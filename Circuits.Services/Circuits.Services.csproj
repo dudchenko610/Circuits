@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Circuits.Shared\Circuits.Shared.csproj" />
+    <ProjectReference Include="..\Circuits.ViewModels\Circuits.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

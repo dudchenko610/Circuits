@@ -1,1 +1,10 @@
-﻿
+﻿.main-page-cnt {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+    .main-page-cnt > .navigation {
+        margin: 16px;
+        flex: 1 1;
+    }

@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32611.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Circuits", "Circuits\Circuits.csproj", "{E353E6DF-3C41-4657-9DAC-BE00A5C077E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Circuits", "Circuits\Circuits.csproj", "{E353E6DF-3C41-4657-9DAC-BE00A5C077E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Circuits.Shared", "Circuits.Shared\Circuits.Shared.csproj", "{8B6D0BA0-7FD0-4D51-922C-521CDB19D5B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Circuits.Shared", "Circuits.Shared\Circuits.Shared.csproj", "{8B6D0BA0-7FD0-4D51-922C-521CDB19D5B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Circuits.ViewModels", "Circuits.ViewModels\Circuits.ViewModels.csproj", "{25BC212E-BAA6-418D-83D1-CFE87D83B843}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Circuits.ViewModels", "Circuits.ViewModels\Circuits.ViewModels.csproj", "{25BC212E-BAA6-418D-83D1-CFE87D83B843}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Circuits.Components", "Circuits.Components\Circuits.Components.csproj", "{F28FADD5-130B-47C7-BADC-009B53A671F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Circuits.Components", "Circuits.Components\Circuits.Components.csproj", "{F28FADD5-130B-47C7-BADC-009B53A671F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BCH", "BCH", "{4C43B13C-57CF-45CB-84EC-3E00282D2782}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Circuits.Services", "Circuits.Services\Circuits.Services.csproj", "{C99726E4-334F-410C-9478-C9170B816102}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{F28FADD5-130B-47C7-BADC-009B53A671F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F28FADD5-130B-47C7-BADC-009B53A671F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F28FADD5-130B-47C7-BADC-009B53A671F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C99726E4-334F-410C-9478-C9170B816102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C99726E4-334F-410C-9478-C9170B816102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C99726E4-334F-410C-9478-C9170B816102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C99726E4-334F-410C-9478-C9170B816102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

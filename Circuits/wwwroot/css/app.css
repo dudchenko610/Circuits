@@ -4,6 +4,55 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+html,
+body,
+#app {
+    height: 100%;
+}
+
+.scroll::-webkit-scrollbar {
+    width: 18px;
+}
+
+.scroll::-webkit-scrollbar-track {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #E8EAED;
+}
+
+    .scroll::-webkit-scrollbar-track:vertical {
+        border-left: 1px solid #E8EAED;
+        border-top: 0;
+    }
+
+.scroll::-webkit-scrollbar-corner {
+    border-radius: 20px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    background: #B3BBC5;
+    border: 6px solid transparent;
+    border-radius: 9px;
+    background-clip: content-box;
+}
+
+    .scroll::-webkit-scrollbar-thumb:hover {
+        background: #555;
+        border: 6px solid transparent;
+        border-radius: 9px;
+        background-clip: content-box;
+    }
+
+.noselectable-text {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /*Internet Explorer/Edge */
+    user-select: none; /*Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 h1:focus {
     outline: none;
 }

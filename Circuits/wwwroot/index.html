@@ -2,13 +2,24 @@
 <html lang="en">
 
 <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Circuits</title>
     <base href="/" />
+
+
+    <link rel="preload" href="fonts/Nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTA3j77e.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTk3j77e.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTo3j77e.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTs3j77e.woff2" as="font" type="font/woff2" crossorigin>
+
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
+    <link href="css/fonts.css" rel="stylesheet" />
     <link href="Circuits.styles.css" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -20,6 +31,22 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+
+    <script>
+        Blazor.registerCustomEventType('extscroll', {
+            browserEventName: 'scroll',
+            createEventArgs: event => {
+
+                return {
+                    clientHeight: event.target.clientHeight,
+                    scrollHeight: event.target.scrollHeight,
+                    scrollTop: event.target.scrollTop,
+                    scrollLeft: event.target.scrollLeft,
+                    clientWidth: event.target.clientWidth
+                };
+            }
+        }); 
+    </script>
 </body>
 
 </html>
