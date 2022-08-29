@@ -1,115 +1,126 @@
 ﻿using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Microsoft.AspNetCore.Components.Web;
+using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
+using System.Numerics;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Circuits.Components.Main.NavigationPlane;
 
 public partial class NavigationPlaneComponent
 {
-    private bool _isDown = false;
-    private float _scaleFactor = 0.0f;
-    private float _scaleAccumulator = 1.0f;
-
-    private Vec2 _vec2 = new();
-    private Vec2 _savedZoomPos = new();
 
     private NumberFormatInfo _nF = new NumberFormatInfo
     {
         NumberDecimalSeparator = "."
     };
 
+    private Vec2 _size = new Vec2 { X = 1566, Y = 855 };
+    private Vec2 _pos = new();
+    private float _scale = 1;
+    private Vec2 _zoomTarget = new Vec2();
+    private Vec2 _zoomPoint = new Vec2();
+    private Vec2 _lastMousePosiiton = new Vec2();
+    private bool _dragStarted = false;
+    private float _factor = 0.3f;
+    private float _maxScale = 8f;
+
     private async Task OnZoomDownAsync(float scale)
     {
-        _scaleFactor = scale;
-        _isDown = true;
+
 
        // await OnZoomAsync();
     }
 
     private void OnZoomUp()
     {
-        _isDown = false;
     }
 
-    private void OnScroll(ScrollEventArgs e)
+    private void Update()
     {
-        //_vec2 = new Vec2(
-        //    e.ScrollLeft + e.ClientWidth * 0.5f, 
-        //    e.ScrollTop + e.ClientHeight * 0.5f
-        //);
-    }
+        if (_pos.X > 0)
+        {
+            _pos.X = 0;
+        }
 
-    //private async Task OnZoomAsync()
-    //{
-    //    _savedZoomPos.Set(_vec2);
-    //    _scaleAccumulator += _scaleFactor;
+        if (_pos.X + _size.X * _scale < _size.X)
+        {
+            _pos.X = -_size.X * (_scale - 1);
+        }
 
-    //    if (_scaleAccumulator < 1.0f)
-    //    {
-    //        _scaleAccumulator = 1.0f;
-    //    }
+        if (_pos.Y > 0)
+        {
+            _pos.Y = 0;
+        }
 
-    //    if (_scaleAccumulator > 3.5f)
-    //    {
-    //        _scaleAccumulator = 3.5f;
-    //    }
-
-    //    StateHasChanged();
-    //    await Task.Delay(20);
-
-    //    if (_isDown)
-    //    {
-    //        await OnZoomAsync();
-    //    }
-    //}
-
-    private Vec2 _prevOrigin = new();
-    private Vec2 _nextOrigin = new();
-    private float _zoomIntensity = 0.005f;
-    private float _zoom = 1;
-    private float _scale = 1;
-
-    private void OnMouseWheel(ExtWheelEventArgs e)
-    {
-        //_savedZoomPos.Set(_vec2.X, _vec2.Y);
-
-        //_scaleFactor = (float)-e.DeltaY * 0.001f;
-        //_scaleAccumulator += _scaleFactor;
-
-        //if (_scaleAccumulator < 1.0f)
-        //{
-        //    _scaleAccumulator = 1.0f;
-        //}
-
-        //if (_scaleAccumulator > 3.5f)
-        //{
-        //    _scaleAccumulator = 3.5f;
-        //}
-
-        var scroll = e.DeltaY < 0 ? 1 : -2;
-        _zoom = (float) Math.Exp(scroll * _zoomIntensity);
-
-        _prevOrigin.Set(_nextOrigin);
-        _nextOrigin.Add(-(e.X / (_scale * _zoom) - e.X / _scale), -(e.Y / (_scale * _zoom) - e.Y / _scale));
-
-        // Updating scale and visisble width and height
-        _scale *= _zoom;
+        if (_pos.Y + _size.Y * _scale < _size.Y)
+        {
+            _pos.Y = -_size.Y * (_scale - 1);
+        }
 
         StateHasChanged();
     }
 
-    private void OnMouseMove(ExtMouseEventArgs e)
+    private void OnMouseWheel(ExtWheelEventArgs e)
     {
-        var navigationPanel = e.PathCoordinates.FirstOrDefault(x => x.ClassList.Contains("navigation-scroller-panel"));
+        var container = e.PathCoordinates.FirstOrDefault(x => x.ClassList.Contains("navigation-cs-container"));
 
-        if (navigationPanel == null)
+        if (container == null)
             return;
 
-        //_vec2.Set(navigationPanel.X, navigationPanel.Y);
-        //_vec2.Multiply(1.0f / _scaleAccumulator);
+        _zoomPoint.Set(container.X, container.Y);
 
-        //Console.WriteLine($"move x: {_vec2.X} y: {_vec2.Y} scale: {_scaleAccumulator}");
+        Console.WriteLine($"_zoomPoint {_zoomPoint.X} {_zoomPoint.Y}");
+
+
+        var delta = (float) Math.Max(-1, Math.Min(1, -e.DeltaY)); // cap the delta to [-1,1] for cross browser consistency
+
+        // determine the point on where the slide is zoomed in
+        _zoomTarget.Set((_zoomPoint.X - _pos.X) / _scale, (_zoomPoint.Y - _pos.Y) / _scale);
+
+
+        //Console.WriteLine($"_zoomTarget {_zoomTarget.X} {_zoomTarget.Y}");
+
+        // apply zoom
+        _scale += delta * _factor * _scale;
+        _scale = Math.Max(1, Math.Min(_maxScale, _scale));
+
+        // calculate x and y based on zoom
+        _pos.Set(
+            -_zoomTarget.X * _scale + _zoomPoint.X, 
+            -_zoomTarget.Y * _scale + _zoomPoint.Y
+        );
+
+        Update();
+    }
+
+    private void OnMouseDown(MouseEventArgs e)
+    {
+        _lastMousePosiiton.Set(e.PageX, e.PageY);
+        _dragStarted = true;
+    }
+
+    private void OnMouseUpOut()
+    {
+        _dragStarted = false;
+    }
+
+    private void OnMouseMove(ExtMouseEventArgs e)
+    {
+        if (_dragStarted)
+        {
+            var mousePosition = new Vec2(e.PageX, e.PageY);
+            var change = new Vec2(
+                mousePosition.X - _lastMousePosiiton.X, 
+                mousePosition.Y - _lastMousePosiiton.Y
+            );
+
+            _lastMousePosiiton.Set(mousePosition);
+            _pos.Add(change);
+
+            Update();
+        }
     }
 }

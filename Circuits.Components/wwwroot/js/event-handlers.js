@@ -59,10 +59,12 @@ Blazor.registerCustomEventType('extmousemove', {
         const pathCoordinates = getPathCoordinates(event);
 
         return {
-            clientHeight: event.target.clientHeight,
-            clientWidth: event.target.clientWidth,
             offsetX: event.offsetX,
             offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            clientHeight: event.target.clientHeight,
+            clientWidth: event.target.clientWidth,
             pathCoordinates: pathCoordinates
         };
     }
@@ -72,18 +74,16 @@ Blazor.registerCustomEventType('extmousewheel', {
     browserEventName: 'mousewheel',
     createEventArgs: event => {
 
-        var x = event.clientX - event.target.offsetLeft;
-        var y = event.clientY - event.target.offsetTop;
+        const x = event.clientX - event.target.offsetLeft;
+        const y = event.clientY - event.target.offsetTop;
+        const pathCoordinates = getPathCoordinates(event);
 
-        const ev = {
+        return {
             x: x,
             y: y,
             deltaX: event.deltaX,
-            deltaY: event.deltaY
+            deltaY: event.deltaY,
+            pathCoordinates: pathCoordinates
         };
-
-        console.log(ev);
-
-        return ev;
     }
 });
