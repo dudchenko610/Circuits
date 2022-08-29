@@ -58,13 +58,14 @@
         box-shadow: 0px 2px 4px rgb(0 0 0 / 12%);
         border-radius: 20px;
         position: absolute;
-        overflow: scroll;
+        overflow: hidden;
     }
 
         .navigation-cnt > .scroll-cnt > .scroller {
             position: absolute;
             width: 3000px;
             height: 3000px;
+/*            transition: transform-origin 0.2s;*/
         }
 
             .navigation-cnt > .scroll-cnt > .scroller > .horizontal-delimiter {
@@ -79,4 +80,22 @@
                 top: 0;
                 height: 100%;
                 border-left: 0.5px solid rgba(3, 2, 41, 0.1);
+            }
+
+            .navigation-cnt > .scroll-cnt > .scroller > .marker {
+                position: absolute;
+                background: red;
+                width: 10px;
+                height: 10px;
+            }
+
+            .navigation-cnt > .scroll-cnt > .scroller > .marker {
+                position: absolute;
+                background: red;
+                width: 10px;
+                height: 10px;
+            }
+
+            .navigation-cnt > .scroll-cnt > .scroller > .marker.blue {
+                background: blue;
             }

@@ -16,24 +16,35 @@
         </div>
     </div>
 
-    <div class="scroll-cnt scroll" @onextscroll="OnScroll">
+    <div class="scroll-cnt">
 
-        <div class="scroller"
+        <div @onextmousemove="OnMouseMove"
+             @onextmousewheel="OnMouseWheel"
+             class="scroller navigation-scroller-panel"
              style="@(
-                $"transform: scale({_scaleAccumulator.ToString(_numberFormatWithDot)});" +
-                $"transform-origin: {_vec2.X.ToString(_numberFormatWithDot)}px {_vec2.Y.ToString(_numberFormatWithDot)}px;"
+                $"transform: " +
+
+                $"translate({_prevOrigin.X.ToString(_nF)}px, {_prevOrigin.Y.ToString(_nF)}px) " +
+
+                $"scale({_scale.ToString(_nF)}) " +
+
+                $"translate({(-_nextOrigin.X).ToString(_nF)}px, {(-_nextOrigin.Y).ToString(_nF)}px); "
              )">
+            @*$"transform-origin: {_savedZoomPos.X.ToString(_numberFormatWithDot)}px {_savedZoomPos.Y.ToString(_numberFormatWithDot)}px;"*@
 
             @for (int i = 0; i < 3000 / 30 + 5; i++)
             {
                 <div class="horizontal-delimiter"
-                 style="@($"top: calc(30px * ({i - 5}));")">
+                     style="@($"top: calc(30px * ({i - 5}));")">
                 </div>
 
                 <div class="vertical-delimiter"
-                 style="@($"left: calc(30px * ({i - 5}));")">
+                     style="@($"left: calc(30px * ({i - 5}));")">
                 </div>
             }
+
+            <div class="marker blue" style="@($"left: {(_savedZoomPos.X).ToString(_nF)}px; top: {(_savedZoomPos.Y).ToString(_nF)}px;")"></div>
+            <div class="marker" style="@($"left: {(_vec2.X).ToString(_nF)}px; top: {(_vec2.Y).ToString(_nF)}px;")"></div>
         </div>
 
     </div>

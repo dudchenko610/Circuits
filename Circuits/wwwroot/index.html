@@ -31,22 +31,7 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
-
-    <script>
-        Blazor.registerCustomEventType('extscroll', {
-            browserEventName: 'scroll',
-            createEventArgs: event => {
-
-                return {
-                    clientHeight: event.target.clientHeight,
-                    scrollHeight: event.target.scrollHeight,
-                    scrollTop: event.target.scrollTop,
-                    scrollLeft: event.target.scrollLeft,
-                    clientWidth: event.target.clientWidth
-                };
-            }
-        }); 
-    </script>
+    <script src="_content/Circuits.Components/js/event-handlers.js"></script>
 </body>
 
 </html>

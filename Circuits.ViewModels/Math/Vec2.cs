@@ -71,6 +71,14 @@ public class Vec2
         return this;
     }
 
+    public Vec2 Multiply(float scale)
+    {
+        this.X *= scale;
+        this.Y *= scale;
+
+        return this;
+    }
+
     public string GetXStr()
     {
         return X.ToString().Replace(",", ".");

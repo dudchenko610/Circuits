@@ -7,5 +7,4 @@ public class ScrollEventArgs : EventArgs
     public double ScrollHeight { get; set; }
     public double ClientWidth { get; set; }
     public double ClientHeight { get; set; }
-
 }

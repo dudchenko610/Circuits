@@ -10,4 +10,14 @@
     <ProjectReference Include="..\Circuits.Shared\Circuits.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Microsoft.AspNetCore.Components.Web" />
+    <None Remove="Markup\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Markup\" />
+  </ItemGroup>
 </Project>
