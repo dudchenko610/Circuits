@@ -9,4 +9,7 @@ public class ExtMouseEventArgs : MouseEventArgs
 
     public double ClientWidth { get; set; }
     public double ClientHeight { get; set; }
+    public string TargetClassList { get; set; } = string.Empty;
+    public string RelatedTargetClassList { get; set; } = string.Empty;
+    public bool RelatedTargetIsChildOfTarget { get; set; }
 }

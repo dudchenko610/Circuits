@@ -6,7 +6,7 @@
 
     .navigation-cnt > .control-block {
         position: absolute;
-        right: 19px;
+        right: 1px;
         top: 1px;
         display: flex;
         gap: 10px;
@@ -16,6 +16,7 @@
         border-bottom: 1px solid #CED3E0;
         border-left: 1px solid #CED3E0;
         border-bottom-left-radius: 20px;
+        border-top-right-radius: 20px;
         opacity: 0.2;
         transition: opacity 0.2s ease;
     }

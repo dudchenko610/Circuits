@@ -52,6 +52,36 @@ Blazor.registerCustomEventType('extscroll', {
     }
 });
 
+Blazor.registerCustomEventType('mouseleave', {
+    browserEventName: 'mouseleave',
+    createEventArgs: event => {
+
+        return {
+        };
+    }
+});
+
+Blazor.registerCustomEventType('extmouseout', {
+    browserEventName: 'mouseout',
+    createEventArgs: event => {
+
+        const pathCoordinates = getPathCoordinates(event);
+
+        return {
+            relatedTargetIsChildOfTarget: (event.target && event.relatedTarget) ? event.target.contains(event.relatedTarget) : false,
+            relatedTargetClassList: event.relatedTarget ? event.relatedTarget.classList.value : '',
+            targetClassList: event.target ? event.target.classList.value : '',
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            clientHeight: event.target.clientHeight,
+            clientWidth: event.target.clientWidth,
+            pathCoordinates: pathCoordinates
+        };
+    }
+});
+
 Blazor.registerCustomEventType('extmousemove', {
     browserEventName: 'mousemove',
     createEventArgs: event => {

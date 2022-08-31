@@ -1,23 +1,29 @@
-﻿using Circuits.ViewModels.Events;
+﻿using Circuits.Services.Services.Interfaces;
+using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Numerics;
+using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Circuits.Components.Main.NavigationPlane;
 
-public partial class NavigationPlaneComponent
+public partial class NavigationPlaneComponent : IDisposable
 {
+    [Inject] private IJSUtilsService _jsUtilsService { get; set; } = null!;
+
+    private string _navigationId = $"_id_{Guid.NewGuid()}";
 
     private NumberFormatInfo _nF = new NumberFormatInfo
     {
         NumberDecimalSeparator = "."
     };
 
-    private Vec2 _size = new Vec2 { X = 1566, Y = 855 };
+    private Vec2 _size = new Vec2 { X = 100, Y = 100 };
     private Vec2 _pos = new();
     private float _scale = 1;
     private Vec2 _zoomTarget = new Vec2();
@@ -25,17 +31,52 @@ public partial class NavigationPlaneComponent
     private Vec2 _lastMousePosiiton = new Vec2();
     private bool _dragStarted = false;
     private float _factor = 0.3f;
-    private float _maxScale = 8f;
+    private float _maxScale = 12f;
+    private bool _zoomKeep = false;
 
-    private async Task OnZoomDownAsync(float scale)
+    protected override void OnInitialized()
     {
+        IJSUtilsService.OnResize += OnResizeAsync;
+    }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await OnResizeAsync();
+        }
+    }
 
-       // await OnZoomAsync();
+    public void Dispose()
+    {
+        IJSUtilsService.OnResize -= OnResizeAsync;
+    }
+
+    private async Task OnResizeAsync()
+    {
+        var navigationRect = await _jsUtilsService.GetBoundingClientRectAsync(_navigationId);
+        _size.Set(navigationRect.Width, navigationRect.Height);
+    }
+
+    private async Task OnZoomDownAsync(float zoomDelta)
+    {
+        _zoomKeep = true;
+        await OnZoomHoldAsync(zoomDelta);
+    }
+
+    private async Task OnZoomHoldAsync(float zoomDelta)
+    {
+        if (_zoomKeep)
+        {
+            OnZoom(_size.X * 0.5f, _size.Y * 0.5f, zoomDelta);
+            await Task.Delay(100);
+            await OnZoomHoldAsync(zoomDelta);
+        }
     }
 
     private void OnZoomUp()
     {
+        _zoomKeep = false;
     }
 
     private void Update()
@@ -70,18 +111,18 @@ public partial class NavigationPlaneComponent
         if (container == null)
             return;
 
-        _zoomPoint.Set(container.X, container.Y);
+        OnZoom(container.X, container.Y, - (float)e.DeltaY);
+    }
 
-        Console.WriteLine($"_zoomPoint {_zoomPoint.X} {_zoomPoint.Y}");
+    private void OnZoom(float x, float y, float controlDelta)
+    {
+        _zoomPoint.Set(x, y);
+        Console.WriteLine($"x: {x}, y: {y}");
 
-
-        var delta = (float) Math.Max(-1, Math.Min(1, -e.DeltaY)); // cap the delta to [-1,1] for cross browser consistency
+        var delta = (float)Math.Max(-1, Math.Min(1, controlDelta)); // cap the delta to [-1,1] for cross browser consistency
 
         // determine the point on where the slide is zoomed in
         _zoomTarget.Set((_zoomPoint.X - _pos.X) / _scale, (_zoomPoint.Y - _pos.Y) / _scale);
-
-
-        //Console.WriteLine($"_zoomTarget {_zoomTarget.X} {_zoomTarget.Y}");
 
         // apply zoom
         _scale += delta * _factor * _scale;
@@ -89,7 +130,7 @@ public partial class NavigationPlaneComponent
 
         // calculate x and y based on zoom
         _pos.Set(
-            -_zoomTarget.X * _scale + _zoomPoint.X, 
+            -_zoomTarget.X * _scale + _zoomPoint.X,
             -_zoomTarget.Y * _scale + _zoomPoint.Y
         );
 
@@ -102,7 +143,7 @@ public partial class NavigationPlaneComponent
         _dragStarted = true;
     }
 
-    private void OnMouseUpOut()
+    private void OnMouseLeaveUp()
     {
         _dragStarted = false;
     }

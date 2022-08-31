@@ -3,13 +3,13 @@
 
     <div class="control-block">
         <div class="icon min"
-             @onmousedown="async () => { await OnZoomDownAsync(-0.01f); }"
+             @onmousedown="async () => { await OnZoomDownAsync(-0.1f); }"
              @onmouseup="OnZoomUp"
              @onmouseout="OnZoomUp">
             <div class="noselectable-text">-</div>
         </div>
         <div class="icon mag"
-             @onmousedown="async () => { await OnZoomDownAsync(0.01f); }"
+             @onmousedown="async () => { await OnZoomDownAsync(+0.1f); }"
              @onmouseup="OnZoomUp"
              @onmouseout="OnZoomUp">
             <div class="noselectable-text">+</div>
@@ -20,16 +20,16 @@
 
         <div @onextmousemove="OnMouseMove"
              @onmousedown="OnMouseDown"
-             @onmouseup="OnMouseUpOut"
-             @onmouseout="OnMouseUpOut"
+             @onmouseup="OnMouseLeaveUp"
+             @onmouseleave="OnMouseLeaveUp"
+             id="@_navigationId"
              class="scroller navigation-cs-panel"
              style="@(
                 $"transform: " +
                     $"translate({_pos.X.ToString(_nF)}px, {_pos.Y.ToString(_nF)}px) " +
                     $"scale({_scale.ToString(_nF)}, {_scale.ToString(_nF)}); " +
-                $"{(_dragStarted ? "transition: transform 0s;" : "")}"
+                $"{(_dragStarted ? "transition: transform 0s; cursor: move;" : "")}"
              )">
-            @*$"transform-origin: {_savedZoomPos.X.ToString(_numberFormatWithDot)}px {_savedZoomPos.Y.ToString(_numberFormatWithDot)}px;"*@
 
             @for (int i = 0; i < 3000 / 30 + 5; i++)
             {
