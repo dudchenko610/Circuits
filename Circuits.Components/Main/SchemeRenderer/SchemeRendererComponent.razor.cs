@@ -46,15 +46,16 @@ public partial class SchemeRendererComponent : IDisposable
     private void Update()
     {
         if (!SchemeRendererContext.PencilMode)
-        {
             _firstPointSet = false;
-        }
+        _selectedWire = null!;
 
         StateHasChanged();
     }
 
     private void OnWireClicked(Wire wire)
     {
+        Console.WriteLine("OnWireClicked");
+        
         _selectedWire = wire;
         StateHasChanged();
     }
@@ -99,6 +100,8 @@ public partial class SchemeRendererComponent : IDisposable
 
     private void OnContainerClicked()
     {
+        Console.WriteLine("OnContainerClicked OnContainerClicked");
+        
         // if (OnFirstPointSet())
         //     return;
         //

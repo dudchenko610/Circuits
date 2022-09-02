@@ -20,8 +20,8 @@
     <div class="scroll-cnt navigation-cs-container" @onextmousewheel="OnMouseWheel">
 
         <div @onextmousemove="OnMouseMove"
-             @onextmousemove:preventDefault
              @onmousedown="OnMouseDown"
+             @onmousedown:stopPropagation
              @onmouseup="OnMouseLeaveUp"
              @onmouseleave="OnMouseLeaveUp"
              id="@_navigationId"

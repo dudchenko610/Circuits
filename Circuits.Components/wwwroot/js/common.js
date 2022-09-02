@@ -1,5 +1,5 @@
 ﻿window.addEventListener("resize", () => {
-    DotNet.invokeMethodAsync("BlazorComponentHeap.Core", 'OnBrowserResizeAsync').then(data => data);
+    DotNet.invokeMethodAsync("Circuit.Services", 'OnBrowserResizeAsync').then(data => data);
 });
 
 function bchGetBoundingClientRectById(id, param) {

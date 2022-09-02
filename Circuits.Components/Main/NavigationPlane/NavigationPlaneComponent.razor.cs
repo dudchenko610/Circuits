@@ -142,6 +142,8 @@ public partial class NavigationPlaneComponent : IDisposable
     {
         _lastMousePosition.Set(e.PageX, e.PageY);
         _dragStarted = true;
+        
+        Console.WriteLine("OnMouseDown NavPlane");
     }
 
     private void OnMouseLeaveUp()
