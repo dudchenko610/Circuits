@@ -2,6 +2,20 @@
 
 <div class="main-page-cnt">
     <div class="navigation">
-        <NavigationPlaneComponent/>
+        <NavigationPlaneComponent>
+
+            <ControlTemplate>
+                <div @onclick="OnPenClicked" class="control-icon pen"></div>
+            </ControlTemplate>
+
+            <ContentTemplate Context="_navCtx">
+                
+                <SchemeRendererComponent
+                    SchemeRendererContext="_context"
+                    Scale="_navCtx.Scale"/>
+
+            </ContentTemplate>
+
+        </NavigationPlaneComponent>
     </div>
 </div>

@@ -4,7 +4,24 @@
     display: flex;
 }
 
-    .main-page-cnt > .navigation {
-        margin: 16px;
-        flex: 1 1;
-    }
+.main-page-cnt > .navigation {
+    margin: 16px;
+    flex: 1 1;
+}
+
+.main-page-cnt .control-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(3, 2, 41, 0.4);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    outline: none;
+}
+
+.main-page-cnt .control-icon:hover {
+    transform: scale(1.05);
+}

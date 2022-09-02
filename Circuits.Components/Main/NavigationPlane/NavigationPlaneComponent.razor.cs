@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Numerics;
 using System.Xml.Linq;
+using Circuits.ViewModels.Rendering;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Circuits.Components.Main.NavigationPlane;
@@ -15,25 +16,25 @@ namespace Circuits.Components.Main.NavigationPlane;
 public partial class NavigationPlaneComponent : IDisposable
 {
     [Inject] private IJSUtilsService _jsUtilsService { get; set; } = null!;
+    [Parameter] public RenderFragment<NavigationPlaneContext> ContentTemplate { get; set; } = null!;
+    [Parameter] public RenderFragment ControlTemplate { get; set; } = null!;
 
     private string _navigationId = $"_id_{Guid.NewGuid()}";
+    private NumberFormatInfo _nF = new () { NumberDecimalSeparator = "." };
 
-    private NumberFormatInfo _nF = new NumberFormatInfo
-    {
-        NumberDecimalSeparator = "."
-    };
-
-    private Vec2 _size = new Vec2 { X = 100, Y = 100 };
+    private Vec2 _size = new () { X = 100, Y = 100 };
     private Vec2 _pos = new();
     private float _scale = 1;
-    private Vec2 _zoomTarget = new Vec2();
-    private Vec2 _zoomPoint = new Vec2();
-    private Vec2 _lastMousePosiiton = new Vec2();
+    private Vec2 _zoomTarget = new();
+    private Vec2 _zoomPoint = new();
+    private Vec2 _lastMousePosition = new();
     private bool _dragStarted = false;
     private float _factor = 0.3f;
     private float _maxScale = 12f;
     private bool _zoomKeep = false;
 
+    private NavigationPlaneContext _navigationPlaneContext = new();
+    
     protected override void OnInitialized()
     {
         IJSUtilsService.OnResize += OnResizeAsync;
@@ -117,8 +118,6 @@ public partial class NavigationPlaneComponent : IDisposable
     private void OnZoom(float x, float y, float controlDelta)
     {
         _zoomPoint.Set(x, y);
-        Console.WriteLine($"x: {x}, y: {y}");
-
         var delta = (float)Math.Max(-1, Math.Min(1, controlDelta)); // cap the delta to [-1,1] for cross browser consistency
 
         // determine the point on where the slide is zoomed in
@@ -134,12 +133,14 @@ public partial class NavigationPlaneComponent : IDisposable
             -_zoomTarget.Y * _scale + _zoomPoint.Y
         );
 
+        _navigationPlaneContext.Scale = _scale;
+
         Update();
     }
 
     private void OnMouseDown(MouseEventArgs e)
     {
-        _lastMousePosiiton.Set(e.PageX, e.PageY);
+        _lastMousePosition.Set(e.PageX, e.PageY);
         _dragStarted = true;
     }
 
@@ -154,11 +155,11 @@ public partial class NavigationPlaneComponent : IDisposable
         {
             var mousePosition = new Vec2(e.PageX, e.PageY);
             var change = new Vec2(
-                mousePosition.X - _lastMousePosiiton.X, 
-                mousePosition.Y - _lastMousePosiiton.Y
+                mousePosition.X - _lastMousePosition.X, 
+                mousePosition.Y - _lastMousePosition.Y
             );
 
-            _lastMousePosiiton.Set(mousePosition);
+            _lastMousePosition.Set(mousePosition);
             _pos.Add(change);
 
             Update();

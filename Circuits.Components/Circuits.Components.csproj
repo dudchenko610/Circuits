@@ -22,9 +22,13 @@
   <ItemGroup>
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\js\" />
+    <Folder Include="Main\SchemeRenderer\" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="wwwroot\js\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Main\SchemeRenderer\" />
   </ItemGroup>
 </Project>
