@@ -5,7 +5,7 @@
         <NavigationPlaneComponent>
 
             <ControlTemplate>
-                <div @onclick="OnPenClicked" class="control-icon pen"></div>
+                <div @onclick="OnPenClicked" class="control-icon pen @(_context.PencilMode ? "activated" : "")"></div>
             </ControlTemplate>
 
             <ContentTemplate Context="_navCtx">

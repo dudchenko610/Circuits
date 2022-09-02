@@ -1,15 +1,56 @@
-﻿<div class="scheme-renderer-container" @onextmousemove="OnMouseMove">
-    @for (int i = 0; i < 3000 / 30 + 5; i++)
+﻿<div
+    class="scheme-renderer-container"
+    @onextmousemove="OnMouseMove"
+    @onextmousemove:stopPropagation="@(_selectedWire != null!)"
+    @onclick="OnContainerClicked"
+    @onmousedown="OnContainerDown"
+    @onmouseup="OnContainerUp">
+    
+    @for (int i = 0; i < 3000 / CellSize + 5; i++)
     {
         <div class="horizontal-delimiter"
-             style="@($"top: calc(30px * ({i - 5}));")">
+             style="@($"top: calc({CellSize}px * ({i - 5}));")">
         </div>
-    
+
         <div class="vertical-delimiter"
-             style="@($"left: calc(30px * ({i - 5}));")">
+             style="@($"left: calc({CellSize}px * ({i - 5}));")">
+        </div>
+    }
+
+    @foreach (var wire in _wires)
+    {
+        var horizontal = wire.P1.Y == wire.P2.Y;
+        var horOffset = !horizontal ? "1.5px" : "0px";
+        var vertOffset = horizontal ? "1.5px" : "0px";
+
+        <div
+            @onclick="() => { OnWireClicked(wire); }"
+            @onclick:stopPropagation
+            draggable="true"
+            class="@($"wire {(horizontal ? "horizontal" : "vertical")} {(_selectedWire == wire ? "selected" : "")}")"
+            style="@($"left: calc({wire.P1.X * CellSize}px - {horOffset}); top: calc({wire.P1.Y * CellSize}px - {vertOffset}); width: {Math.Abs(wire.P2.X * CellSize - wire.P1.X * CellSize)}px; height: {Math.Abs(wire.P2.Y * CellSize - wire.P1.Y * CellSize)}px;")">
+
+            <div class="circle"></div>
+            <div class="circle"></div>
+
+        </div>
+    }
+
+    @if (SchemeRendererContext.PencilMode)
+    {
+        @if (_firstPointSet)
+        {
+            <div
+                style="@($"left: {(_firstPointPos.X - 10.0f).ToString(_nF)}px; top: {(_firstPointPos.Y - 10.0f).ToString(_nF)}px;")"
+                class="wire-pointer">
+                <div class="center"></div>
+            </div>
+        }
+
+        <div
+            style="@($"left: {(_wirePointerPos.X - 10.0f).ToString(_nF)}px; top: {(_wirePointerPos.Y - 10.0f).ToString(_nF)}px;")"
+            class="wire-pointer">
+            <div class="center"></div>
         </div>
     }
 </div>
-
-
-

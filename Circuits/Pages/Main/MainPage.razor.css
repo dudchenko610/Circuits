@@ -25,3 +25,7 @@
 .main-page-cnt .control-icon:hover {
     transform: scale(1.05);
 }
+
+.main-page-cnt .control-icon.pen.activated {
+    border: 1px solid rgba(141, 2, 3, 0.4);
+}

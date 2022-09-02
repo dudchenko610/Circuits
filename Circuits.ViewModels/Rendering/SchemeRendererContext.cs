@@ -4,12 +4,12 @@ public class SchemeRendererContext
 {
     public bool PencilMode
     {
-        get
+        get => _privateMode;
+        set
         {
-            OnUpdate?.Invoke();
-            return _privateMode;
+            OnUpdate?.Invoke(); 
+            _privateMode = value;
         }
-        set => _privateMode = value;
     }
 
     private bool _privateMode = false;
