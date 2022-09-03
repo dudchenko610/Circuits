@@ -133,13 +133,16 @@ Blazor.registerCustomEventType('extdragstart', {
         //     event.target.setAttribute('dragging', '');
         // }, 0);
 
+        const pathCoordinates = getPathCoordinates(event);
+
         return {
             offsetX: event.offsetX,
             offsetY: event.offsetY,
             pageX: event.pageX,
             pageY: event.pageY,
             screenX: event.screenX,
-            screenY: event.screenY
+            screenY: event.screenY,
+            pathCoordinates: pathCoordinates
         };
     }
 });
@@ -179,6 +182,25 @@ function subscribeOnMouseMove(contextId, dotNetHelper) {
         const pathCoordinates = getPathCoordinates(event);
         
         dotNetHelper.invokeMethodAsync('OnMouseMove', {
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            screenX: event.screenX,
+            screenY: event.screenY,
+
+            pathCoordinates: pathCoordinates
+        });
+    });
+}
+
+function subscribeOnDragOver(contextId, dotNetHelper) {
+    const contextElement = document.getElementById(contextId);
+
+    contextElement.addEventListener('dragover', (event) => {
+        const pathCoordinates = getPathCoordinates(event);
+
+        dotNetHelper.invokeMethodAsync('OnDragOver', {
             offsetX: event.offsetX,
             offsetY: event.offsetY,
             pageX: event.pageX,

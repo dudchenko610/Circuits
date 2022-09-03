@@ -49,8 +49,8 @@ public partial class NavigationPlaneComponent : IDisposable
         
         if (firstRender)
         {
-            // _dotNetObjectReference = DotNetObjectReference.Create(this);
-            // await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _navigationId, _dotNetObjectReference);
+            _dotNetObjectReference = DotNetObjectReference.Create(this);
+            await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _navigationId, _dotNetObjectReference);
             await OnResizeAsync();
         }
     }
@@ -148,19 +148,19 @@ public partial class NavigationPlaneComponent : IDisposable
 
     private void OnMouseDown(MouseEventArgs e)
     {
-        // _lastMousePosition.Set(e.PageX, e.PageY);
-        // _dragStarted = true;
-        // StateHasChanged();
-        //
-        // Console.WriteLine("OnMouseDown NavPlane");
+        Console.WriteLine("OnMouseDown NavPlane");
+
+        _lastMousePosition.Set(e.PageX, e.PageY);
+        _dragStarted = true;
+        StateHasChanged();
     }
 
     private void OnMouseLeaveUp()
     {
-        // Console.WriteLine("OnMouseLeaveUp NavPlane");
-        //
-        // _dragStarted = false;
-        // StateHasChanged();
+        Console.WriteLine("OnMouseLeaveUp NavPlane");
+        
+        _dragStarted = false;
+        StateHasChanged();
     }
 
     [JSInvokable]

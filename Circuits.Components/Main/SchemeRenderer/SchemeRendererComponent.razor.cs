@@ -31,28 +31,18 @@ public partial class SchemeRendererComponent : IDisposable
     private const int CellSize = 30;
 
     private List<Wire> _wires = new();
-    // {
-    //     new Wire()
-    //     {
-    //         P1 = new Point()
-    //         {
-    //             X = 5, Y = 5
-    //         },
-    //         P2 = new Point()
-    //         {
-    //             X = 5, Y = 10
-    //         }
-    //     }
-    // };
-    
+
     private Vec2 _firstPointPos = new();
     private bool _firstPointSet = false;
     
     private Wire _selectedWire = null!;
     private Wire _draggingWire = null!;
     private bool _firstDragOver = false;
+    private Vec2 _draggingPos = new();
+    private Vec2 _draggingPosOffset = new();
     
     private readonly string _id = $"_id_{Guid.NewGuid()}";
+    private readonly string _contentId = $"_id_{Guid.NewGuid()}";
     private DotNetObjectReference<SchemeRendererComponent> _dotNetObjectReference = null!;
     
     protected override void OnInitialized()
@@ -68,6 +58,7 @@ public partial class SchemeRendererComponent : IDisposable
         {
             _dotNetObjectReference = DotNetObjectReference.Create(this);
             await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _id, _dotNetObjectReference);
+            await _jsRuntime.InvokeVoidAsync("subscribeOnDragOver", _contentId, _dotNetObjectReference);
         }
     }
 
@@ -97,8 +88,6 @@ public partial class SchemeRendererComponent : IDisposable
     [JSInvokable]
     public void OnMouseMove(ExtMouseEventArgs e)
     {
-        Console.WriteLine("OnMouseMove SchemeRendererComponent");
-        
         if (SchemeRendererContext.PencilMode)
         {
             var schemeRendererContainer =
@@ -197,22 +186,19 @@ public partial class SchemeRendererComponent : IDisposable
         return false;
     }
 
-    private void OnDragOver(ExtMouseEventArgs e)
+    [JSInvokable]
+    public void OnDragOver(ExtMouseEventArgs e)
     {
-        Console.WriteLine($"drag-over SchemeRendererComponent");
-
         var container = e.PathCoordinates
             .FirstOrDefault(x => x.ClassList.Contains("scheme-renderer-container"));
 
         if (container is null) return;
-
+        if (!_firstDragOver) _firstDragOver = true;
+        
         Console.WriteLine($"drag-over X: {container.X} Y: {container.Y}");
         
-        if (!_firstDragOver)
-        {
-            _firstDragOver = true;
-            StateHasChanged();
-        }
+        _draggingPos.Set((container.X - _draggingPosOffset.X) / Scale, (container.Y - _draggingPosOffset.Y) / Scale);
+        StateHasChanged();
     }
 
     private void OnDrop()
@@ -224,10 +210,17 @@ public partial class SchemeRendererComponent : IDisposable
         Console.WriteLine($"on-drop");
     }
 
-    private void OnDragStart(Wire wire)
+    private void OnDragStart(ExtMouseEventArgs e, Wire wire)
     {
+        var wireCnt = e.PathCoordinates
+            .FirstOrDefault(x => x.ClassList.Contains("wire"));
+
+        if (wireCnt == null) return;
+
+        _draggingPosOffset.Set(wireCnt.X, wireCnt.Y);
         _draggingWire = wire;
-        Console.WriteLine($"on-drag-start {SchemeRendererContext.PencilMode}");
+        
+        Console.WriteLine($"on-drag-start X: {wireCnt.X}, Y: {wireCnt.Y}");
     }
 
     private void OnDragEnd()
