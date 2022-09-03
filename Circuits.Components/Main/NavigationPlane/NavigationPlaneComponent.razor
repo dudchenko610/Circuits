@@ -1,8 +1,8 @@
 ﻿<div class="navigation-cnt">
     <div class="control-block">
-        
+
         @ControlTemplate
-        
+
         <div class="icon min"
              @onmousedown="async () => { await OnZoomDownAsync(-0.1f); }"
              @onmouseup="OnZoomUp"
@@ -19,26 +19,17 @@
 
     <div class="scroll-cnt navigation-cs-container" @onextmousewheel="OnMouseWheel">
 
-        <div @onextmousemove="OnMouseMove"
+        <div id="@_navigationId"
              @onmousedown="OnMouseDown"
-             @onmousedown:stopPropagation
              @onmouseup="OnMouseLeaveUp"
              @onmouseleave="OnMouseLeaveUp"
-             id="@_navigationId"
              class="scroller navigation-cs-panel"
-             style="@(
-                $"transform: " +
-                    $"translate({_pos.X.ToString(_nF)}px, {_pos.Y.ToString(_nF)}px) " +
-                    $"scale({_scale.ToString(_nF)}, {_scale.ToString(_nF)}); " +
-                $"{(_dragStarted ? "transition: transform 0s; cursor: move;" : "")}"
-             )">
+             style="@($"transform: " + $"translate({_pos.X.ToString(_nF)}px, {_pos.Y.ToString(_nF)}px) " + $"scale({_scale.ToString(_nF)}, {_scale.ToString(_nF)}); " + $"{(_dragStarted ? "transition: transform 0s; cursor: move;" : "")}")">
 
-                @ContentTemplate(_navigationPlaneContext)
+            @ContentTemplate(_navigationPlaneContext)
 
             @*<div class="marker" style="@($"left: {(_zoomTarget.X).ToString(_nF)}px; top: {(_zoomTarget.Y).ToString(_nF)}px;")"></div>*@
-
         </div>
 
     </div>
 </div>
-

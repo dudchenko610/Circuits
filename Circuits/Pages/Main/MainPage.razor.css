@@ -7,6 +7,7 @@
 .main-page-cnt > .navigation {
     margin: 16px;
     flex: 1 1;
+    position: relative;
 }
 
 .main-page-cnt .control-icon {

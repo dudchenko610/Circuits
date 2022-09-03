@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Xml.Linq;
 using Circuits.ViewModels.Rendering;
+using Microsoft.JSInterop;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Circuits.Components.Main.NavigationPlane;
@@ -16,10 +17,11 @@ namespace Circuits.Components.Main.NavigationPlane;
 public partial class NavigationPlaneComponent : IDisposable
 {
     [Inject] private IJSUtilsService _jsUtilsService { get; set; } = null!;
+    [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
     [Parameter] public RenderFragment<NavigationPlaneContext> ContentTemplate { get; set; } = null!;
     [Parameter] public RenderFragment ControlTemplate { get; set; } = null!;
 
-    private string _navigationId = $"_id_{Guid.NewGuid()}";
+    private readonly string _navigationId = $"_id_{Guid.NewGuid()}";
     private NumberFormatInfo _nF = new () { NumberDecimalSeparator = "." };
 
     private Vec2 _size = new () { X = 100, Y = 100 };
@@ -34,6 +36,7 @@ public partial class NavigationPlaneComponent : IDisposable
     private bool _zoomKeep = false;
 
     private NavigationPlaneContext _navigationPlaneContext = new();
+    private DotNetObjectReference<NavigationPlaneComponent> _dotNetObjectReference = null!;
     
     protected override void OnInitialized()
     {
@@ -42,14 +45,19 @@ public partial class NavigationPlaneComponent : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        Console.WriteLine($"OnAfterRender NavigationPlaneComponent {_dragStarted}");
+        
         if (firstRender)
         {
+            // _dotNetObjectReference = DotNetObjectReference.Create(this);
+            // await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _navigationId, _dotNetObjectReference);
             await OnResizeAsync();
         }
     }
 
     public void Dispose()
     {
+        _dotNetObjectReference?.Dispose();
         IJSUtilsService.OnResize -= OnResizeAsync;
     }
 
@@ -140,18 +148,23 @@ public partial class NavigationPlaneComponent : IDisposable
 
     private void OnMouseDown(MouseEventArgs e)
     {
-        _lastMousePosition.Set(e.PageX, e.PageY);
-        _dragStarted = true;
-        
-        Console.WriteLine("OnMouseDown NavPlane");
+        // _lastMousePosition.Set(e.PageX, e.PageY);
+        // _dragStarted = true;
+        // StateHasChanged();
+        //
+        // Console.WriteLine("OnMouseDown NavPlane");
     }
 
     private void OnMouseLeaveUp()
     {
-        _dragStarted = false;
+        // Console.WriteLine("OnMouseLeaveUp NavPlane");
+        //
+        // _dragStarted = false;
+        // StateHasChanged();
     }
 
-    private void OnMouseMove(ExtMouseEventArgs e)
+    [JSInvokable]
+    public void OnMouseMove(ExtMouseEventArgs e)
     {
         if (_dragStarted)
         {

@@ -1,5 +1,5 @@
 ﻿window.addEventListener("resize", () => {
-    DotNet.invokeMethodAsync("Circuit.Services", 'OnBrowserResizeAsync').then(data => data);
+    DotNet.invokeMethodAsync("Circuits.Services", 'OnBrowserResizeAsync').then(data => data);
 });
 
 function bchGetBoundingClientRectById(id, param) {
@@ -39,3 +39,5 @@ function bchScrollElementTo(id, x, y, behavior) {
         behavior: behavior // only 'auto' or 'smooth'
     });
 }
+
+

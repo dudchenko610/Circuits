@@ -1,19 +1,23 @@
-﻿<div
+﻿@using System.ComponentModel
+<div
+    id="@_id"
     class="scheme-renderer-container"
-    @onextmousemove="OnMouseMove"
+    @ondrop="OnDrop"
     @onclick="OnContainerClicked"
+    @onmouseup="OnContainerUp"
     @onmousedown="OnContainerDown"
     @onmousedown:stopPropagation="SchemeRendererContext.PencilMode"
-    @onmouseup="OnContainerUp">
+    @onextdragover="OnDragOver"
+    @onextdragover:preventDefault>
 
-    @for (int i = 0; i < 3000 / CellSize + 5; i++)
+    @for (int i = 0; i < 3000 / CellSize + 3; i++)
     {
         <div class="horizontal-delimiter"
-             style="@($"top: calc({CellSize}px * ({i - 5}));")">
+             style="@($"top: calc({CellSize}px * ({i}));")">
         </div>
 
         <div class="vertical-delimiter"
-             style="@($"left: calc({CellSize}px * ({i - 5}));")">
+             style="@($"left: calc({CellSize}px * ({i}));")">
         </div>
     }
 
@@ -25,17 +29,21 @@
 
         <div
             draggable="true"
-            ondragenter="event.preventDefault()"
-            @ondragstart='() => { Console.WriteLine("ondragstart"); }'
-            @ondragend='() => { Console.WriteLine("ondragend"); }'
-            class="@($"wire {(horizontal ? "horizontal" : "vertical")} {(_selectedWire == wire ? "selected" : "")}")"
+            @onclick="() => { OnWireClicked(wire); }"
+            @onclick:stopPropagation
+            onmousedown="event.stopPropagation()"
+            onmousemove="event.preventDefault()"
+            @ondragenter="() => { }"
+            @ondragenter:preventDefault
+            @onextdragstart='() => { OnDragStart(wire); }'
+            @onextdragend='OnDragEnd'
+
+            class="@($"wire {(horizontal ? "horizontal" : "vertical")} {(_selectedWire == wire ? "selected" : "")} {(_draggingWire == wire && _firstDragOver ? "dragging" : "")}")"
             style="@($"left: calc({wire.P1.X * CellSize}px - {horOffset}); top: calc({wire.P1.Y * CellSize}px - {vertOffset}); width: {Math.Abs(wire.P2.X * CellSize - wire.P1.X * CellSize)}px; height: {Math.Abs(wire.P2.Y * CellSize - wire.P1.Y * CellSize)}px;")">
 
+
             <div
-                class="wire-content"
-                @onclick="() => { OnWireClicked(wire); }"
-                @onclick:stopPropagation
-                onmousedown="event.stopPropagation()">
+                class="wire-content">
 
                 <div class="circle"></div>
                 <div class="circle"></div>

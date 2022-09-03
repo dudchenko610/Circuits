@@ -1,4 +1,6 @@
-﻿
+﻿var drgimg = document.createElement("img");
+drgimg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+
 // for Safari and Firefox
 if (!("path" in MouseEvent.prototype)) {
     Object.defineProperty(MouseEvent.prototype, "path", {
@@ -117,3 +119,74 @@ Blazor.registerCustomEventType('extmousewheel', {
         };
     }
 });
+
+Blazor.registerCustomEventType('extdragstart', {
+    browserEventName: 'dragstart',
+    createEventArgs: event => {
+
+        //var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+        event.dataTransfer.effectAllowed = "copyMove";
+        event.dataTransfer.setDragImage(drgimg, 0, 0);
+
+        // setTimeout(function () {
+        //     event.target.setAttribute('dragging', '');
+        // }, 0);
+
+        return {
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            screenX: event.screenX,
+            screenY: event.screenY
+        };
+    }
+});
+
+Blazor.registerCustomEventType('extdragend', {
+    browserEventName: 'dragend',
+    createEventArgs: event => {
+        // event.target.removeAttribute('dragging');
+        return event;
+    }
+});
+
+Blazor.registerCustomEventType('extdragover', {
+    browserEventName: 'dragover',
+    createEventArgs: event => {
+        
+        event.dataTransfer.dropEffect = "copy";
+        const pathCoordinates = getPathCoordinates(event);
+
+        return {
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            screenX: event.screenX,
+            screenY: event.screenY,
+
+            pathCoordinates: pathCoordinates
+        };
+    }
+});
+
+function subscribeOnMouseMove(contextId, dotNetHelper) {
+    const contextElement = document.getElementById(contextId);
+    
+    contextElement.addEventListener('mousemove', (event) => {
+        const pathCoordinates = getPathCoordinates(event);
+        
+        dotNetHelper.invokeMethodAsync('OnMouseMove', {
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            screenX: event.screenX,
+            screenY: event.screenY,
+
+            pathCoordinates: pathCoordinates
+        });
+    });
+}

@@ -7,8 +7,8 @@ public class SchemeRendererContext
         get => _privateMode;
         set
         {
-            OnUpdate?.Invoke(); 
             _privateMode = value;
+            OnUpdate?.Invoke(); 
         }
     }
 
