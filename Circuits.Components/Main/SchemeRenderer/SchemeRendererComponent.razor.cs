@@ -1,11 +1,9 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Circuits.Components.Main.SchemeRenderer.Elements;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
-using Circuits.ViewModels.Rendering;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -29,7 +27,7 @@ public partial class SchemeRendererComponent : IDisposable
     private bool _firstPointSet = false;
     private bool _firstMouseMove = false;
 
-    public event Action OnDragUpdate;
+    public event Action OnDragUpdate = null!;
 
     public Element SelectedElement { get; private set; } = null!;
     public Element DraggingElement { get; private set;  } = null!;
@@ -57,7 +55,7 @@ public partial class SchemeRendererComponent : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine("OnAfterRender SchemeRendererComponent");
+        //Console.WriteLine("OnAfterRender SchemeRendererComponent");
 
         if (firstRender)
         {

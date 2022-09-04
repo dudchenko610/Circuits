@@ -11,7 +11,7 @@ public partial class ElementComponent
     
     protected override void OnInitialized()
     {
-        Console.WriteLine($"OnInitialized");
+        //Console.WriteLine($"OnInitialized");
 
         SchemeRenderer.AddElement(this);
     }

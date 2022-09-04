@@ -1,5 +1,4 @@
-﻿
-using Circuits.ViewModels.Rendering.Scheme;
+﻿using Circuits.ViewModels.Rendering.Scheme;
 
 namespace Circuits.Pages.Main;
 

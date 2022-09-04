@@ -45,7 +45,7 @@ public partial class NavigationPlaneComponent : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine($"OnAfterRender NavigationPlaneComponent {_dragStarted}");
+        //Console.WriteLine($"OnAfterRender NavigationPlaneComponent {_dragStarted}");
         
         if (firstRender)
         {

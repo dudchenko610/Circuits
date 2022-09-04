@@ -1,21 +1,18 @@
 @using Circuits.ViewModels.Entities.Elements
-<div
-    @key="@Wire"
-    draggable="true"
-    @ondragenter="() => { }"
-    @ondragenter:preventDefault
-    @onextdragstart="OnDragStart"
-    @onextdragend="OnDragEnd"
+<div @key="@Wire"
+     draggable="true"
+     @ondragenter="() => { }"
+     @ondragenter:preventDefault
+     @onextdragstart="OnDragStart"
+     @onextdragend="OnDragEnd"
+     class="@($"wire {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == Wire ? "selected" : "")} {(_draggingElement == Wire && _firstDragOver ? "dragging" : "")}")"
+     style="@($"left: calc({Wire.P1.X * CellSize}px - {_horOffset}); top: calc({Wire.P1.Y * CellSize}px - {_verOffset}); width: {Math.Abs(Wire.P2.X * CellSize - Wire.P1.X * CellSize)}px; height: {Math.Abs(Wire.P2.Y * CellSize - Wire.P1.Y * CellSize)}px;")">
 
-    class="@($"wire {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == Wire ? "selected" : "")} {(_draggingElement == Wire && _firstDragOver ? "dragging" : "")}")"
-    style="@($"left: calc({Wire.P1.X * CellSize}px - {_horOffset}); top: calc({Wire.P1.Y * CellSize}px - {_verOffset}); width: {Math.Abs(Wire.P2.X * CellSize - Wire.P1.X * CellSize)}px; height: {Math.Abs(Wire.P2.Y * CellSize - Wire.P1.Y * CellSize)}px;")">
-
-    <div
-        @onclick="OnElementClicked"
-        @onclick:stopPropagation
-        onmousedown="event.stopPropagation()"
-        onmousemove="event.preventDefault()"
-        class="wire-content">
+    <div @onclick="OnElementClicked"
+         @onclick:stopPropagation
+         onmousedown="event.stopPropagation()"
+         onmousemove="event.preventDefault()"
+         class="wire-content">
 
         <div class="circle"></div>
         <div class="circle"></div>
@@ -29,7 +26,7 @@
     var draggingElement = (Wire)_draggingElement;
 
     <div class="@($"wire {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == draggingElement ? "selected" : "")}")"
-         style="@($"left: calc({_draggingPos.X}px - {_horOffset}); top: calc({_draggingPos.Y}px - {_verOffset}); width: {Math.Abs(draggingElement.P2.X * CellSize - draggingElement.P1.X * CellSize)}px; height: {Math.Abs(draggingElement.P2.Y * CellSize - draggingElement.P1.Y * CellSize)}px;")">
+         style="@($"left: calc({_draggingPos.X.ToString(_nF)}px - {_horOffset}); top: calc({_draggingPos.Y.ToString(_nF)}px - {_verOffset}); width: {Math.Abs(draggingElement.P2.X * CellSize - draggingElement.P1.X * CellSize)}px; height: {Math.Abs(draggingElement.P2.Y * CellSize - draggingElement.P1.Y * CellSize)}px;")">
 
         <div class="wire-content">
             <div class="circle"></div>
