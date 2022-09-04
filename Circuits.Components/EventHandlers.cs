@@ -13,8 +13,9 @@ namespace Circuits.Components;
 [EventHandler("onextscroll", typeof(ScrollEventArgs), true, true)]
 
 [EventHandler("onextdragstart", typeof(ExtMouseEventArgs), true, true)]
-[EventHandler("onextdragend", typeof(MouseEventArgs), true, true)]
+[EventHandler("onextdragend", typeof(ExtMouseEventArgs), true, true)]
 [EventHandler("onextdragover", typeof(ExtMouseEventArgs), true, true)]
+[EventHandler("onextdrop", typeof(ExtMouseEventArgs), true, true)]
 public static class EventHandlers
 {
 }

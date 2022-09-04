@@ -6,7 +6,7 @@
     @onmouseup="OnContainerUp"
     @onmousedown="OnContainerDown"
     @onmousedown:stopPropagation="SchemeRendererContext.PencilMode"
-    @ondrop="OnDrop"
+    @onextdrop="OnDrop"
     ondragover="event.preventDefault();">
     
     <div id="@_contentId"
@@ -85,7 +85,7 @@
 
             <div
                 style="@($"left: {(_wirePointerPos.X - 10.0f).ToString(_nF)}px; top: {(_wirePointerPos.Y - 10.0f).ToString(_nF)}px;")"
-                class="wire-pointer">
+                class="@($"wire-pointer {(!_firstMouseMove ? "first" : "")}")">
                 <div class="center"></div>
             </div>
         }

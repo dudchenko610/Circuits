@@ -45,7 +45,7 @@ public partial class NavigationPlaneComponent : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine($"OnAfterRender NavigationPlaneComponent {_dragStarted}");
+        // Console.WriteLine($"OnAfterRender NavigationPlaneComponent {_dragStarted}");
         
         if (firstRender)
         {
@@ -148,7 +148,7 @@ public partial class NavigationPlaneComponent : IDisposable
 
     private void OnMouseDown(MouseEventArgs e)
     {
-        Console.WriteLine("OnMouseDown NavPlane");
+        // Console.WriteLine("OnMouseDown NavPlane");
 
         _lastMousePosition.Set(e.PageX, e.PageY);
         _dragStarted = true;
@@ -157,7 +157,7 @@ public partial class NavigationPlaneComponent : IDisposable
 
     private void OnMouseLeaveUp()
     {
-        Console.WriteLine("OnMouseLeaveUp NavPlane");
+        // Console.WriteLine("OnMouseLeaveUp NavPlane");
         
         _dragStarted = false;
         StateHasChanged();

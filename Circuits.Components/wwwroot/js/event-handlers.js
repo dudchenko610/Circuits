@@ -151,7 +151,18 @@ Blazor.registerCustomEventType('extdragend', {
     browserEventName: 'dragend',
     createEventArgs: event => {
         // event.target.removeAttribute('dragging');
-        return event;
+        const pathCoordinates = getPathCoordinates(event);
+
+        return {
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            screenX: event.screenX,
+            screenY: event.screenY,
+
+            pathCoordinates: pathCoordinates
+        };
     }
 });
 
@@ -160,6 +171,24 @@ Blazor.registerCustomEventType('extdragover', {
     createEventArgs: event => {
         
         event.dataTransfer.dropEffect = "copy";
+        const pathCoordinates = getPathCoordinates(event);
+
+        return {
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            screenX: event.screenX,
+            screenY: event.screenY,
+
+            pathCoordinates: pathCoordinates
+        };
+    }
+});
+
+Blazor.registerCustomEventType('extdrop', {
+    browserEventName: 'drop',
+    createEventArgs: event => {
         const pathCoordinates = getPathCoordinates(event);
 
         return {

@@ -70,6 +70,14 @@ public class Vec2
 
         return this;
     }
+    
+    public Vec2 Subtract(Vec2 other)
+    {
+        this.X -= other.X;
+        this.Y -= other.Y;
+
+        return this;
+    }
 
     public Vec2 Multiply(float scale)
     {

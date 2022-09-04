@@ -44,6 +44,10 @@
     pointer-events: none;
 }
 
+.scheme-renderer-container > .scheme-content > .wire-pointer.first {
+    transition: none;
+}
+
 .scheme-renderer-container > .scheme-content > .wire-pointer > .center {
     width: 5px;
     height: 5px;
@@ -56,14 +60,6 @@
     background: #abadbb;
 }
 
-.scheme-renderer-container > .scheme-content > .wire > .wire-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .scheme-renderer-container > .scheme-content > .wire:hover {
     box-shadow: 0px 0px 7px 1px #CED3E0;
 }
@@ -72,8 +68,19 @@
     opacity: 0.3;
 }
 
-.scheme-renderer-container > .scheme-content > .wire:hover > .wire-content  > .circle {
-    box-shadow: 0px 0px 7px 1px #CED3E0;
+.scheme-renderer-container > .scheme-content > .wire > .wire-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.scheme-renderer-container > .scheme-content > .wire > .wire-content  > .circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #CED3E0;
 }
 
 .scheme-renderer-container > .scheme-content > .wire.selected > .wire-content  {
@@ -88,11 +95,8 @@
     z-index: 100;
 }
 
-.scheme-renderer-container > .scheme-content > .wire > .wire-content  > .circle {
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: #CED3E0;
+.scheme-renderer-container > .scheme-content > .wire:hover > .wire-content  > .circle {
+    box-shadow: 0px 0px 7px 1px #CED3E0;
 }
 
 .scheme-renderer-container > .scheme-content > .wire.horizontal {
