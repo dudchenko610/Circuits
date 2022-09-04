@@ -29,6 +29,8 @@ public partial class SchemeRendererComponent : IDisposable
     private bool _firstPointSet = false;
     private bool _firstMouseMove = false;
 
+    public event Action OnDragUpdate;
+
     public Element SelectedElement { get; private set; } = null!;
     public Element DraggingElement { get; private set;  } = null!;
     public bool FirstDragOver { get; private set; } = false;
@@ -55,7 +57,7 @@ public partial class SchemeRendererComponent : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Console.WriteLine("OnAfterRender SchemeRendererComponent");
+        Console.WriteLine("OnAfterRender SchemeRendererComponent");
 
         if (firstRender)
         {
@@ -184,7 +186,7 @@ public partial class SchemeRendererComponent : IDisposable
         if (!FirstDragOver) FirstDragOver = true;
 
         DraggingPos.Set((container.X - _draggingPosOffset.X) / Scale, (container.Y - _draggingPosOffset.Y) / Scale);
-        StateHasChanged();
+        OnDragUpdate?.Invoke();
     }
 
     private void OnDrop(ExtMouseEventArgs e)
