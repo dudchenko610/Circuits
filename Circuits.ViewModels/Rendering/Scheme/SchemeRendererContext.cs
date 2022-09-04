@@ -1,7 +1,8 @@
-namespace Circuits.ViewModels.Rendering;
+namespace Circuits.ViewModels.Rendering.Scheme;
 
 public class SchemeRendererContext
 {
+    public const int CellSize = 30;
     public bool PencilMode
     {
         get => _privateMode;

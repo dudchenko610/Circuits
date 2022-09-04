@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Circuits.ViewModels.Entities.Elements
 
 <div class="main-page-cnt">
     <div class="navigation">
@@ -12,7 +13,15 @@
         
                 <SchemeRendererComponent
                     SchemeRendererContext="_context"
-                    Scale="_navCtx.Scale"/>
+                    Scale="_navCtx.Scale">
+                    
+                    <ElementComponent Key="typeof(Wire)">
+                        <Template Context="element">
+                            <WireComponent Wire="(Wire) element"/>
+                        </Template>
+                    </ElementComponent>
+                    
+                </SchemeRendererComponent>
         
             </ContentTemplate>
         

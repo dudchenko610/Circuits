@@ -1,10 +1,11 @@
-﻿using Circuits.ViewModels.Rendering;
+﻿
+using Circuits.ViewModels.Rendering.Scheme;
 
 namespace Circuits.Pages.Main;
 
 public partial class MainPage : IDisposable
 {
-    private SchemeRendererContext _context = new();
+    private readonly SchemeRendererContext _context = new();
 
     protected override void OnInitialized()
     {

@@ -31,4 +31,8 @@
   <ItemGroup>
     <None Remove="Main\SchemeRenderer\" />
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Main\SchemeRenderer\Wire\WireComponent.razor" />
+    <_ContentIncludedByDefault Remove="Main\SchemeRenderer\WireE\WireComponent.razor" />
+  </ItemGroup>
 </Project>

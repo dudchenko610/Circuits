@@ -1,54 +1,56 @@
 ﻿using System;
 using System.Globalization;
+using Circuits.Components.Main.SchemeRenderer.Elements;
+using Circuits.Services.Services.Interfaces;
+using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering;
+using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace Circuits.Components.Main.SchemeRenderer;
 
-class Point
-{
-    public int X { get; set; }
-    public int Y { get; set; }
-}
-
-class Wire
-{
-    public Point P1 { get; set; } = new();
-    public Point P2 { get; set; } = new();
-}
-
 public partial class SchemeRendererComponent : IDisposable
 {
     [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
+    [Inject] private ISchemeService _schemeService { get; set; } = null!;
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
     [Parameter] public SchemeRendererContext SchemeRendererContext { get; set; } = null!;
     [Parameter] public float Scale { get; set; } = 1.0f;
 
-    private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
-    private Vec2 _wirePointerPos = new(-99999, -99999);
-    private const int CellSize = 30;
+    private int CellSize => SchemeRendererContext.CellSize;
 
-    private List<Wire> _wires = new();
+    private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
+    private Vec2 _elementPointerPos = new(-99999, -99999);
 
     private Vec2 _firstPointPos = new();
     private bool _firstPointSet = false;
     private bool _firstMouseMove = false;
 
-    private Wire _selectedWire = null!;
-    private Wire _draggingWire = null!;
-    private bool _firstDragOver = false;
-    private Vec2 _draggingPos = new();
+    public Element SelectedElement { get; private set; } = null!;
+    public Element DraggingElement { get; private set;  } = null!;
+    public bool FirstDragOver { get; private set; } = false;
+
+    public Vec2 DraggingPos { get; } = new();
     private Vec2 _draggingPosOffset = new();
 
     private readonly string _id = $"_id_{Guid.NewGuid()}";
     private readonly string _contentId = $"_id_{Guid.NewGuid()}";
     private DotNetObjectReference<SchemeRendererComponent> _dotNetObjectReference = null!;
 
+    private Dictionary<Type, ElementComponent> _elementComponents = new();
+
     protected override void OnInitialized()
     {
         SchemeRendererContext.OnUpdate += Update;
+    }
+    
+    public void Dispose()
+    {
+        _dotNetObjectReference?.Dispose();
+        SchemeRendererContext.OnUpdate -= Update;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -63,34 +65,20 @@ public partial class SchemeRendererComponent : IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        _dotNetObjectReference?.Dispose();
-        SchemeRendererContext.OnUpdate -= Update;
-    }
-
     private void Update()
     {
         if (!SchemeRendererContext.PencilMode)
         {
-            _wirePointerPos.Set(-99999, -99999);
+            _elementPointerPos.Set(-99999, -99999);
             _firstPointSet = false;
             _firstMouseMove = false;
         }
 
-        _selectedWire = null!;
+        SelectedElement = null!;
 
         StateHasChanged();
     }
-
-    private void OnWireClicked(Wire wire)
-    {
-        Console.WriteLine("OnWireClicked");
-
-        _selectedWire = wire;
-        StateHasChanged();
-    }
-
+    
     [JSInvokable]
     public void OnMouseMove(ExtMouseEventArgs e)
     {
@@ -111,11 +99,11 @@ public partial class SchemeRendererComponent : IDisposable
             int posX = (int)(schemeRendererContainer.X / CellSize) * CellSize + CellSize;
             int posY = (int)(schemeRendererContainer.Y / CellSize) * CellSize + CellSize;
 
-            if (_wirePointerPos.X != posX || _wirePointerPos.Y != posY)
+            if (_elementPointerPos.X != posX || _elementPointerPos.Y != posY)
             {
-                if ((int) _wirePointerPos.X != -99999) _firstMouseMove = true;
+                if ((int) _elementPointerPos.X != -99999) _firstMouseMove = true;
                 
-                _wirePointerPos.Set(posX, posY);
+                _elementPointerPos.Set(posX, posY);
                 StateHasChanged();
             }
         }
@@ -127,9 +115,9 @@ public partial class SchemeRendererComponent : IDisposable
 
     private void OnContainerClicked()
     {
-        if (_selectedWire == null!) return;
+        if (SelectedElement == null!) return;
 
-        _selectedWire = null!;
+        SelectedElement = null!;
         StateHasChanged();
     }
 
@@ -138,7 +126,7 @@ public partial class SchemeRendererComponent : IDisposable
         if (!SchemeRendererContext.PencilMode || _firstPointSet) return false;
 
         _firstPointSet = true;
-        _firstPointPos.Set(_wirePointerPos);
+        _firstPointPos.Set(_elementPointerPos);
         StateHasChanged();
 
         return true;
@@ -148,41 +136,33 @@ public partial class SchemeRendererComponent : IDisposable
     {
         if (SchemeRendererContext.PencilMode && _firstPointSet)
         {
-            var p1 = new Point()
-            {
-                X = (int)_firstPointPos.X / CellSize,
-                Y = (int)_firstPointPos.Y / CellSize
-            };
+            var p1 = new Vec2((int)_firstPointPos.X / CellSize, (int)_firstPointPos.Y / CellSize);
+            var p2 = new Vec2((int)_elementPointerPos.X / CellSize, (int)_elementPointerPos.Y / CellSize);
 
-            var p2 = new Point()
-            {
-                X = (int)_wirePointerPos.X / CellSize,
-                Y = (int)_wirePointerPos.Y / CellSize
-            };
-
-            if (p1.Y == p2.Y && p1.X == p2.X)
+            if ((int) p1.Y == (int) p2.Y && (int) p1.X == (int) p2.X)
                 return false;
 
-            if (p1.X == p2.X)
+            // Pizdec below
+            if ((int) p1.X == (int) p2.X)
             {
                 if (p1.Y < p2.Y)
                 {
-                    _wires.Add(new Wire { P1 = p1, P2 = p2 });
+                    _schemeService.Add(new Wire { P1 = p1, P2 = p2 });
                 }
                 else
                 {
-                    _wires.Add(new Wire { P1 = p2, P2 = p1 });
+                    _schemeService.Add(new Wire { P1 = p2, P2 = p1 });
                 }
             }
             else if (p1.Y == p2.Y)
             {
                 if (p1.X < p2.X)
                 {
-                    _wires.Add(new Wire { P1 = p1, P2 = p2 });
+                    _schemeService.Add(new Wire { P1 = p1, P2 = p2 });
                 }
                 else
                 {
-                    _wires.Add(new Wire { P1 = p2, P2 = p1 });
+                    _schemeService.Add(new Wire { P1 = p2, P2 = p1 });
                 }
             }
 
@@ -201,9 +181,9 @@ public partial class SchemeRendererComponent : IDisposable
             .FirstOrDefault(x => x.ClassList.Contains("scheme-renderer-container"));
 
         if (container is null) return;
-        if (!_firstDragOver) _firstDragOver = true;
+        if (!FirstDragOver) FirstDragOver = true;
 
-        _draggingPos.Set((container.X - _draggingPosOffset.X) / Scale, (container.Y - _draggingPosOffset.Y) / Scale);
+        DraggingPos.Set((container.X - _draggingPosOffset.X) / Scale, (container.Y - _draggingPosOffset.Y) / Scale);
         StateHasChanged();
     }
 
@@ -214,32 +194,24 @@ public partial class SchemeRendererComponent : IDisposable
         var container = e.PathCoordinates
             .FirstOrDefault(x => x.ClassList.Contains("scheme-renderer-container"));
 
-        var dS = new Vec2(
-            (int)((container.X - _draggingPosOffset.X) / Scale + 0.5f * CellSize) / CellSize,
-            (int)((container.Y - _draggingPosOffset.Y) / Scale + 0.5f * CellSize) / CellSize
-        ).Add(-_draggingWire.P1.X, -_draggingWire.P1.Y);
-
-        _wires.Remove(_draggingWire);
-        _wires.Add(new Wire
+        if (container is not null)
         {
-            P1 = new Point()
-            {
-                X = (int) (_draggingWire.P1.X + dS.X),
-                Y = (int) (_draggingWire.P1.Y + dS.Y)
-            },
-            P2 = new Point()
-            {
-                X = (int) (_draggingWire.P2.X + dS.X),
-                Y = (int) (_draggingWire.P2.Y + dS.Y)
-            }
-        });
+            var dS = new Vec2(
+                (int)((container.X - _draggingPosOffset.X) / Scale + 0.5f * CellSize) / CellSize,
+                (int)((container.Y - _draggingPosOffset.Y) / Scale + 0.5f * CellSize) / CellSize
+            ).Add(-DraggingElement.Points[0].X, -DraggingElement.Points[0].Y);
 
-        _firstDragOver = false;
-        _draggingWire = null!;
+            _schemeService.Remove(DraggingElement);
+            DraggingElement.Translate(dS);
+            _schemeService.Add(DraggingElement);
+        }
+
+        FirstDragOver = false;
+        DraggingElement = null!;
         StateHasChanged();
     }
 
-    private void OnDragStart(ExtMouseEventArgs e, Wire wire)
+    public void OnDragStart(ExtMouseEventArgs e, Wire wire)
     {
         var wireCnt = e.PathCoordinates
             .FirstOrDefault(x => x.ClassList.Contains("wire"));
@@ -247,16 +219,16 @@ public partial class SchemeRendererComponent : IDisposable
         if (wireCnt == null) return;
 
         _draggingPosOffset.Set(wireCnt.X, wireCnt.Y);
-        _draggingWire = wire;
+        DraggingElement = wire;
 
         // Console.WriteLine($"on-drag-start X: {wireCnt.X}, Y: {wireCnt.Y}");
     }
 
-    private void OnDragEnd(ExtMouseEventArgs e)
+    public void OnDragEnd(ExtMouseEventArgs e)
     {
         // Console.WriteLine($"on-drag-end");
 
-        if (_firstDragOver)
+        if (FirstDragOver)
         {
             var container = e.PathCoordinates
                 .FirstOrDefault(x => x.ClassList.Contains("scheme-renderer-container"));
@@ -264,10 +236,7 @@ public partial class SchemeRendererComponent : IDisposable
             if (container != null)
             {
                 var lastPos = new Vec2();
-                lastPos
-                    .Set(_draggingPos)
-                    .Multiply(Scale)
-                    .Add(_draggingPosOffset);
+                lastPos.Set(DraggingPos).Multiply(Scale).Add(_draggingPosOffset);
 
                 container.X = lastPos.X;
                 container.Y = lastPos.Y;
@@ -277,8 +246,21 @@ public partial class SchemeRendererComponent : IDisposable
             }
         }
 
-        _firstDragOver = false;
-        _draggingWire = null!;
+        FirstDragOver = false;
+        DraggingElement = null!;
         StateHasChanged();
+    }
+
+    public void OnElementClicked(Element element)
+    {
+        SelectedElement = element;
+        StateHasChanged();
+    }
+
+    public void AddElement(ElementComponent element)
+    {
+        if (_elementComponents.TryGetValue(element.Key, out _)) return;
+        
+        _elementComponents.Add(element.Key, element);
     }
 }
