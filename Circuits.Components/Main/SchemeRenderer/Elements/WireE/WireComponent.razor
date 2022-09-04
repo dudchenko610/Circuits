@@ -1,5 +1,6 @@
 @using Circuits.ViewModels.Entities.Elements
 <div
+    @key="@Wire"
     draggable="true"
     @ondragenter="() => { }"
     @ondragenter:preventDefault
@@ -23,16 +24,12 @@
 
 </div>
 
-@if (_firstDragOver)
+@if (_draggingElement == Wire && _firstDragOver)
 {
     var draggingElement = (Wire)_draggingElement;
 
-    var horizontal = (int)draggingElement.P1.Y == (int)draggingElement.P2.Y;
-    var horOffset = !horizontal ? "1.5px" : "0px";
-    var vertOffset = horizontal ? "1.5px" : "0px";
-
-    <div class="@($"wire {(horizontal ? "horizontal" : "vertical")} {(_selectedElement == draggingElement ? "selected" : "")}")"
-         style="@($"left: calc({_draggingPos.X}px - {horOffset}); top: calc({_draggingPos.Y}px - {vertOffset}); width: {Math.Abs(draggingElement.P2.X * CellSize - draggingElement.P1.X * CellSize)}px; height: {Math.Abs(draggingElement.P2.Y * CellSize - draggingElement.P1.Y * CellSize)}px;")">
+    <div class="@($"wire {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == draggingElement ? "selected" : "")}")"
+         style="@($"left: calc({_draggingPos.X}px - {_horOffset}); top: calc({_draggingPos.Y}px - {_verOffset}); width: {Math.Abs(draggingElement.P2.X * CellSize - draggingElement.P1.X * CellSize)}px; height: {Math.Abs(draggingElement.P2.Y * CellSize - draggingElement.P1.Y * CellSize)}px;")">
 
         <div class="wire-content">
             <div class="circle"></div>

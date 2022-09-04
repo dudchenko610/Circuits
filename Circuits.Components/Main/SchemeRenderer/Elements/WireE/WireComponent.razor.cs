@@ -20,8 +20,8 @@ public partial class WireComponent
     private bool _horizontal = false;
     private string _horOffset = "0px";
     private string _verOffset = "0px";
-
-    protected override void OnInitialized()
+    
+    protected override void OnParametersSet()
     {
         _horizontal = (int)Wire.P1.Y == (int)Wire.P2.Y;
         _horOffset = !_horizontal ? "1.5px" : "0px";
