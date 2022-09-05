@@ -17,11 +17,11 @@ public partial class WireComponent : IDisposable
     private Element _draggingElement => SchemeRenderer?.DraggingElement!;
     private Vec2 _draggingPos => SchemeRenderer?.DraggingPos!;
     private bool _firstDragOver => SchemeRenderer == null ? false : SchemeRenderer.FirstDragOver;
+    private bool _dragAllowed => SchemeRenderer.SchemeRendererContext.PencilMode;
+    private bool _eventsDisabled => SchemeRenderer.SchemeRendererContext.PencilMode;
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private bool _horizontal = false;
-    private string _horOffset = "0px";
-    private string _verOffset = "0px";
 
     // protected override void OnAfterRender(bool firstRender)
     // {
@@ -49,8 +49,6 @@ public partial class WireComponent : IDisposable
     protected override void OnParametersSet()
     {
         _horizontal = (int)Wire.P1.Y == (int)Wire.P2.Y;
-        // _horOffset = !_horizontal ? "1.75px" : "0px"; 
-        // _verOffset = _horizontal ? "1.75px" : "0px";
     }
 
     private void OnDragStart(ExtMouseEventArgs e)

@@ -2,10 +2,15 @@
 .wire {
     position: absolute;
     background: #abadbb;
+    z-index: 80;
 }
 
 .wire:hover {
     box-shadow: 0px 0px 7px 1px #CED3E0;
+}
+
+.wire.disabled {
+    pointer-events: none;
 }
 
 .wire.dragging {
@@ -25,18 +30,20 @@
     height: 8px;
     border-radius: 4px;
     background: #CED3E0;
+    box-shadow: 0px 0px 7px 1px #CED3E000;
+    z-index: 100;
 }
 
 .wire.selected > .wire-content  {
     box-shadow: 0px 0px 7px 1px #e5a4aa;
     background: #e5a4aa;
-    z-index: 100;
+    z-index: 90;
 }
 
 .wire.selected > .wire-content  > .circle {
     box-shadow: 0px 0px 7px 1px #e5a4aa;
     background: #e8c5c9;
-    z-index: 100;
+    z-index: 110;
 }
 
 .wire:hover > .wire-content > .circle {

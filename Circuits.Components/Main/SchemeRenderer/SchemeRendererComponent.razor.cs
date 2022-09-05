@@ -200,10 +200,18 @@ public partial class SchemeRendererComponent : IDisposable
                 (int)((container.X - _draggingPosOffset.X) / Scale + 0.5f * CellSize) / CellSize,
                 (int)((container.Y - _draggingPosOffset.Y) / Scale + 0.5f * CellSize) / CellSize
             ).Add(-DraggingElement.Points[0].X, -DraggingElement.Points[0].Y);
-
-            _schemeService.Remove(DraggingElement);
+            
             DraggingElement.Translate(dS);
-            _schemeService.Add(DraggingElement);
+            
+            if (!_schemeService.Intersects(DraggingElement))
+            {
+                _schemeService.Remove(DraggingElement);
+                _schemeService.Add(DraggingElement);
+            }
+            else
+            {
+                DraggingElement.Translate(dS.Multiply(-1));
+            }
         }
 
         FirstDragOver = false;
