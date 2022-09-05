@@ -41,14 +41,14 @@
                 @if (_firstPointSet)
                 {
                     <div
-                        style="@($"left: {(_firstPointPos.X - 10.0f).ToString(_nF)}px; top: {(_firstPointPos.Y - 10.0f).ToString(_nF)}px;")"
+                        style="@($"left: calc({(_firstPointPos.X - 10.0f).ToString(_nF)}px + 1.75px); top: calc({(_firstPointPos.Y - 10.0f).ToString(_nF)}px + 1.75px);")"
                         class="wire-pointer">
                         <div class="center"></div>
                     </div>
                 }
 
                 <div
-                    style="@($"left: {(_elementPointerPos.X - 10.0f).ToString(_nF)}px; top: {(_elementPointerPos.Y - 10.0f).ToString(_nF)}px;")"
+                    style="@($"left: calc({(_elementPointerPos.X - 10.0f).ToString(_nF)}px + 1.75px); top: calc({(_elementPointerPos.Y - 10.0f).ToString(_nF)}px + 1.75px);")"
                     class="@($"wire-pointer {(!_firstMouseMove ? "first" : "")}")">
                     <div class="center"></div>
                 </div>

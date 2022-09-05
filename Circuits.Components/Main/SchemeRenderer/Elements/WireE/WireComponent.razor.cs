@@ -49,8 +49,8 @@ public partial class WireComponent : IDisposable
     protected override void OnParametersSet()
     {
         _horizontal = (int)Wire.P1.Y == (int)Wire.P2.Y;
-        _horOffset = !_horizontal ? "1.5px" : "0px";
-        _verOffset = _horizontal ? "1.5px" : "0px";
+        // _horOffset = !_horizontal ? "1.75px" : "0px"; 
+        // _verOffset = _horizontal ? "1.75px" : "0px";
     }
 
     private void OnDragStart(ExtMouseEventArgs e)
