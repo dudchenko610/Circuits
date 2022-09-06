@@ -2,6 +2,7 @@
 .wire {
     position: absolute;
     background: #abadbb;
+    box-shadow: 0px 0px 7px 1px #CED3E000;
     z-index: 80;
 }
 
@@ -11,6 +12,10 @@
 
 .wire.disabled {
     pointer-events: none;
+}
+
+.wire.dragged {
+    z-index: 1000;
 }
 
 .wire.dragging {

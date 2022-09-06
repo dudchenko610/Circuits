@@ -18,7 +18,7 @@ public partial class SchemeRendererComponent : IDisposable
     [Parameter] public SchemeRendererContext SchemeRendererContext { get; set; } = null!;
     [Parameter] public float Scale { get; set; } = 1.0f;
 
-    private int CellSize => SchemeRendererContext.CellSize;
+    private static int CellSize => SchemeRendererContext.CellSize;
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private Vec2 _elementPointerPos = new(-99999, -99999);
@@ -142,31 +142,24 @@ public partial class SchemeRendererComponent : IDisposable
             if ((int) p1.Y == (int) p2.Y && (int) p1.X == (int) p2.X)
                 return false;
 
-            // Pizdec below
+            Wire wire = null!;
+            
             if ((int) p1.X == (int) p2.X)
             {
-                if (p1.Y < p2.Y)
-                {
-                    _schemeService.Add(new Wire { P1 = p1, P2 = p2 });
-                }
-                else
-                {
-                    _schemeService.Add(new Wire { P1 = p2, P2 = p1 });
-                }
+                wire = p1.Y < p2.Y ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
             }
-            else if (p1.Y == p2.Y)
+            else if ((int) p1.Y == (int) p2.Y)
             {
-                if (p1.X < p2.X)
-                {
-                    _schemeService.Add(new Wire { P1 = p1, P2 = p2 });
-                }
-                else
-                {
-                    _schemeService.Add(new Wire { P1 = p2, P2 = p1 });
-                }
+                wire = p1.X < p2.X ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
             }
 
-            SchemeRendererContext.PencilMode = false;
+            if (wire is not null && !_schemeService.Intersects(wire))
+            {
+                _schemeService.Add(wire);
+                SchemeRendererContext.PencilMode = false;
+            }
+
+            _firstPointSet = false;
 
             return true;
         }
@@ -205,7 +198,9 @@ public partial class SchemeRendererComponent : IDisposable
             
             if (!_schemeService.Intersects(DraggingElement))
             {
+                DraggingElement.Translate(dS.Multiply(-1));
                 _schemeService.Remove(DraggingElement);
+                DraggingElement.Translate(dS.Multiply(-1));
                 _schemeService.Add(DraggingElement);
             }
             else

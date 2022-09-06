@@ -2,14 +2,14 @@ using Circuits.ViewModels.Math;
 
 namespace Circuits.ViewModels.Entities.Elements;
 
-public class Element
+public abstract class Element
 {
     public IReadOnlyList<Vec2> Points { get; }
-    protected List<Vec2> _points;
+    protected readonly List<Vec2> _points;
 
-    public Element()
+    protected Element()
     {
-        _points = new();
+        _points = new List<Vec2>();
         Points = _points;
     }
 
@@ -20,4 +20,6 @@ public class Element
             point.Add(dS);
         }
     }
+
+    public abstract bool IsHorizontal(Vec2 point = null!);
 }
