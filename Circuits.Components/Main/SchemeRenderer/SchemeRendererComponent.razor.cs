@@ -214,10 +214,10 @@ public partial class SchemeRendererComponent : IDisposable
         StateHasChanged();
     }
 
-    public void OnDragStart(ExtMouseEventArgs e, Wire wire)
+    public void OnDragStart(ExtMouseEventArgs e, Element wire)
     {
         var wireCnt = e.PathCoordinates
-            .FirstOrDefault(x => x.ClassList.Contains("wire"));
+            .FirstOrDefault(x => x.ClassList.Contains("element"));
 
         if (wireCnt == null) return;
 

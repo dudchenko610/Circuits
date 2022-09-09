@@ -16,7 +16,19 @@ public class SchemeService : ISchemeService
     public IReadOnlyList<Element> Elements { get; }
 
     public event Action? OnUpdate;
-    private readonly List<Element> _elements = new();
+
+    private readonly List<Element> _elements = new()
+    {
+        new Resistor
+        {
+            Direction = Direction.RIGHT,
+            P1 = new Vec2
+            {
+                X = 10,
+                Y = 10
+            }
+        }
+    };
 
     private Dictionary<int, List<NodeData>> _nodesHashMap = new();
 
@@ -39,35 +51,37 @@ public class SchemeService : ISchemeService
         if (element is Wire wire)
         {
             var isHorizontal = wire.IsHorizontal();
-            
+
             // 3. Join parallel
-            
-            var hashCodeP1 = ((int) wire.P1.X << 16) | (int) wire.P1.Y;
-            var hashCodeP2 = ((int) wire.P2.X << 16) | (int) wire.P2.Y;
+
+            var hashCodeP1 = ((int)wire.P1.X << 16) | (int)wire.P1.Y;
+            var hashCodeP2 = ((int)wire.P2.X << 16) | (int)wire.P2.Y;
             var nodeDataListP1 = GetNodeData(hashCodeP1);
             var nodeDataListP2 = GetNodeData(hashCodeP2);
 
-            if (nodeDataListP1.Count == 1 && nodeDataListP1[0].Element is Wire leftWire && nodeDataListP1[0].Element.IsHorizontal() == isHorizontal)
+            if (nodeDataListP1.Count == 1 && nodeDataListP1[0].Element is Wire leftWire &&
+                nodeDataListP1[0].Element.IsHorizontal() == isHorizontal)
             {
                 wire.P1.Set(leftWire.P1);
                 RemoveWithoutCheck(leftWire);
             }
-            
-            if (nodeDataListP2.Count == 1 && nodeDataListP2[0].Element is Wire rightWire && nodeDataListP2[0].Element.IsHorizontal() == isHorizontal)
+
+            if (nodeDataListP2.Count == 1 && nodeDataListP2[0].Element is Wire rightWire &&
+                nodeDataListP2[0].Element.IsHorizontal() == isHorizontal)
             {
                 wire.P2.Set(rightWire.P2);
                 RemoveWithoutCheck(rightWire);
             }
 
             // 4. Separate by others wires
-            
+
             var dividePoints = new List<Vec2>();
 
             if (isHorizontal)
             {
-                for (var i = (int) wire.P1.X + 1; i < (int) wire.P2.X; i ++)
+                for (var i = (int)wire.P1.X + 1; i < (int)wire.P2.X; i++)
                 {
-                    var hashCode = (i << 16) | (int) wire.P1.Y;
+                    var hashCode = (i << 16) | (int)wire.P1.Y;
                     var nodeDataList = GetNodeData(hashCode);
 
                     if (nodeDataList.Count == 0) continue;
@@ -78,9 +92,9 @@ public class SchemeService : ISchemeService
             }
             else
             {
-                for (var i = (int) wire.P1.Y + 1; i < (int) wire.P2.Y; i ++)
+                for (var i = (int)wire.P1.Y + 1; i < (int)wire.P2.Y; i++)
                 {
-                    var hashCode = ((int) wire.P1.X << 16) | i;
+                    var hashCode = ((int)wire.P1.X << 16) | i;
                     var nodeDataList = GetNodeData(hashCode);
 
                     if (nodeDataList.Count == 0) continue;
@@ -89,7 +103,7 @@ public class SchemeService : ISchemeService
                     dividePoints.Add(new Vec2(wire.P1.X, i));
                 }
             }
-            
+
             dividePoints.Insert(0, wire.P1);
             dividePoints.Add(wire.P2);
 
@@ -148,7 +162,8 @@ public class SchemeService : ISchemeService
 
                         break;
                     }
-                    else if ((int)point.Y == (int)existingWire.P1.Y && point.X > existingWire.P1.X && point.X < existingWire.P2.X)
+                    else if ((int)point.Y == (int)existingWire.P1.Y && point.X > existingWire.P1.X &&
+                             point.X < existingWire.P2.X)
                     {
                         RemoveWithoutCheck(existingWire);
 
@@ -185,14 +200,14 @@ public class SchemeService : ISchemeService
     public void Remove(Element element)
     {
         RemoveWithoutCheck(element);
-        
+
         foreach (var point in element.Points)
         {
             var hashCode = ((int)point.X << 16) | (int)point.Y;
             var nodeDataList = GetNodeData(hashCode);
 
-            if (nodeDataList.Count == 2 && 
-                nodeDataList[0].Element is Wire w1 && nodeDataList[1].Element is Wire w2 && 
+            if (nodeDataList.Count == 2 &&
+                nodeDataList[0].Element is Wire w1 && nodeDataList[1].Element is Wire w2 &&
                 w1.IsHorizontal() == w2.IsHorizontal())
             {
                 if (nodeDataList[0].PointIndex == 0)
