@@ -2,6 +2,12 @@ using Circuits.ViewModels.Math;
 
 namespace Circuits.ViewModels.Entities.Elements;
 
+public enum Direction
+{
+    RIGHT,
+    BOTTOM
+}
+
 public abstract class Element
 {
     public IReadOnlyList<Vec2> Points { get; }

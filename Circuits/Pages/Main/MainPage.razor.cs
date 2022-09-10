@@ -26,16 +26,10 @@ public partial class MainPage : IDisposable
         _context.OnUpdate -= StateHasChanged;
     }
     
-    private void OnPenClicked()
+    private void OnPenClicked(int mode)
     {
         _context.PencilMode = !_context.PencilMode;
-        _mode = 0;
-    }
-    
-    private void OnResistorClicked()
-    {
-        _context.PencilMode = !_context.PencilMode;
-        _mode = 1;
+        _mode = mode;
     }
 
     private void OnFirstPointSet(Vec2 firstPoint)
@@ -48,56 +42,63 @@ public partial class MainPage : IDisposable
         var p1 = new Vec2((int)_firstPoint.X / CellSize, (int)_firstPoint.Y / CellSize);
         var p2 = new Vec2((int)secondPoint.X / CellSize, (int)secondPoint.Y / CellSize);
 
+        Element element = null;
+        
         switch (_mode)
         {
             case 0:
             {
-                Wire wire = null!;
-        
                 if ((int) p1.X == (int) p2.X)
                 {
-                    wire = p1.Y < p2.Y ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
+                    element = p1.Y < p2.Y ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
                 }
                 else if ((int) p1.Y == (int) p2.Y)
                 {
-                    wire = p1.X < p2.X ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
+                    element = p1.X < p2.X ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
                 }
-        
-                if (wire is not null && !_schemeService.Intersects(wire))
-                {
-                    _schemeService.Add(wire);
-                    _context.PencilMode = false;
-                }
-                
+
                 break;
             }
             case 1:
             {
-                Resistor resistor = null!;
-                
                 if ((int) p1.X == (int) p2.X)
                 {
-                    resistor = p1.Y < p2.Y ? 
+                    element = p1.Y < p2.Y ? 
                         new Resistor { Direction = Direction.BOTTOM, P1 = p1 } : 
                         new Resistor { Direction = Direction.BOTTOM, P1 = p1.Add(0, -2) };
                 }
                 else if ((int) p1.Y == (int) p2.Y)
                 {
-                    resistor = p1.X < p2.X ? 
+                    element = p1.X < p2.X ? 
                         new Resistor { Direction = Direction.RIGHT, P1 = p1 } : 
                         new Resistor { Direction = Direction.RIGHT, P1 = p1.Add(-2, 0) };
                 }
-                
-                if (resistor != null && !_schemeService.Intersects(resistor))
+ 
+                break;
+            }
+            case 2:
+            {
+                if ((int) p1.X == (int) p2.X)
                 {
-                    _schemeService.Add(resistor);
-                    _context.PencilMode = false;
+                    element = p1.Y < p2.Y ? 
+                        new Capacitor { Direction = Direction.BOTTOM, P1 = p1 } : 
+                        new Capacitor { Direction = Direction.BOTTOM, P1 = p1.Add(0, -2) };
                 }
-                
+                else if ((int) p1.Y == (int) p2.Y)
+                {
+                    element = p1.X < p2.X ? 
+                        new Capacitor { Direction = Direction.RIGHT, P1 = p1 } : 
+                        new Capacitor { Direction = Direction.RIGHT, P1 = p1.Add(-2, 0) };
+                }
+
                 break;
             }
         }
         
-
+        if (element is not null && !_schemeService.Intersects(element))
+        {
+            _schemeService.Add(element);
+            _context.PencilMode = false;
+        }
     }
 }

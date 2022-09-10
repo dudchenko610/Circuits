@@ -86,15 +86,17 @@
     z-index: 90;
 }
 
-.resistor.selected > .resistor-content > .circle {
-    box-shadow: 0px 0px 7px 1px #e5a4aa;
-    background: #e8c5c9;
-    z-index: 110;
-}
+
 
 .resistor:hover > .resistor-content > .block,
 .resistor:hover > .resistor-content > .circle {
     box-shadow: 0px 0px 7px 1px #CED3E0;
+}
+
+.resistor.selected > .resistor-content > .circle {
+    box-shadow: 0px 0px 7px 1px #e5a4aa;
+    background: #e8c5c9;
+    z-index: 110;
 }
 
 .resistor.horizontal {

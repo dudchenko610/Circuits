@@ -2,7 +2,7 @@ using Circuits.ViewModels.Math;
 
 namespace Circuits.ViewModels.Entities.Elements;
 
-public class Resistor : Element
+public class Capacitor : Element
 {
     public Vec2 P1
     {
@@ -20,7 +20,7 @@ public class Resistor : Element
 
     public Direction Direction { get; init; } = Direction.RIGHT;
 
-    public Resistor()
+    public Capacitor()
     {
         _points.Add(new Vec2());
         _points.Add(new Vec2());

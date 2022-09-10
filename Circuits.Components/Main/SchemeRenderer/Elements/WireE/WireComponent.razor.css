@@ -45,14 +45,14 @@
     z-index: 90;
 }
 
+.wire:hover > .wire-content > .circle {
+    box-shadow: 0px 0px 7px 1px #CED3E0;
+}
+
 .wire.selected > .wire-content  > .circle {
     box-shadow: 0px 0px 7px 1px #e5a4aa;
     background: #e8c5c9;
     z-index: 110;
-}
-
-.wire:hover > .wire-content > .circle {
-    box-shadow: 0px 0px 7px 1px #CED3E0;
 }
 
 .wire.horizontal {

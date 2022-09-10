@@ -6,8 +6,9 @@
         <NavigationPlaneComponent>
 
             <ControlTemplate>
-                <div @onclick="OnResistorClicked" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 1 ? "activated" : "")">R</div>
-                <div @onclick="OnPenClicked" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 0 ? "activated" : "")">W</div>
+                <div @onclick="() => { OnPenClicked(2); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 2 ? "activated" : "")">C</div>
+                <div @onclick="() => { OnPenClicked(1); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 1 ? "activated" : "")">R</div>
+                <div @onclick="() => { OnPenClicked(0); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 0 ? "activated" : "")">W</div>
             </ControlTemplate>
 
             <ContentTemplate Context="_navCtx">
@@ -27,6 +28,12 @@
                     <ElementComponent Key="typeof(Resistor)">
                         <Template Context="element">
                             <ResistorComponent Resistor="(Resistor)element"/>
+                        </Template>
+                    </ElementComponent>
+
+                    <ElementComponent Key="typeof(Capacitor)">
+                        <Template Context="element">
+                            <CapacitorComponent Capacitor="(Capacitor)element"/>
                         </Template>
                     </ElementComponent>
 
