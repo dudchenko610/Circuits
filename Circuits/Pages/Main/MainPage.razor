@@ -4,33 +4,36 @@
 <div class="main-page-cnt">
     <div class="navigation">
         <NavigationPlaneComponent>
-        
+
             <ControlTemplate>
-                <div @onclick="OnPenClicked" class="control-icon pen @(_context.PencilMode ? "activated" : "")"></div>
+                <div @onclick="OnResistorClicked" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 1 ? "activated" : "")">R</div>
+                <div @onclick="OnPenClicked" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 0 ? "activated" : "")">W</div>
             </ControlTemplate>
-        
+
             <ContentTemplate Context="_navCtx">
-        
+
                 <SchemeRendererComponent
                     SchemeRendererContext="_context"
-                    Scale="_navCtx.Scale">
-                    
+                    Scale="_navCtx.Scale"
+                    OnFirstPointSet="OnFirstPointSet"
+                    OnSecondPointSet="OnSecondPointSet">
+
                     <ElementComponent Key="typeof(Wire)">
                         <Template Context="element">
-                            <WireComponent Wire="(Wire) element"/>
+                            <WireComponent Wire="(Wire)element"/>
                         </Template>
                     </ElementComponent>
-                    
+
                     <ElementComponent Key="typeof(Resistor)">
                         <Template Context="element">
-                            <ResistorComponent Resistor="(Resistor) element"/>
+                            <ResistorComponent Resistor="(Resistor)element"/>
                         </Template>
                     </ElementComponent>
-                    
+
                 </SchemeRendererComponent>
-        
+
             </ContentTemplate>
-        
+
         </NavigationPlaneComponent>
     </div>
 </div>

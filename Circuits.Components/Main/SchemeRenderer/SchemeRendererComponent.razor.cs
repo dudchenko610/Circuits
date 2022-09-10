@@ -17,6 +17,8 @@ public partial class SchemeRendererComponent : IDisposable
     [Parameter] public RenderFragment ChildContent { get; set; } = null!;
     [Parameter] public SchemeRendererContext SchemeRendererContext { get; set; } = null!;
     [Parameter] public float Scale { get; set; } = 1.0f;
+    [Parameter] public EventCallback<Vec2> OnFirstPointSet { get; set; }
+    [Parameter] public EventCallback<Vec2> OnSecondPointSet { get; set; }
 
     private static int CellSize => SchemeRendererContext.CellSize;
 
@@ -109,9 +111,9 @@ public partial class SchemeRendererComponent : IDisposable
         }
     }
 
-    private void OnContainerDown() => OnFirstPointSet();
+    private async Task OnContainerDownAsync() => await OnFirstPointSetAsync();
 
-    private void OnContainerUp() => OnSecondPointSet();
+    private async Task OnContainerUpAsync() => await OnSecondPointSetAsync();
 
     private void OnContainerClicked()
     {
@@ -121,50 +123,30 @@ public partial class SchemeRendererComponent : IDisposable
         StateHasChanged();
     }
 
-    private bool OnFirstPointSet()
+    private async Task OnFirstPointSetAsync()
     {
-        if (!SchemeRendererContext.PencilMode || _firstPointSet) return false;
+        if (!SchemeRendererContext.PencilMode || _firstPointSet) return;
 
         _firstPointSet = true;
         _firstPointPos.Set(_elementPointerPos);
-        StateHasChanged();
 
-        return true;
+        StateHasChanged();
+        await OnFirstPointSet.InvokeAsync(_firstPointPos);
     }
 
-    private bool OnSecondPointSet()
+    private async Task OnSecondPointSetAsync()
     {
         if (SchemeRendererContext.PencilMode && _firstPointSet)
         {
             var p1 = new Vec2((int)_firstPointPos.X / CellSize, (int)_firstPointPos.Y / CellSize);
             var p2 = new Vec2((int)_elementPointerPos.X / CellSize, (int)_elementPointerPos.Y / CellSize);
-
-            if ((int) p1.Y == (int) p2.Y && (int) p1.X == (int) p2.X)
-                return false;
-
-            Wire wire = null!;
             
-            if ((int) p1.X == (int) p2.X)
-            {
-                wire = p1.Y < p2.Y ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
-            }
-            else if ((int) p1.Y == (int) p2.Y)
-            {
-                wire = p1.X < p2.X ? new Wire { P1 = p1, P2 = p2 } : new Wire { P1 = p2, P2 = p1 };
-            }
-
-            if (wire is not null && !_schemeService.Intersects(wire))
-            {
-                _schemeService.Add(wire);
-                SchemeRendererContext.PencilMode = false;
-            }
+            if ((int) p1.Y == (int) p2.Y && (int) p1.X == (int) p2.X)
+                return;
 
             _firstPointSet = false;
-
-            return true;
+            await OnSecondPointSet.InvokeAsync(_elementPointerPos);
         }
-
-        return false;
     }
 
     [JSInvokable]

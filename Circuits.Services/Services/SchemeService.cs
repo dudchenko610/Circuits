@@ -1,4 +1,3 @@
-using System.Drawing;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Math;
@@ -17,20 +16,8 @@ public class SchemeService : ISchemeService
 
     public event Action? OnUpdate;
 
-    private readonly List<Element> _elements = new()
-    {
-        new Resistor
-        {
-            Direction = Direction.RIGHT,
-            P1 = new Vec2
-            {
-                X = 10,
-                Y = 10
-            }
-        }
-    };
-
-    private Dictionary<int, List<NodeData>> _nodesHashMap = new();
+    private readonly List<Element> _elements = new();
+    private readonly Dictionary<int, List<NodeData>> _nodesHashMap = new();
 
     public SchemeService()
     {
@@ -298,18 +285,29 @@ public class SchemeService : ISchemeService
 
     private bool Intersects(Element e1, Element e2)
     {
-        if (e1 is Wire w1 && e2 is Wire w2)
+        if (e1 is Wire or Resistor && e2 is Wire or Resistor)
         {
-            var w1IsHorizontal = (int)w1.P1.Y == (int)w1.P2.Y;
-            var w2IsHorizontal = (int)w2.P1.Y == (int)w2.P2.Y;
-
-            var areHorizontalInOneLine = w1IsHorizontal && w2IsHorizontal && (int)w1.P1.Y == (int)w2.P1.Y;
-            var areVerticalInOneLine = !w1IsHorizontal && !w2IsHorizontal && (int)w1.P1.X == (int)w2.P1.X;
-
-            return (areHorizontalInOneLine && !((w1.P2.X <= w2.P1.X) || (w2.P2.X <= w1.P1.X))) ||
-                   (areVerticalInOneLine && !((w1.P2.Y <= w2.P1.Y) || (w2.P2.Y <= w1.P1.Y)));
+            return IntersectsLinear(e1, e2);
         }
 
         return false;
+    }
+
+    private bool IntersectsLinear(Element e1, Element e2)
+    {
+        var p11 = e1.Points[0];
+        var p12 = e1.Points[1];
+        
+        var p21 = e2.Points[0];
+        var p22 = e2.Points[1];
+        
+        var w1IsHorizontal = (int)p11.Y == (int)p12.Y;
+        var w2IsHorizontal = (int)p21.Y == (int)p22.Y;
+
+        var areHorizontalInOneLine = w1IsHorizontal && w2IsHorizontal && (int)p11.Y == (int)p21.Y;
+        var areVerticalInOneLine = !w1IsHorizontal && !w2IsHorizontal && (int)p11.X == (int)p21.X;
+
+        return (areHorizontalInOneLine && !((p12.X <= p21.X) || (p22.X <= p11.X))) ||
+               (areVerticalInOneLine && !((p12.Y <= p21.Y) || (p22.Y <= p11.Y)));
     }
 }

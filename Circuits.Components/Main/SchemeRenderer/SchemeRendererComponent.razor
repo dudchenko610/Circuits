@@ -8,8 +8,8 @@
         id="@_id"
         class="scheme-renderer-container"
         @onclick="OnContainerClicked"
-        @onmouseup="OnContainerUp"
-        @onmousedown="OnContainerDown"
+        @onmouseup="OnContainerUpAsync"
+        @onmousedown="OnContainerDownAsync"
         @onmousedown:stopPropagation="SchemeRendererContext.PencilMode"
         @onextdrop="OnDrop"
         ondragover="event.preventDefault();">
