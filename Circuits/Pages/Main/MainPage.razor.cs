@@ -93,6 +93,23 @@ public partial class MainPage : IDisposable
 
                 break;
             }
+            case 3:
+            {
+                if ((int) p1.X == (int) p2.X)
+                {
+                    element = p1.Y < p2.Y ? 
+                        new Inductor() { Direction = Direction.BOTTOM, P1 = p1 } : 
+                        new Inductor { Direction = Direction.BOTTOM, P1 = p1.Add(0, -2) };
+                }
+                else if ((int) p1.Y == (int) p2.Y)
+                {
+                    element = p1.X < p2.X ? 
+                        new Inductor { Direction = Direction.RIGHT, P1 = p1 } : 
+                        new Inductor { Direction = Direction.RIGHT, P1 = p1.Add(-2, 0) };
+                }
+
+                break;
+            }
         }
         
         if (element is not null && !_schemeService.Intersects(element))

@@ -1,0 +1,49 @@
+@using Circuits.ViewModels.Entities.Elements
+<div @key="@Inductor"
+     draggable="true"
+     @ondragenter="() => { }"
+     @ondragenter:preventDefault
+     @onextdragstart="OnDragStart"
+     @onextdragstart:preventDefault="@_dragAllowed"
+     @onextdragend="OnDragEnd"
+     class="@($"inductor element {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == Inductor ? "selected" : "")} {(_draggingElement == Inductor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
+     style="@($"left: {Inductor.P1.X * CellSize}px; top: {Inductor.P1.Y * CellSize}px; width: {Math.Abs(Inductor.P2.X * CellSize - Inductor.P1.X * CellSize)}px; height: {Math.Abs(Inductor.P2.Y * CellSize - Inductor.P1.Y * CellSize)}px;")">
+
+    <div @onclick="OnElementClicked"
+         @onclick:stopPropagation
+         onmousedown="event.stopPropagation()"
+         onmousemove="event.preventDefault()"
+         class="inductor-content">
+
+        <div class="circle"></div>
+        <div class="circle"></div>
+
+        <div class="block">
+            <div class="half-circle"></div>
+            <div class="half-circle"></div>
+            <div class="half-circle"></div>
+        </div>
+    </div>
+
+</div>
+
+@if (_draggingElement == Inductor && _firstDragOver)
+{
+    var draggingElement = (Inductor)_draggingElement;
+
+    <div class="@($"inductor dragged {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == draggingElement ? "selected" : "")}")"
+         style="@($"left: {_draggingPos.X.ToString(_nF)}px; top: {_draggingPos.Y.ToString(_nF)}px; width: {Math.Abs(draggingElement.P2.X * CellSize - draggingElement.P1.X * CellSize)}px; height: {Math.Abs(draggingElement.P2.Y * CellSize - draggingElement.P1.Y * CellSize)}px;")">
+
+        <div class="inductor-content">
+            <div class="circle"></div>
+            <div class="circle"></div>
+
+            <div class="block">
+                <div class="half-circle"></div>
+                <div class="half-circle"></div>
+                <div class="half-circle"></div>
+            </div>
+        </div>
+
+    </div>
+}

@@ -285,7 +285,7 @@ public class SchemeService : ISchemeService
 
     private bool Intersects(Element e1, Element e2)
     {
-        if (e1 is Wire or Resistor or Capacitor && e2 is Wire or Resistor or Capacitor)
+        if (e1 is Wire or Resistor or Capacitor or Inductor && e2 is Wire or Resistor or Capacitor or Inductor)
         {
             return IntersectsLinear(e1, e2);
         }

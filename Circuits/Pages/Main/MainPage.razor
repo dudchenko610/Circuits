@@ -6,6 +6,7 @@
         <NavigationPlaneComponent>
 
             <ControlTemplate>
+                <div @onclick="() => { OnPenClicked(3); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 3 ? "activated" : "")">I</div>
                 <div @onclick="() => { OnPenClicked(2); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 2 ? "activated" : "")">C</div>
                 <div @onclick="() => { OnPenClicked(1); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 1 ? "activated" : "")">R</div>
                 <div @onclick="() => { OnPenClicked(0); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 0 ? "activated" : "")">W</div>
@@ -34,6 +35,12 @@
                     <ElementComponent Key="typeof(Capacitor)">
                         <Template Context="element">
                             <CapacitorComponent Capacitor="(Capacitor)element"/>
+                        </Template>
+                    </ElementComponent>
+
+                    <ElementComponent Key="typeof(Inductor)">
+                        <Template Context="element">
+                            <InductorComponent Inductor="(Inductor)element"/>
                         </Template>
                     </ElementComponent>
 
