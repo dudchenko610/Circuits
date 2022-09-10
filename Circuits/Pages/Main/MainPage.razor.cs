@@ -110,6 +110,24 @@ public partial class MainPage : IDisposable
 
                 break;
             }
+            
+            case 4:
+            {
+                if ((int) p1.X == (int) p2.X)
+                {
+                    element = p1.Y < p2.Y ? 
+                        new DCSource() { Direction = Direction.BOTTOM, P1 = p1 } : 
+                        new DCSource { Direction = Direction.BOTTOM, P1 = p1.Add(0, -2), Reverse = true };
+                }
+                else if ((int) p1.Y == (int) p2.Y)
+                {
+                    element = p1.X < p2.X ? 
+                        new DCSource { Direction = Direction.RIGHT, P1 = p1 } : 
+                        new DCSource { Direction = Direction.RIGHT, P1 = p1.Add(-2, 0), Reverse = true  };
+                }
+
+                break;
+            }
         }
         
         if (element is not null && !_schemeService.Intersects(element))
