@@ -110,7 +110,6 @@ public partial class MainPage : IDisposable
 
                 break;
             }
-            
             case 4:
             {
                 if ((int) p1.X == (int) p2.X)
@@ -124,6 +123,23 @@ public partial class MainPage : IDisposable
                     element = p1.X < p2.X ? 
                         new DCSource { Direction = Direction.RIGHT, P1 = p1 } : 
                         new DCSource { Direction = Direction.RIGHT, P1 = p1.Add(-2, 0), Reverse = true  };
+                }
+
+                break;
+            }            
+            case 5:
+            {
+                if ((int) p1.X == (int) p2.X)
+                {
+                    element = p1.Y < p2.Y ? 
+                        new Transistor { P1 = p1 } : 
+                        new Transistor { P1 = p1.Add(0, -2)};
+                }
+                else if ((int) p1.Y == (int) p2.Y)
+                {
+                    element = p1.X < p2.X ? 
+                        new Transistor { P1 = p1 } : 
+                        new Transistor { P1 = p1.Add(-2, 0) };
                 }
 
                 break;

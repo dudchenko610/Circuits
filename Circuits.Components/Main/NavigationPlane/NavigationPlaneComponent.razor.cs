@@ -32,7 +32,7 @@ public partial class NavigationPlaneComponent : IDisposable
     private Vec2 _lastMousePosition = new();
     private bool _dragStarted = false;
     private float _factor = 0.3f;
-    private float _maxScale = 12f;
+    private float _maxScale = 28f;
     private bool _zoomKeep = false;
 
     private NavigationPlaneContext _navigationPlaneContext = new();
