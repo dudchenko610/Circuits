@@ -128,18 +128,21 @@ public partial class MainPage : IDisposable
                 break;
             }            
             case 5:
+            case 6:
             {
+                var type = _mode == 5 ? BipolarTransistorType.PNP : BipolarTransistorType.NPN;
+                
                 if ((int) p1.X == (int) p2.X)
                 {
                     element = p1.Y < p2.Y ? 
-                        new Transistor { P1 = p1 } : 
-                        new Transistor { P1 = p1.Add(0, -2)};
+                        new Transistor { P1 = p1.Add(-2, 0), BipolarType = type, Direction = Direction.LEFT } : 
+                        new Transistor { P1 = p1.Add(0, -2), BipolarType = type, Direction = Direction.RIGHT };
                 }
                 else if ((int) p1.Y == (int) p2.Y)
                 {
                     element = p1.X < p2.X ? 
-                        new Transistor { P1 = p1 } : 
-                        new Transistor { P1 = p1.Add(-2, 0) };
+                        new Transistor { P1 = p1.Add(0, 0), BipolarType = type, Direction = Direction.BOTTOM } : 
+                        new Transistor { P1 = p1.Add(-2, -2), BipolarType = type, Direction = Direction.TOP };
                 }
 
                 break;

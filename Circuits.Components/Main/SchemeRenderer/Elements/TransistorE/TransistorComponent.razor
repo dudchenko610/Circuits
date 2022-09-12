@@ -6,18 +6,19 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"transistor element {(_selectedElement == Transistor ? "selected" : "")} {(_draggingElement == Transistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
+     class="@($"transistor element {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == Transistor ? "selected" : "")} {(_draggingElement == Transistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
      style="@($"left: {Transistor.P1.X * CellSize}px; top: {Transistor.P1.Y * CellSize}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
     <div @onclick="OnElementClicked"
          @onclick:stopPropagation
          onmousedown="event.stopPropagation()"
          onmousemove="event.preventDefault()"
-         class="transistor-content">
+         class="transistor-content"
+         style="@($"transform: rotate({GetRotation(Transistor.Direction)}deg);")">
 
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+        <div class="circle selectable"></div>
+        <div class="circle selectable"></div>
+        <div class="circle selectable"></div>
 
         <div class="main-circle">
             <div class="w2"></div>
@@ -29,8 +30,8 @@
         <div class="base"></div>
         <div class="w1"></div>
 
-        <div class="w2"></div>
-        <div class="w3"></div>
+        <div class="w2 selectable"></div>
+        <div class="w3 selectable"></div>
     </div>
 
 </div>
@@ -39,13 +40,14 @@
 {
     var draggingElement = (Transistor)_draggingElement;
 
-    <div class="@($"transistor dragged {(_selectedElement == draggingElement ? "selected" : "")}")"
+    <div class="@($"transistor dragged {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == draggingElement ? "selected" : "")}")"
          style="@($"left: {_draggingPos.X.ToString(_nF)}px; top: {_draggingPos.Y.ToString(_nF)}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
-        <div class="transistor-content">
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
+        <div class="transistor-content" 
+             style="@($"transform: rotate({GetRotation(Transistor.Direction)}deg);")">
+            <div class="circle selectable"></div>
+            <div class="circle selectable"></div>
+            <div class="circle selectable"></div>
 
             <div class="main-circle">
                 <div class="w2"></div>
@@ -57,8 +59,8 @@
             <div class="base"></div>
             <div class="w1"></div>
 
-            <div class="w2"></div>
-            <div class="w3"></div>
+            <div class="w2 selectable"></div>
+            <div class="w3 selectable"></div>
 
         </div>
 

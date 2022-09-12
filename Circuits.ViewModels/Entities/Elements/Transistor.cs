@@ -2,6 +2,12 @@ using Circuits.ViewModels.Math;
 
 namespace Circuits.ViewModels.Entities.Elements;
 
+public enum BipolarTransistorType
+{
+    PNP,
+    NPN
+}
+
 public class Transistor : Element
 {
     public Vec2 P1 // Base
@@ -17,6 +23,9 @@ public class Transistor : Element
 
     public Vec2 P2 => _points[1]; // Collector
     public Vec2 P3 => _points[1]; // Emitter
+
+    public BipolarTransistorType BipolarType = BipolarTransistorType.NPN;
+    public Direction Direction { get; set; } = Direction.LEFT;
 
     public Transistor()
     {

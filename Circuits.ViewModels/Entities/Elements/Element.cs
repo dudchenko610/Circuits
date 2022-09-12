@@ -4,8 +4,10 @@ namespace Circuits.ViewModels.Entities.Elements;
 
 public enum Direction
 {
+    LEFT,
     RIGHT,
-    BOTTOM
+    TOP,
+    BOTTOM,
 }
 
 public abstract class Element

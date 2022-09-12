@@ -64,4 +64,15 @@ public partial class TransistorComponent : IDisposable
     {
         SchemeRenderer.OnElementClicked(Transistor);
     }
+
+    private int GetRotation(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.TOP => 90,
+            Direction.RIGHT => 180,
+            Direction.BOTTOM => 270,
+            _ => 0
+        };
+    }
 }
