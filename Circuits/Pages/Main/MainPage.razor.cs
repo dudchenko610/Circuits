@@ -135,14 +135,14 @@ public partial class MainPage : IDisposable
                 if ((int) p1.X == (int) p2.X)
                 {
                     element = p1.Y < p2.Y ? 
-                        new Transistor { P1 = p1.Add(-2, 0), BipolarType = type, Direction = Direction.LEFT } : 
-                        new Transistor { P1 = p1.Add(0, -2), BipolarType = type, Direction = Direction.RIGHT };
+                        new Transistor { Direction = Direction.LEFT, P1 = p1.Add(-2, 1), BipolarType = type } : 
+                        new Transistor { Direction = Direction.RIGHT, P1 = p1.Add(2, -1), BipolarType = type };
                 }
                 else if ((int) p1.Y == (int) p2.Y)
                 {
                     element = p1.X < p2.X ? 
-                        new Transistor { P1 = p1.Add(0, 0), BipolarType = type, Direction = Direction.BOTTOM } : 
-                        new Transistor { P1 = p1.Add(-2, -2), BipolarType = type, Direction = Direction.TOP };
+                        new Transistor { Direction = Direction.BOTTOM, P1 = p1.Add(1, 2), BipolarType = type } : 
+                        new Transistor { Direction = Direction.TOP, P1 = p1.Add(-1, -2), BipolarType = type };
                 }
 
                 break;

@@ -153,6 +153,39 @@
     /*background: white;*/
 }
 
+
+
+.transistor:hover .selectable {
+    box-shadow: 0px 0px 7px 1px #CED3E0;
+}
+
+.transistor:hover .main-circle {
+    box-shadow: 0px 0px 7px 1px #CED3E0;
+}
+
+/*.transistor:hover .main-circle > .arrow {*/
+/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
+/*}*/
+
+.transistor:hover .circle.selectable {
+    box-shadow: 0px 0px 7px 1px #CED3E0;
+}
+
+/*.transistor:hover > .transistor-content > .w1,*/
+/*.transistor:hover > .transistor-content > .base {*/
+/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
+/*}*/
+
+/*.transistor.npn:hover > .transistor-content > .main-circle > .w3 {*/
+/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
+/*}*/
+
+/*.transistor.pnp:hover > .transistor-content > .main-circle > .w3 {*/
+/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
+/*}*/
+
+
+
 .transistor.selected .selectable {
     background: #e5a4aa;
     box-shadow: 0px 0px 7px 1px #e5a4aa;

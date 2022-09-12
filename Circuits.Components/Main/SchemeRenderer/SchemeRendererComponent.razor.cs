@@ -174,7 +174,9 @@ public partial class SchemeRendererComponent : IDisposable
             var dS = new Vec2(
                 (int)((container.X - _draggingPosOffset.X) / Scale + 0.5f * CellSize) / CellSize,
                 (int)((container.Y - _draggingPosOffset.Y) / Scale + 0.5f * CellSize) / CellSize
-            ).Add(-DraggingElement.Points[0].X, -DraggingElement.Points[0].Y);
+            )
+                .Add(-DraggingElement.Points[0].X, -DraggingElement.Points[0].Y)
+                .Add(DraggingElement.ShiftFromTopLeft);
             
             DraggingElement.Translate(dS);
             

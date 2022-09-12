@@ -7,7 +7,7 @@
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
      class="@($"transistor element {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == Transistor ? "selected" : "")} {(_draggingElement == Transistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
-     style="@($"left: {Transistor.P1.X * CellSize}px; top: {Transistor.P1.Y * CellSize}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
+     style="@($"left: {(Transistor.P1.X - Transistor.ShiftFromTopLeft.X) * CellSize}px; top: {(Transistor.P1.Y - Transistor.ShiftFromTopLeft.Y) * CellSize}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
     <div @onclick="OnElementClicked"
          @onclick:stopPropagation

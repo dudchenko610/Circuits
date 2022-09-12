@@ -15,6 +15,8 @@ public abstract class Element
     public IReadOnlyList<Vec2> Points { get; }
     protected readonly List<Vec2> _points;
 
+    public Vec2 ShiftFromTopLeft { get; protected set; } = new();
+
     protected Element()
     {
         _points = new List<Vec2>();
