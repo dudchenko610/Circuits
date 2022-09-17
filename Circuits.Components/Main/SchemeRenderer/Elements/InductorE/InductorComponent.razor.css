@@ -46,33 +46,14 @@
 
 }
 
-.inductor.vertical > .inductor-content > .block {
-    width: 10px;
-    height: 39px;
-    left: -1px;
-    flex-direction: column;
-}
 
-.inductor.vertical > .inductor-content > .block > .half-circle {
-    height: 14px;
-    width: 10px;
-
-    margin-top: -0.5px;
-    margin-bottom: -0.5px;
-
-    border-bottom-left-radius: 13px;
-    border-top-left-radius: 13px;
-    border: 2.5px solid #abadbb;
-    border-right: 0 !important;
-}
-
-.inductor.horizontal > .inductor-content > .block {
+.inductor > .inductor-content > .block {
     width: 39px;
     height: 10px;
     top: -1px;
 }
 
-.inductor.horizontal > .inductor-content > .block > .half-circle {
+.inductor > .inductor-content > .block > .half-circle {
     width: 14px;
     height: 10px;
     margin-left: -0.5px;
@@ -84,21 +65,12 @@
     border-bottom: 0 !important;
 }
 
-.inductor.horizontal > .inductor-content {
+.inductor > .inductor-content {
     background: linear-gradient(to right, #abadbb 0, #abadbb 17.5%, #00000000 17.5%, #00000000 82.5%, #abadbb 82.5%, #abadbb 100%);
 }
 
-.inductor.vertical > .inductor-content {
-    background: linear-gradient(to top, #abadbb 0, #abadbb 17.5%, #00000000 17.5%, #00000000 82.5%, #abadbb 82.5%, #abadbb 100%);
-}
-
-.inductor.horizontal.selected > .inductor-content {
+.inductor.selected > .inductor-content {
     background: linear-gradient(to right, #e5a4aa 0, #e5a4aa 17.5%, #00000000 17.5%, #00000000 82.5%, #e5a4aa 82.5%, #e5a4aa 100%);
-    z-index: 90;
-}
-
-.inductor.vertical.selected > .inductor-content {
-    background: linear-gradient(to top, #e5a4aa 0, #e5a4aa 17.5%, #00000000 17.5%, #00000000 82.5%, #e5a4aa 82.5%, #e5a4aa 100%);
     z-index: 90;
 }
 
@@ -122,36 +94,19 @@
     z-index: 110;
 }
 
-.inductor.horizontal {
+.inductor {
     height: 4px !important;
     transform: translateX(2px);
 }
 
-.inductor.vertical {
-    width: 4px !important;
-    transform: translateY(2px);
-}
-
-.inductor.horizontal > .inductor-content {
+.inductor > .inductor-content {
     flex-direction: row;
 }
 
-.inductor.vertical > .inductor-content {
-    flex-direction: column;
-}
-
-.inductor.horizontal > .inductor-content > .circle:nth-child(1) {
+.inductor > .inductor-content > .circle:nth-child(1) {
     margin-left: -4px;
 }
 
-.inductor.horizontal > .inductor-content > .circle:nth-child(2) {
+.inductor > .inductor-content > .circle:nth-child(2) {
     margin-right: -4px;
-}
-
-.inductor.vertical > .inductor-content > .circle:nth-child(1) {
-    margin-top: -4px;
-}
-
-.inductor.vertical > .inductor-content > .circle:nth-child(2) {
-    margin-bottom: -4px;
 }

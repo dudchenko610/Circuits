@@ -1,4 +1,10 @@
 @using Circuits.ViewModels.Entities.Elements
+@using Circuits.Shared.Extensions
+
+@{
+    var pos = GetPosition();
+}
+
 <div @key="@Resistor"
      draggable="true"
      @ondragenter="() => { }"
@@ -6,10 +12,10 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"resistor element {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == Resistor ? "selected" : "")} {(_draggingElement == Resistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
-     style="@($"left: {Resistor.P1.X * CellSize}px; top: {Resistor.P1.Y * CellSize}px; width: {Math.Abs(Resistor.P2.X * CellSize - Resistor.P1.X * CellSize)}px; height: {Math.Abs(Resistor.P2.Y * CellSize - Resistor.P1.Y * CellSize)}px;")">
+     class="@($"resistor element {(_selectedElement == Resistor ? "selected" : "")} {(_draggingElement == Resistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
+     style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({Resistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
-    <div @onclick="OnElementClicked"
+    <div @onclick="OnElementClickedAsync"
          @onclick:stopPropagation
          onmousedown="event.stopPropagation()"
          onmousemove="event.preventDefault()"
@@ -26,9 +32,10 @@
 @if (_draggingElement == Resistor && _firstDragOver)
 {
     var draggingElement = (Resistor)_draggingElement;
+    var dragPos = GetPosition(true);
 
-    <div class="@($"resistor dragged {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == draggingElement ? "selected" : "")}")"
-         style="@($"left: {_draggingPos.X.ToString(_nF)}px; top: {_draggingPos.Y.ToString(_nF)}px; width: {Math.Abs(draggingElement.P2.X * CellSize - draggingElement.P1.X * CellSize)}px; height: {Math.Abs(draggingElement.P2.Y * CellSize - draggingElement.P1.Y * CellSize)}px;")">
+    <div class="@($"resistor dragged {(_selectedElement == draggingElement ? "selected" : "")}")"
+         style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({Resistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
         <div class="resistor-content">
             <div class="circle"></div>

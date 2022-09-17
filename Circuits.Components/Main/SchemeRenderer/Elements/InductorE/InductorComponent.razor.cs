@@ -21,7 +21,7 @@ public partial class InductorComponent
     private bool _eventsDisabled => SchemeRenderer.SchemeRendererContext.PencilMode;
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
-    private bool _horizontal = false;
+    private Vec2 _pos = new();
 
     // protected override void OnAfterRender(bool firstRender)
     // {
@@ -46,11 +46,6 @@ public partial class InductorComponent
         }    
     }
 
-    protected override void OnParametersSet()
-    {
-        _horizontal = (int)Inductor.P1.Y == (int)Inductor.P2.Y;
-    }
-
     private void OnDragStart(ExtMouseEventArgs e)
     {
         SchemeRenderer.OnDragStart(e, Inductor);
@@ -61,8 +56,37 @@ public partial class InductorComponent
         SchemeRenderer.OnDragEnd(e);
     }
     
-    private void OnElementClicked()
+    private async Task OnElementClickedAsync()
     {
-        SchemeRenderer.OnElementClicked(Inductor);
+        await SchemeRenderer.OnElementClickedAsync(Inductor);
+    }
+    
+    private Vec2 GetPosition(bool subtractP1 = false)
+    {
+        if (subtractP1)
+        {
+            _pos.Set(Inductor.P2).Subtract(Inductor.P1);
+        }
+        else
+        {
+            _pos.Set(Inductor.P2);
+            _pos.Add(Inductor.P1);
+        }
+
+        _pos.Multiply(0.5f * CellSize);
+
+        var width = GetWidth();
+        
+        _pos.Add(-0.5f * width, 0);
+        
+        return _pos;
+    }
+
+    private int GetWidth()
+    {
+        var width = (int) Math.Abs(Inductor.P2.X * CellSize - Inductor.P1.X * CellSize);
+        var height = (int) Math.Abs(Inductor.P2.Y * CellSize - Inductor.P1.Y * CellSize);
+        
+        return width > height ? width : height;
     }
 }

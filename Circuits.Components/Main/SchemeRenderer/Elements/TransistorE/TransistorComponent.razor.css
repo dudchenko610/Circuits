@@ -33,6 +33,7 @@
     border-radius: 60px;
     overflow: hidden;
     box-shadow: 0px 0px 7px 1px #CED3E000;
+    z-index: 10;
 }
 
 .transistor > .transistor-content > .main-circle > .w2 {
@@ -54,6 +55,7 @@
     bottom: 7px;
     transform: rotate(45deg) skew(45deg);
     background: linear-gradient(to right, #abadbb 0, #abadbb 60%, #00000000 60%, #00000000 100%);
+    z-index: 9;
 }
 
 .transistor.pnp > .transistor-content > .main-circle > .w3 {

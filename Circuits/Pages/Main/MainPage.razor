@@ -3,6 +3,31 @@
 
 <div class="main-page-cnt">
     <div class="navigation">
+
+        @if (_selectedElement != null)
+        {
+            <div class="element-help-menu" style="@($"top: {_selectedPos.Y}px; left: {_selectedPos.X}px;")">
+                <div class="icon" @onclick="() => { RemoveElement(_selectedElement); }">
+                    <div class="noselectable-text">&#x2715;</div>
+                </div>
+
+                <div class="icon rotate" 
+                     @onclick="() => { RotateElement(_selectedElement); }"
+                     >
+                    <div class="noselectable-text">↺</div>
+                </div>
+
+                @if (_selectedElement is Transistor trasistor)
+                {
+                    <div
+                        class="icon"
+                        @onclick="() => { trasistor.IsFlipped = !trasistor.IsFlipped; StateHasChanged(); }">
+                        <div class="noselectable-text">⇄</div>
+                    </div>
+                }
+            </div>
+        }
+
         <NavigationPlaneComponent>
 
             <ControlTemplate>
@@ -21,7 +46,8 @@
                     SchemeRendererContext="_context"
                     Scale="_navCtx.Scale"
                     OnFirstPointSet="OnFirstPointSet"
-                    OnSecondPointSet="OnSecondPointSet">
+                    OnSecondPointSet="OnSecondPointSet"
+                    OnElementSelected="OnSelectElement">
 
                     <ElementComponent Key="typeof(Wire)">
                         <Template Context="element">

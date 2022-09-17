@@ -1,15 +1,8 @@
 
 .resistor {
     position: absolute;
-    /*background: #abadbb;*/
-    /*box-shadow: 0px 0px 7px 1px #CED3E000;*/
     z-index: 80;
 }
-
-
-/*.resistor:hover {*/
-/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
-/*}*/
 
 .resistor.disabled {
     pointer-events: none;
@@ -49,12 +42,9 @@
     box-shadow: 0px 0px 7px 1px #CED3E000;
 
     border: 2.5px solid #abadbb;
+    height: 14px;
+    width: 65%;
     /*background: white;*/
-}
-
-.resistor.vertical > .resistor-content > .block {
-    width: 14px;
-    height: 65%;
 }
 
 .resistor.horizontal > .resistor-content > .block {
@@ -62,21 +52,12 @@
     height: 14px;
 }
 
-.resistor.horizontal > .resistor-content {
+.resistor > .resistor-content {
     background: linear-gradient(to right, #abadbb 0, #abadbb 17.5%, #00000000 17.5%, #00000000 82.5%, #abadbb 82.5%, #abadbb 100%);
 }
 
-.resistor.vertical > .resistor-content {
-    background: linear-gradient(to top, #abadbb 0, #abadbb 17.5%, #00000000 17.5%, #00000000 82.5%, #abadbb 82.5%, #abadbb 100%);
-}
-
-.resistor.horizontal.selected > .resistor-content {
+.resistor.selected > .resistor-content {
     background: linear-gradient(to right, #e5a4aa 0, #e5a4aa 17.5%, #00000000 17.5%, #00000000 82.5%, #e5a4aa 82.5%, #e5a4aa 100%);
-    z-index: 90;
-}
-
-.resistor.vertical.selected > .resistor-content {
-    background: linear-gradient(to top, #e5a4aa 0, #e5a4aa 17.5%, #00000000 17.5%, #00000000 82.5%, #e5a4aa 82.5%, #e5a4aa 100%);
     z-index: 90;
 }
 
@@ -99,36 +80,19 @@
     z-index: 110;
 }
 
-.resistor.horizontal {
+.resistor {
     height: 4px !important;
     transform: translateX(2px);
 }
 
-.resistor.vertical {
-    width: 4px !important;
-    transform: translateY(2px);
-}
-
-.resistor.horizontal > .resistor-content {
+.resistor > .resistor-content {
     flex-direction: row;
 }
 
-.resistor.vertical > .resistor-content {
-    flex-direction: column;
-}
-
-.resistor.horizontal > .resistor-content > .circle:nth-child(1) {
+.resistor > .resistor-content > .circle:nth-child(1) {
     margin-left: -4px;
 }
 
-.resistor.horizontal > .resistor-content > .circle:nth-child(2) {
+.resistor > .resistor-content > .circle:nth-child(2) {
     margin-right: -4px;
-}
-
-.resistor.vertical > .resistor-content > .circle:nth-child(1) {
-    margin-top: -4px;
-}
-
-.resistor.vertical > .resistor-content > .circle:nth-child(2) {
-    margin-bottom: -4px;
 }

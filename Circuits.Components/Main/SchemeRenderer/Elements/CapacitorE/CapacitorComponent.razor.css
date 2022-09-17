@@ -1,7 +1,7 @@
-
 .capacitor {
     position: absolute;
     z-index: 80;
+    height: 4px !important;
 }
 
 .capacitor.disabled {
@@ -23,6 +23,7 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
+    flex-direction: row;
 }
 
 .capacitor > .capacitor-content > .circle {
@@ -53,42 +54,22 @@
     box-shadow: 0px 0px 7px 1px #CED3E0;
 }
 
-.capacitor.vertical > .capacitor-content > .block {
-    width: 24px;
-    height: 10px;
-    flex-direction: column;
-}
-
-.capacitor.vertical > .capacitor-content > .block > .delimiter {
-    width: 100%;
-    height: 3px;
-}
-
-.capacitor.horizontal > .capacitor-content > .block {
+.capacitor > .capacitor-content > .block {
     width: 10px;
     height: 24px;
 }
 
-.capacitor.horizontal > .capacitor-content > .block > .delimiter {
+.capacitor > .capacitor-content > .block > .delimiter {
     height: 100%;
     width: 3px;
 }
 
-.capacitor.horizontal > .capacitor-content {
+.capacitor > .capacitor-content {
     background: linear-gradient(to right, #abadbb 0, #abadbb 42%, #00000000 42%, #00000000 58%, #abadbb 58%, #abadbb 100%);
 }
 
-.capacitor.vertical > .capacitor-content {
-    background: linear-gradient(to top, #abadbb 0, #abadbb 42%, #00000000 42%, #00000000 58%, #abadbb 58%, #abadbb 100%);
-}
-
-.capacitor.horizontal.selected > .capacitor-content {
+.capacitor.selected > .capacitor-content {
     background: linear-gradient(to right, #e5a4aa 0, #e5a4aa 42%, #00000000 42%, #00000000 58%, #e5a4aa 58%, #e5a4aa 100%);
-    z-index: 90;
-}
-
-.capacitor.vertical.selected > .capacitor-content {
-    background: linear-gradient(to top, #e5a4aa 0, #e5a4aa 42%, #00000000 42%, #00000000 58%, #e5a4aa 58%, #e5a4aa 100%);
     z-index: 90;
 }
 
@@ -108,39 +89,10 @@
     z-index: 110;
 }
 
-/*.capacitor:hover > .capacitor-content > .block,*/
-
-
-.capacitor.horizontal {
-    height: 4px !important;
-    transform: translateX(2px);
-}
-
-.capacitor.vertical {
-    width: 4px !important;
-    transform: translateY(2px);
-}
-
-.capacitor.horizontal > .capacitor-content {
-    flex-direction: row;
-}
-
-.capacitor.vertical > .capacitor-content {
-    flex-direction: column;
-}
-
-.capacitor.horizontal > .capacitor-content > .circle:nth-child(1) {
+.capacitor > .capacitor-content > .circle:nth-child(1) {
     margin-left: -4px;
 }
 
-.capacitor.horizontal > .capacitor-content > .circle:nth-child(2) {
+.capacitor > .capacitor-content > .circle:nth-child(2) {
     margin-right: -4px;
-}
-
-.capacitor.vertical > .capacitor-content > .circle:nth-child(1) {
-    margin-top: -4px;
-}
-
-.capacitor.vertical > .capacitor-content > .circle:nth-child(2) {
-    margin-bottom: -4px;
 }

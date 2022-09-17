@@ -1,4 +1,10 @@
 @using Circuits.ViewModels.Entities.Elements
+@using Circuits.Shared.Extensions
+
+@{
+    var pos = GetPosition();
+}
+
 <div @key="@Inductor"
      draggable="true"
      @ondragenter="() => { }"
@@ -6,10 +12,10 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"inductor element {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == Inductor ? "selected" : "")} {(_draggingElement == Inductor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
-     style="@($"left: {Inductor.P1.X * CellSize}px; top: {Inductor.P1.Y * CellSize}px; width: {Math.Abs(Inductor.P2.X * CellSize - Inductor.P1.X * CellSize)}px; height: {Math.Abs(Inductor.P2.Y * CellSize - Inductor.P1.Y * CellSize)}px;")">
+     class="@($"inductor element {(_selectedElement == Inductor ? "selected" : "")} {(_draggingElement == Inductor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
+     style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({Inductor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
-    <div @onclick="OnElementClicked"
+    <div @onclick="OnElementClickedAsync"
          @onclick:stopPropagation
          onmousedown="event.stopPropagation()"
          onmousemove="event.preventDefault()"
@@ -30,9 +36,10 @@
 @if (_draggingElement == Inductor && _firstDragOver)
 {
     var draggingElement = (Inductor)_draggingElement;
+    var dragPos = GetPosition(true);
 
-    <div class="@($"inductor dragged {(_horizontal ? "horizontal" : "vertical")} {(_selectedElement == draggingElement ? "selected" : "")}")"
-         style="@($"left: {_draggingPos.X.ToString(_nF)}px; top: {_draggingPos.Y.ToString(_nF)}px; width: {Math.Abs(draggingElement.P2.X * CellSize - draggingElement.P1.X * CellSize)}px; height: {Math.Abs(draggingElement.P2.Y * CellSize - draggingElement.P1.Y * CellSize)}px;")">
+    <div class="@($"inductor dragged {(_selectedElement == draggingElement ? "selected" : "")}")"
+         style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({Inductor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
         <div class="inductor-content">
             <div class="circle"></div>

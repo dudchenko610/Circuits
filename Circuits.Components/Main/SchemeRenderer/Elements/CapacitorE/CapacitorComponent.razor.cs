@@ -19,9 +19,9 @@ public partial class CapacitorComponent : IDisposable
     private bool _firstDragOver => SchemeRenderer == null ? false : SchemeRenderer.FirstDragOver;
     private bool _dragAllowed => SchemeRenderer.SchemeRendererContext.PencilMode;
     private bool _eventsDisabled => SchemeRenderer.SchemeRendererContext.PencilMode;
-
+    
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
-    private bool _horizontal = false;
+    private Vec2 _pos = new();
 
     // protected override void OnAfterRender(bool firstRender)
     // {
@@ -46,11 +46,6 @@ public partial class CapacitorComponent : IDisposable
         }    
     }
 
-    protected override void OnParametersSet()
-    {
-        _horizontal = (int)Capacitor.P1.Y == (int)Capacitor.P2.Y;
-    }
-
     private void OnDragStart(ExtMouseEventArgs e)
     {
         SchemeRenderer.OnDragStart(e, Capacitor);
@@ -61,8 +56,37 @@ public partial class CapacitorComponent : IDisposable
         SchemeRenderer.OnDragEnd(e);
     }
     
-    private void OnElementClicked()
+    private async Task OnElementClickedAsync()
     {
-        SchemeRenderer.OnElementClicked(Capacitor);
+        await SchemeRenderer.OnElementClickedAsync(Capacitor);
+    }
+    
+    private Vec2 GetPosition(bool subtractP1 = false)
+    {
+        if (subtractP1)
+        {
+            _pos.Set(Capacitor.P2).Subtract(Capacitor.P1);
+        }
+        else
+        {
+            _pos.Set(Capacitor.P2);
+            _pos.Add(Capacitor.P1);
+        }
+
+        _pos.Multiply(0.5f * CellSize);
+
+        var width = GetWidth();
+        
+        _pos.Add(-0.5f * width, 0);
+        
+        return _pos;
+    }
+
+    private int GetWidth()
+    {
+        var width = (int) Math.Abs(Capacitor.P2.X * CellSize - Capacitor.P1.X * CellSize);
+        var height = (int) Math.Abs(Capacitor.P2.Y * CellSize - Capacitor.P1.Y * CellSize);
+        
+        return width > height ? width : height;
     }
 }

@@ -10,6 +10,58 @@
     position: relative;
 }
 
+.main-page-cnt > .navigation > .element-help-menu {
+    position: absolute;
+    height: 30px;
+    transform: translateY(calc(-100% - 15px));
+    border: 1px solid #CED3E0;
+    background: white;
+    border-radius: 20px;
+    z-index: 10;
+    opacity: 0.2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.main-page-cnt > .navigation > .element-help-menu > .icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(3, 2, 41, 0.4);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    outline: none;
+    margin-left: 0.5px;
+}
+
+.main-page-cnt > .navigation > .element-help-menu > .icon.rotate {
+    font-size: 16px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+}
+
+.main-page-cnt > .navigation > .element-help-menu > .icon:hover {
+    transform: scale(1.05);
+}
+
+.main-page-cnt > .navigation > .element-help-menu > .icon > div {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    color: rgba(3, 2, 41, 0.4);
+}
+
+.main-page-cnt > .navigation > .element-help-menu:hover {
+    opacity: 1.0;
+}
+
 .main-page-cnt .control-icon {
     width: 30px;
     height: 30px;

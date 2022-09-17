@@ -60,19 +60,8 @@ public partial class TransistorComponent : IDisposable
         SchemeRenderer.OnDragEnd(e);
     }
 
-    private void OnElementClicked()
+    private async Task OnElementClickedAsync()
     {
-        SchemeRenderer.OnElementClicked(Transistor);
-    }
-
-    private int GetRotation(Direction direction)
-    {
-        return direction switch
-        {
-            Direction.TOP => 90,
-            Direction.RIGHT => 180,
-            Direction.BOTTOM => 270,
-            _ => 0
-        };
+        await SchemeRenderer.OnElementClickedAsync(Transistor);
     }
 }

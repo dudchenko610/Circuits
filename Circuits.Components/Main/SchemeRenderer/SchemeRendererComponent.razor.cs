@@ -19,6 +19,7 @@ public partial class SchemeRendererComponent : IDisposable
     [Parameter] public float Scale { get; set; } = 1.0f;
     [Parameter] public EventCallback<Vec2> OnFirstPointSet { get; set; }
     [Parameter] public EventCallback<Vec2> OnSecondPointSet { get; set; }
+    [Parameter] public EventCallback<Element> OnElementSelected { get; set; }
 
     private static int CellSize => SchemeRendererContext.CellSize;
 
@@ -57,13 +58,17 @@ public partial class SchemeRendererComponent : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //Console.WriteLine("OnAfterRender SchemeRendererComponent");
-
         if (firstRender)
         {
             _dotNetObjectReference = DotNetObjectReference.Create(this);
             await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _id, _dotNetObjectReference);
             await _jsRuntime.InvokeVoidAsync("subscribeOnDragOver", _contentId, _dotNetObjectReference);
+        }
+
+        if (SelectedElement != null! && !_schemeService.Elements.Contains(SelectedElement))
+        {
+            SelectedElement = null!;
+            await OnElementSelected.InvokeAsync(null!);
         }
     }
 
@@ -75,8 +80,9 @@ public partial class SchemeRendererComponent : IDisposable
             _firstPointSet = false;
             _firstMouseMove = false;
         }
-
+        
         SelectedElement = null!;
+        OnElementSelected.InvokeAsync(null!);
 
         StateHasChanged();
     }
@@ -120,6 +126,7 @@ public partial class SchemeRendererComponent : IDisposable
         if (SelectedElement == null!) return;
 
         SelectedElement = null!;
+        OnElementSelected.InvokeAsync(null!);
         StateHasChanged();
     }
 
@@ -195,6 +202,7 @@ public partial class SchemeRendererComponent : IDisposable
 
         FirstDragOver = false;
         DraggingElement = null!;
+        OnElementSelected.InvokeAsync(SelectedElement);
         StateHasChanged();
     }
 
@@ -238,9 +246,11 @@ public partial class SchemeRendererComponent : IDisposable
         StateHasChanged();
     }
 
-    public void OnElementClicked(Element element)
+    public async Task OnElementClickedAsync(Element element)
     {
-        SelectedElement = element;
+        SelectedElement = element == SelectedElement ? null! : element;
+
+        await OnElementSelected.InvokeAsync(SelectedElement);
         StateHasChanged();
     }
 

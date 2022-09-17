@@ -91,16 +91,19 @@ public class SchemeService : ISchemeService
                 }
             }
 
-            dividePoints.Insert(0, wire.P1);
-            dividePoints.Add(wire.P2);
-
-            for (var i = 0; i < dividePoints.Count - 1; i++)
+            if (dividePoints.Count == 0)
             {
-                AddWithoutCheck(new Wire
+                AddWithoutCheck(wire);
+            }
+            else
+            {
+                dividePoints.Insert(0, wire.P1);
+                dividePoints.Add(wire.P2);
+
+                for (var i = 0; i < dividePoints.Count - 1; i++)
                 {
-                    P1 = dividePoints[i + 0],
-                    P2 = dividePoints[i + 1]
-                });
+                    AddWithoutCheck(new Wire(dividePoints[i + 0], dividePoints[i + 1]));
+                }
             }
         }
         else
@@ -124,25 +127,22 @@ public class SchemeService : ISchemeService
                     {
                         RemoveWithoutCheck(existingWire);
 
-                        var wire1 = new Wire
-                        {
-                            P1 = existingWire.P1,
-                            P2 = new Vec2
+                        var wire1 = new Wire(
+                            existingWire.P1,
+                            new Vec2
                             {
                                 X = existingWire.P1.X,
                                 Y = point.Y
                             }
-                        };
+                        );
 
-                        var wire2 = new Wire
-                        {
-                            P1 = new Vec2
+                        var wire2 = new Wire(
+                            new Vec2
                             {
                                 X = existingWire.P1.X,
                                 Y = point.Y
-                            },
-                            P2 = existingWire.P2,
-                        };
+                            }, existingWire.P2
+                        );
 
                         AddWithoutCheck(wire1);
                         AddWithoutCheck(wire2);
@@ -154,25 +154,22 @@ public class SchemeService : ISchemeService
                     {
                         RemoveWithoutCheck(existingWire);
 
-                        var wire1 = new Wire
-                        {
-                            P1 = existingWire.P1,
-                            P2 = new Vec2
+                        var wire1 = new Wire(
+                            existingWire.P1, new Vec2
                             {
                                 X = point.X,
                                 Y = existingWire.P1.Y
                             }
-                        };
+                        );
 
-                        var wire2 = new Wire
-                        {
-                            P1 = new Vec2
+                        var wire2 = new Wire(
+                            new Vec2
                             {
                                 X = point.X,
                                 Y = existingWire.P1.Y
                             },
-                            P2 = existingWire.P2,
-                        };
+                            existingWire.P2
+                        );
 
                         AddWithoutCheck(wire1);
                         AddWithoutCheck(wire2);
@@ -285,7 +282,7 @@ public class SchemeService : ISchemeService
 
     private bool Intersects(Element e1, Element e2)
     {
-        if (e1 is Wire or Resistor or Capacitor or Inductor or DCSource && 
+        if (e1 is Wire or Resistor or Capacitor or Inductor or DCSource &&
             e2 is Wire or Resistor or Capacitor or Inductor or DCSource)
         {
             return IntersectsLinear(e1, e2);
@@ -298,10 +295,10 @@ public class SchemeService : ISchemeService
     {
         var p11 = e1.Points[0];
         var p12 = e1.Points[1];
-        
+
         var p21 = e2.Points[0];
         var p22 = e2.Points[1];
-        
+
         var w1IsHorizontal = (int)p11.Y == (int)p12.Y;
         var w2IsHorizontal = (int)p21.Y == (int)p22.Y;
 

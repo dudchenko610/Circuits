@@ -55,36 +55,19 @@
     z-index: 110;
 }
 
-.wire.horizontal {
+.wire {
     height: 4px !important;
-    transform: translateX(2px);
+    
 }
 
-.wire.vertical {
-    width: 4px !important;
-    transform: translateY(2px);
-}
-
-.wire.horizontal > .wire-content {
+.wire > .wire-content {
     flex-direction: row;
 }
 
-.wire.vertical > .wire-content {
-    flex-direction: column;
-}
-
-.wire.horizontal > .wire-content  > .circle:nth-child(1) {
+.wire > .wire-content  > .circle:nth-child(1) {
     margin-left: -4px;
 }
 
-.wire.horizontal > .wire-content  > .circle:nth-child(2) {
+.wire > .wire-content  > .circle:nth-child(2) {
     margin-right: -4px;
-}
-
-.wire.vertical > .wire-content  > .circle:nth-child(1) {
-    margin-top: -4px;
-}
-
-.wire.vertical > .wire-content  > .circle:nth-child(2) {
-    margin-bottom: -4px;
 }

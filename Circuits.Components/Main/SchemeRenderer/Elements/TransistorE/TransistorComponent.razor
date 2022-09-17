@@ -1,4 +1,6 @@
 @using Circuits.ViewModels.Entities.Elements
+@using Circuits.Shared.Extensions
+@using Circuits.Shared.Attributes
 <div @key="@Transistor"
      draggable="true"
      @ondragenter="() => { }"
@@ -9,12 +11,12 @@
      class="@($"transistor element {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == Transistor ? "selected" : "")} {(_draggingElement == Transistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
      style="@($"left: {(Transistor.P1.X - Transistor.ShiftFromTopLeft.X) * CellSize}px; top: {(Transistor.P1.Y - Transistor.ShiftFromTopLeft.Y) * CellSize}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
-    <div @onclick="OnElementClicked"
+    <div @onclick="OnElementClickedAsync"
          @onclick:stopPropagation
          onmousedown="event.stopPropagation()"
          onmousemove="event.preventDefault()"
          class="transistor-content"
-         style="@($"transform: rotate({GetRotation(Transistor.Direction)}deg);")">
+         style="@($"transform: rotate({Transistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg) scale(1, {(Transistor.IsFlipped ? -1 : 1)});")">
 
         <div class="circle selectable"></div>
         <div class="circle selectable"></div>
@@ -44,7 +46,7 @@
          style="@($"left: {_draggingPos.X.ToString(_nF)}px; top: {_draggingPos.Y.ToString(_nF)}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
         <div class="transistor-content" 
-             style="@($"transform: rotate({GetRotation(Transistor.Direction)}deg);")">
+             style="@($"transform: rotate({Transistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg) scale(1, {(Transistor.IsFlipped ? -1 : 1)});")">
             <div class="circle selectable"></div>
             <div class="circle selectable"></div>
             <div class="circle selectable"></div>
