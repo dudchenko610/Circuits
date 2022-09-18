@@ -17,14 +17,17 @@
         </div>
     </div>
 
-    <div class="scroll-cnt navigation-cs-container" @onextmousewheel="OnMouseWheel">
+    <div 
+        id="@_wrapperId" 
+        class="scroll-cnt navigation-cs-container" 
+        @onextmousewheel="OnMouseWheel">
 
         <div id="@_navigationId"
              @onmousedown="OnMouseDown"
              @onmouseup="OnMouseLeaveUp"
              @onmouseleave="OnMouseLeaveUp"
              class="scroller navigation-cs-panel"
-             style="@($"transform: " + $"translate({_pos.X.ToString(_nF)}px, {_pos.Y.ToString(_nF)}px) " + $"scale({_scale.ToString(_nF)}, {_scale.ToString(_nF)}); " + $"{(_dragStarted ? "transition: transform 0s; cursor: move;" : "")}")">
+             style="@($"width: {_size.X.ToString(_nF)}px; height: {_size.Y.ToString(_nF)}px; " + $"transform: translate({_pos.X.ToString(_nF)}px, {_pos.Y.ToString(_nF)}px) " + $"scale({_scale.ToString(_nF)}, {_scale.ToString(_nF)}); " + $"{(_dragStarted ? "transition: transform 0s; cursor: move;" : "")}")">
 
             @ContentTemplate(_navigationPlaneContext)
 

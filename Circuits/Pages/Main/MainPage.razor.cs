@@ -145,19 +145,23 @@ public partial class MainPage : IDisposable
 
                 if ((int)p1.X == (int)p2.X)
                 {
-                    element = p1.Y < p2.Y
+                    var condition = p1.Y < p2.Y;
+                    
+                    element = condition
                         ? new Transistor { P1 = p1.Add(+2, 1), BipolarType = type }
                         : new Transistor { P1 = p1.Add(-2, -1), BipolarType = type };
                     
-                    element.Rotate(p1.Y < p2.Y ? Direction.LEFT : Direction.RIGHT);
+                    element.Rotate(condition ? Direction.LEFT : Direction.RIGHT);
                 }
                 else if ((int)p1.Y == (int)p2.Y)
                 {
-                    element = p1.X < p2.X
+                    var condition = p1.X < p2.X;
+                    
+                    element = condition
                         ? new Transistor { P1 = p1.Add(1, -2), BipolarType = type }
                         : new Transistor { P1 = p1.Add(-1, +2), BipolarType = type };
                     
-                    element.Rotate(p1.X < p2.X ? Direction.BOTTOM : Direction.TOP);
+                    element.Rotate(condition ? Direction.BOTTOM : Direction.TOP);
                 }
 
                 break;

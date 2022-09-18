@@ -10,7 +10,6 @@ using System.Numerics;
 using System.Xml.Linq;
 using Circuits.ViewModels.Rendering;
 using Microsoft.JSInterop;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Circuits.Components.Main.NavigationPlane;
 
@@ -22,9 +21,11 @@ public partial class NavigationPlaneComponent : IDisposable
     [Parameter] public RenderFragment ControlTemplate { get; set; } = null!;
 
     private readonly string _navigationId = $"_id_{Guid.NewGuid()}";
+    private readonly string _wrapperId = $"_id_{Guid.NewGuid()}";
     private NumberFormatInfo _nF = new () { NumberDecimalSeparator = "." };
 
-    private Vec2 _size = new () { X = 100, Y = 100 };
+    private Vec2 _size = new () { X = 3000, Y = 3000 };
+    private Vec2 _viewPortSize = new();
     private Vec2 _pos = new();
     private float _scale = 1;
     private Vec2 _zoomTarget = new();
@@ -33,6 +34,7 @@ public partial class NavigationPlaneComponent : IDisposable
     private bool _dragStarted = false;
     private float _factor = 0.3f;
     private float _maxScale = 28f;
+    private float _minScale = 0.5f;
     private bool _zoomKeep = false;
 
     private NavigationPlaneContext _navigationPlaneContext = new();
@@ -63,8 +65,8 @@ public partial class NavigationPlaneComponent : IDisposable
 
     private async Task OnResizeAsync()
     {
-        var navigationRect = await _jsUtilsService.GetBoundingClientRectAsync(_navigationId);
-        _size.Set(navigationRect.Width, navigationRect.Height);
+        var wrapperRect = await _jsUtilsService.GetBoundingClientRectAsync(_wrapperId);
+        _viewPortSize.Set(wrapperRect.Width, wrapperRect.Height);
     }
 
     private async Task OnZoomDownAsync(float zoomDelta)
@@ -77,7 +79,7 @@ public partial class NavigationPlaneComponent : IDisposable
     {
         if (_zoomKeep)
         {
-            OnZoom(_size.X * 0.5f, _size.Y * 0.5f, zoomDelta);
+            OnZoom(_viewPortSize.X * 0.5f, _viewPortSize.Y * 0.5f, zoomDelta);
             await Task.Delay(100);
             await OnZoomHoldAsync(zoomDelta);
         }
@@ -94,21 +96,32 @@ public partial class NavigationPlaneComponent : IDisposable
         {
             _pos.X = 0;
         }
-
-        if (_pos.X + _size.X * _scale < _size.X)
-        {
-            _pos.X = -_size.X * (_scale - 1);
-        }
-
+        
         if (_pos.Y > 0)
         {
             _pos.Y = 0;
         }
-
-        if (_pos.Y + _size.Y * _scale < _size.Y)
+        
+        if ((_pos.X - _viewPortSize.X) / _scale < -_size.X)
         {
-            _pos.Y = -_size.Y * (_scale - 1);
+            _pos.X = _viewPortSize.X - _size.X * _scale;
         }
+        
+        if ((_pos.Y - _viewPortSize.Y) / _scale < -_size.Y)
+        {
+            _pos.Y = _viewPortSize.Y - _size.Y * _scale;
+        }
+        
+        // if (_pos.X + _size.X * _scale < _size.X)
+        // {
+        //     _pos.X = -_size.X * (_scale - 1);
+        // }
+
+        //
+        // if (_pos.Y + _size.Y * _scale < _size.Y)
+        // {
+        //     _pos.Y = -_size.Y * (_scale - 1);
+        // }
 
         StateHasChanged();
     }
@@ -133,7 +146,7 @@ public partial class NavigationPlaneComponent : IDisposable
 
         // apply zoom
         _scale += delta * _factor * _scale;
-        _scale = Math.Max(1, Math.Min(_maxScale, _scale));
+        _scale = Math.Max(_minScale, Math.Min(_maxScale, _scale));
 
         // calculate x and y based on zoom
         _pos.Set(
@@ -176,6 +189,10 @@ public partial class NavigationPlaneComponent : IDisposable
 
             _lastMousePosition.Set(mousePosition);
             _pos.Add(change);
+
+            Console.WriteLine($"Pos: X: {((_pos.X) / _scale)}, Y: {(_pos.Y) / _scale}");
+            Console.WriteLine($"Pos: X: {((_pos.X - _viewPortSize.X) / _scale)}, Y: {(_pos.Y - _viewPortSize.Y) / _scale}");
+            Console.WriteLine($"_viewPortSize: X: {_viewPortSize.X}, Y: {_viewPortSize.Y}");
 
             Update();
         }
