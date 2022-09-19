@@ -67,6 +67,8 @@ public partial class NavigationPlaneComponent : IDisposable
     {
         var wrapperRect = await _jsUtilsService.GetBoundingClientRectAsync(_wrapperId);
         _viewPortSize.Set(wrapperRect.Width, wrapperRect.Height);
+
+        Update();
     }
 
     private async Task OnZoomDownAsync(float zoomDelta)
@@ -112,16 +114,8 @@ public partial class NavigationPlaneComponent : IDisposable
             _pos.Y = _viewPortSize.Y - _size.Y * _scale;
         }
         
-        // if (_pos.X + _size.X * _scale < _size.X)
-        // {
-        //     _pos.X = -_size.X * (_scale - 1);
-        // }
-
-        //
-        // if (_pos.Y + _size.Y * _scale < _size.Y)
-        // {
-        //     _pos.Y = -_size.Y * (_scale - 1);
-        // }
+        // Console.WriteLine($"X: {_size.X * _scale}, Y: {_size.Y * _scale}");
+        // Console.WriteLine($"_viewPortSize: X: {_viewPortSize.X}, Y: {_viewPortSize.Y}");
 
         StateHasChanged();
     }
@@ -190,9 +184,9 @@ public partial class NavigationPlaneComponent : IDisposable
             _lastMousePosition.Set(mousePosition);
             _pos.Add(change);
 
-            Console.WriteLine($"Pos: X: {((_pos.X) / _scale)}, Y: {(_pos.Y) / _scale}");
-            Console.WriteLine($"Pos: X: {((_pos.X - _viewPortSize.X) / _scale)}, Y: {(_pos.Y - _viewPortSize.Y) / _scale}");
-            Console.WriteLine($"_viewPortSize: X: {_viewPortSize.X}, Y: {_viewPortSize.Y}");
+            // Console.WriteLine($"Pos: X: {((_pos.X) / _scale)}, Y: {(_pos.Y) / _scale}");
+            // Console.WriteLine($"Pos: X: {((_pos.X - _viewPortSize.X) / _scale)}, Y: {(_pos.Y - _viewPortSize.Y) / _scale}");
+            // Console.WriteLine($"_viewPortSize: X: {_viewPortSize.X}, Y: {_viewPortSize.Y}");
 
             Update();
         }

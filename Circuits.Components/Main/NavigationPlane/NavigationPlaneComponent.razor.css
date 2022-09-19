@@ -62,6 +62,22 @@
         overflow: hidden;
     }
 
+        .navigation-cnt > .scroll-cnt > .scrollbar {
+            position: absolute;
+            border-radius: 12px;
+            background: #B3BBC5;
+        }
+    
+            .navigation-cnt > .scroll-cnt > .scrollbar.horizontal {
+                bottom: 5px;
+                height: 5px;
+            }
+    
+            .navigation-cnt > .scroll-cnt > .scrollbar.vertical {
+                right: 5px;
+                width: 5px;
+            }
+
         .navigation-cnt > .scroll-cnt > .scroller {
             position: absolute;
             /*width: 100%;*/

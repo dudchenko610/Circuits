@@ -33,6 +33,13 @@
 
             @*<div class="marker" style="@($"left: {(_zoomTarget.X).ToString(_nF)}px; top: {(_zoomTarget.Y).ToString(_nF)}px;")"></div>*@
         </div>
+        
+        <div 
+            class="scrollbar horizontal" 
+            style="@($"width: calc((100% - 20px) * ({(_viewPortSize.X / (_size.X * _scale)).ToString(_nF)})); left: calc(10px + (100% - 20px) * {((-_pos.X / _scale) / _size.X).ToString(_nF)});")"></div>
+        <div 
+            class="scrollbar vertical"
+            style="@($"height: calc((100% - 20px) * ({(_viewPortSize.Y / (_size.Y * _scale)).ToString(_nF)})); top: calc(10px + (100% - 20px) * {((-_pos.Y / _scale) / _size.Y).ToString(_nF)});")"></div>
 
     </div>
 </div>
