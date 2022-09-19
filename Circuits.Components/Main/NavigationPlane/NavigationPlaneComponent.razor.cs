@@ -147,6 +147,8 @@ public partial class NavigationPlaneComponent : IDisposable
             -_zoomTarget.X * _scale + _zoomPoint.X,
             -_zoomTarget.Y * _scale + _zoomPoint.Y
         );
+        
+        _navigationPlaneContext.TopLeftPos.Set(_pos);
 
         _navigationPlaneContext.Scale = _scale;
 
@@ -183,6 +185,8 @@ public partial class NavigationPlaneComponent : IDisposable
 
             _lastMousePosition.Set(mousePosition);
             _pos.Add(change);
+
+            _navigationPlaneContext.TopLeftPos.Set(_pos);
 
             // Console.WriteLine($"Pos: X: {((_pos.X) / _scale)}, Y: {(_pos.Y) / _scale}");
             // Console.WriteLine($"Pos: X: {((_pos.X - _viewPortSize.X) / _scale)}, Y: {(_pos.Y - _viewPortSize.Y) / _scale}");

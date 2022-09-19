@@ -200,51 +200,6 @@ public partial class MainPage : IDisposable
         
         _schemeService.Add(element);
 
-        // if (element is Wire wire)
-        // {
-        //     var testWire = GetTestWire(wire);
-        //
-        //     if (testWire is not null)
-        //     {
-        //         _schemeService.Remove(wire);
-        //         
-        //         wire.P1.Set(testWire.P1);
-        //         wire.P2.Set(testWire.P2);
-        //         
-        //         _schemeService.Add(wire);
-        //     }
-        //
-        // }
-        //
-        // if (element is Capacitor capacitor)
-        // {
-        //     var testWire = GetTestWire(capacitor);
-        //
-        //     if (testWire is not null)
-        //     {
-        //         _schemeService.Remove(capacitor);
-        //         
-        //         capacitor.P1 = testWire.P1;
-        //         
-        //         _schemeService.Add(capacitor);
-        //     }
-        // }
-        //
-        // if (element is DCSource dcSource)
-        // {
-        //     var testWire = GetTestWire(dcSource);
-        //
-        //     if (testWire is not null)
-        //     {
-        //         _schemeService.Remove(dcSource);
-        //
-        //         dcSource.Direction = (dcSource.Direction == Direction.RIGHT) ? Direction.BOTTOM : Direction.RIGHT;
-        //         dcSource.P1 = testWire.P1;
-        //         
-        //         _schemeService.Add(dcSource);
-        //     }
-        // }
-        
         StateHasChanged();
     }
 

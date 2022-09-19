@@ -4,24 +4,26 @@
 <div class="main-page-cnt">
     <div class="navigation">
 
-        @if (_selectedElement != null)
+        @if (_selectedElement != null!)
         {
-            <div class="element-help-menu" style="@($"top: {_selectedPos.Y}px; left: {_selectedPos.X}px;")">
+            <div
+                class="element-help-menu"
+                style="@($"top: {_selectedPos.Y}px; left: {_selectedPos.X}px;")">
+                
                 <div class="icon" @onclick="() => { RemoveElement(_selectedElement); }">
                     <div class="noselectable-text">&#x2715;</div>
                 </div>
 
-                <div class="icon rotate" 
-                     @onclick="() => { RotateElement(_selectedElement); }"
-                     >
+                <div class="icon rotate"
+                     @onclick="() => { RotateElement(_selectedElement); }">
                     <div class="noselectable-text">↺</div>
                 </div>
 
-                @if (_selectedElement is Transistor trasistor)
+                @if (_selectedElement is Transistor transistor)
                 {
                     <div
                         class="icon"
-                        @onclick="() => { trasistor.IsFlipped = !trasistor.IsFlipped; StateHasChanged(); }">
+                        @onclick="() => { transistor.IsFlipped = !transistor.IsFlipped; StateHasChanged(); }">
                         <div class="noselectable-text">⇄</div>
                     </div>
                 }
@@ -47,7 +49,7 @@
                     Scale="_navCtx.Scale"
                     OnFirstPointSet="OnFirstPointSet"
                     OnSecondPointSet="OnSecondPointSet"
-                    OnElementSelected="OnSelectElement">
+                    SelectedElementChanged="OnSelectElement">
 
                     <ElementComponent Key="typeof(Wire)">
                         <Template Context="element">

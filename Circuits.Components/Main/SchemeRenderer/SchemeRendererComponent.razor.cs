@@ -19,8 +19,22 @@ public partial class SchemeRendererComponent : IDisposable
     [Parameter] public float Scale { get; set; } = 1.0f;
     [Parameter] public EventCallback<Vec2> OnFirstPointSet { get; set; }
     [Parameter] public EventCallback<Vec2> OnSecondPointSet { get; set; }
-    [Parameter] public EventCallback<Element> OnElementSelected { get; set; }
 
+    [Parameter] public EventCallback<Element> SelectedElementChanged { get; set; }
+    [Parameter] public Element SelectedElement 
+    {
+        get => _selectedElement;
+        set
+        {
+            if (_selectedElement == value) return;
+            _selectedElement = value;
+
+            SelectedElementChanged.InvokeAsync(value);
+        }
+    }
+
+    private Element _selectedElement = null!;
+    
     private static int CellSize => SchemeRendererContext.CellSize;
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
@@ -32,7 +46,6 @@ public partial class SchemeRendererComponent : IDisposable
 
     public event Action OnDragUpdate = null!;
 
-    public Element SelectedElement { get; private set; } = null!;
     public Element DraggingElement { get; private set;  } = null!;
     public bool FirstDragOver { get; private set; } = false;
 
@@ -68,7 +81,6 @@ public partial class SchemeRendererComponent : IDisposable
         if (SelectedElement != null! && !_schemeService.Elements.Contains(SelectedElement))
         {
             SelectedElement = null!;
-            await OnElementSelected.InvokeAsync(null!);
         }
     }
 
@@ -82,7 +94,6 @@ public partial class SchemeRendererComponent : IDisposable
         }
         
         SelectedElement = null!;
-        OnElementSelected.InvokeAsync(null!);
 
         StateHasChanged();
     }
@@ -126,7 +137,6 @@ public partial class SchemeRendererComponent : IDisposable
         if (SelectedElement == null!) return;
 
         SelectedElement = null!;
-        OnElementSelected.InvokeAsync(null!);
         StateHasChanged();
     }
 
@@ -202,7 +212,7 @@ public partial class SchemeRendererComponent : IDisposable
 
         FirstDragOver = false;
         DraggingElement = null!;
-        OnElementSelected.InvokeAsync(SelectedElement);
+        SelectedElementChanged.InvokeAsync(SelectedElement);
         StateHasChanged();
     }
 
@@ -250,7 +260,7 @@ public partial class SchemeRendererComponent : IDisposable
     {
         SelectedElement = element == SelectedElement ? null! : element;
 
-        await OnElementSelected.InvokeAsync(SelectedElement);
+        await SelectedElementChanged.InvokeAsync(SelectedElement);
         StateHasChanged();
     }
 
