@@ -30,7 +30,7 @@
             </div>
         }
 
-        <NavigationPlaneComponent>
+        <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
 
             <ControlTemplate>
                 <div @onclick="() => { OnPenClicked(6); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 6 ? "activated" : "")">Tₙₚₙ</div>

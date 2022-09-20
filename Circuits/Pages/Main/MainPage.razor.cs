@@ -2,6 +2,7 @@
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Math;
+using Circuits.ViewModels.Rendering;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
 
@@ -11,12 +12,13 @@ public partial class MainPage : IDisposable
 {
     [Inject] private ISchemeService _schemeService { get; set; } = null!;
 
+    private readonly NavigationPlaneContext _navPlaneContext = new();
     private readonly SchemeRendererContext _context = new();
     private readonly Vec2 _firstPoint = new();
     private int _mode = 0;
 
     private Element _selectedElement = null!;
-    private Vec2 _selectedPos = new();
+    private readonly Vec2 _selectedPos = new();
 
     private static int CellSize => SchemeRendererContext.CellSize;
 
@@ -54,7 +56,7 @@ public partial class MainPage : IDisposable
         var p1 = new Vec2((int)_firstPoint.X / CellSize, (int)_firstPoint.Y / CellSize);
         var p2 = new Vec2((int)secondPoint.X / CellSize, (int)secondPoint.Y / CellSize);
 
-        Element element = null;
+        Element element = null!;
 
         switch (_mode)
         {
@@ -168,7 +170,7 @@ public partial class MainPage : IDisposable
             }
         }
 
-        if (element is not null && !_schemeService.Intersects(element))
+        if (element != null! && !_schemeService.Intersects(element))
         {
             _schemeService.Add(element);
             _context.PencilMode = false;
@@ -179,9 +181,11 @@ public partial class MainPage : IDisposable
     {
         _selectedElement = element;
 
-        if (element != null)
+        if (element != null!)
         {
-            _selectedPos.Set(element.TopLeft).Multiply(CellSize);
+            _selectedPos.Set(
+                element.TopLeft.X * CellSize * _navPlaneContext.Scale + _navPlaneContext.TopLeftPos.X, 
+                element.TopLeft.Y * CellSize * _navPlaneContext.Scale + _navPlaneContext.TopLeftPos.Y);
         }
 
         StateHasChanged();

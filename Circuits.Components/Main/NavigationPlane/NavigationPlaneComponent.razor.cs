@@ -19,6 +19,7 @@ public partial class NavigationPlaneComponent : IDisposable
     [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
     [Parameter] public RenderFragment<NavigationPlaneContext> ContentTemplate { get; set; } = null!;
     [Parameter] public RenderFragment ControlTemplate { get; set; } = null!;
+    [Parameter] public NavigationPlaneContext NavigationPlaneContext { get; set; } = null!;
 
     private readonly string _navigationId = $"_id_{Guid.NewGuid()}";
     private readonly string _wrapperId = $"_id_{Guid.NewGuid()}";
@@ -37,7 +38,6 @@ public partial class NavigationPlaneComponent : IDisposable
     private float _minScale = 0.5f;
     private bool _zoomKeep = false;
 
-    private NavigationPlaneContext _navigationPlaneContext = new();
     private DotNetObjectReference<NavigationPlaneComponent> _dotNetObjectReference = null!;
     
     protected override void OnInitialized()
@@ -148,9 +148,8 @@ public partial class NavigationPlaneComponent : IDisposable
             -_zoomTarget.Y * _scale + _zoomPoint.Y
         );
         
-        _navigationPlaneContext.TopLeftPos.Set(_pos);
-
-        _navigationPlaneContext.Scale = _scale;
+        NavigationPlaneContext.TopLeftPos.Set(_pos);
+        NavigationPlaneContext.Scale = _scale;
 
         Update();
     }
@@ -186,7 +185,7 @@ public partial class NavigationPlaneComponent : IDisposable
             _lastMousePosition.Set(mousePosition);
             _pos.Add(change);
 
-            _navigationPlaneContext.TopLeftPos.Set(_pos);
+            NavigationPlaneContext.TopLeftPos.Set(_pos);
 
             // Console.WriteLine($"Pos: X: {((_pos.X) / _scale)}, Y: {(_pos.Y) / _scale}");
             // Console.WriteLine($"Pos: X: {((_pos.X - _viewPortSize.X) / _scale)}, Y: {(_pos.Y - _viewPortSize.Y) / _scale}");
