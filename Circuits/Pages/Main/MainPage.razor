@@ -4,7 +4,7 @@
 <div class="main-page-cnt">
     <div class="navigation">
 
-        <div class="control-block">
+        <div class="control-block right">
 
             <div @onclick="() => { OnPenClicked(6); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 6 ? "activated" : "")">Tₙₚₙ</div>
             <div @onclick="() => { OnPenClicked(5); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 5 ? "activated" : "")">Tₚₙₚ</div>
@@ -25,6 +25,20 @@
                  @onmouseup="() => { _navPlaneContext.ZoomUp!.Invoke(); }"
                  @onmouseout="() => { _navPlaneContext.ZoomUp!.Invoke(); }">
                 <div class="noselectable-text">+</div>
+            </div>
+        </div>
+
+        <div class="control-block left">
+            <div
+                class="icon graph-details"
+                @onclick="() => { _showGraphInspector = !_showGraphInspector; StateHasChanged(); }">
+                
+                <div class="icon-cnt">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.125 6.375H19.875M4.125 18.375H19.875H4.125ZM4.125 12.375H19.875H4.125Z" stroke="#B3BBC5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                
             </div>
         </div>
 
@@ -54,8 +68,12 @@
             </div>
         }
 
+        <div class="graph-inspector-wrapper @(_showGraphInspector ? "show" : "")">
+            <GraphInspectorComponent/>
+        </div>
+        
         <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
-            
+
             <ContentTemplate Context="_navCtx">
 
                 <SchemeRendererComponent

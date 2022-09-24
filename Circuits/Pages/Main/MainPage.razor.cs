@@ -19,6 +19,8 @@ public partial class MainPage : IDisposable
     private Element _selectedElement = null!;
     private readonly Vec2 _selectedPos = new();
 
+    private bool _showGraphInspector = false;
+
     private static int CellSize => SchemeRendererContext.CellSize;
 
     protected override void OnInitialized()
@@ -205,35 +207,4 @@ public partial class MainPage : IDisposable
 
         StateHasChanged();
     }
-
-    // private Wire GetTestWire(Element element)
-    // {
-    //     var isHorizontal = element.IsHorizontal();
-    //     Wire newTestWire = null!;
-    //
-    //     if (isHorizontal)
-    //     {
-    //         var length = (int)(element.Points[1].X - element.Points[0].X);
-    //         var halfLength = length / 2;
-    //
-    //         newTestWire = new Wire
-    //         {
-    //             P1 = new Vec2(element.Points[0].X + (halfLength == 0 ? 1 : halfLength), element.Points[0].Y - (halfLength == 0 ? 1 : halfLength)),
-    //             P2 = new Vec2(element.Points[0].X + (halfLength == 0 ? 1 : halfLength), element.Points[0].Y + halfLength)
-    //         };
-    //     }
-    //     else
-    //     {
-    //         var length = (int)(element.Points[1].Y - element.Points[0].Y);
-    //         var halfLength = length / 2;
-    //
-    //         newTestWire = new Wire
-    //         {
-    //             P1 = new Vec2(element.Points[0].X - (halfLength == 0 ? 1 : halfLength), element.Points[0].Y + (halfLength == 0 ? 1 : halfLength)),
-    //             P2 = new Vec2(element.Points[0].X + halfLength, element.Points[0].Y + (halfLength == 0 ? 1 : halfLength))
-    //         };
-    //     }
-    //
-    //     return !_schemeService.Intersects(newTestWire) ? newTestWire : null!;
-    // }
 }

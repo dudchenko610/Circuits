@@ -8,24 +8,39 @@
     margin: 16px;
     flex: 1 1;
     position: relative;
+    overflow: hidden;
+    border: 1px solid #CED3E0;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 4px rgb(0 0 0 / 12%);
+    border-radius: 20px;
 }
 
     .main-page-cnt > .navigation > .control-block {
         position: absolute;
-        right: 1px;
-        top: 1px;
+        top: 0;
         display: flex;
         gap: 10px;
         background: white;
         z-index: 100;
         padding: 10px;
         border-bottom: 1px solid #CED3E0;
-        border-left: 1px solid #CED3E0;
-        border-bottom-left-radius: 20px;
-        border-top-right-radius: 20px;
         opacity: 0.2;
         transition: opacity 0.2s ease;
     }
+
+        .main-page-cnt > .navigation > .control-block.right {
+            right: 0;
+            border-bottom-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border-left: 1px solid #CED3E0;
+        }
+
+        .main-page-cnt > .navigation > .control-block.left {
+            left: 0;
+            border-bottom-right-radius: 20px;
+            border-top-left-radius: 20px;
+            border-right: 1px solid #CED3E0;
+        }
     
         .main-page-cnt > .navigation > .control-block:hover {
             opacity: 1.0;
@@ -55,6 +70,19 @@
                 font-size: 20px;
                 color: rgba(3, 2, 41, 0.4);
             }
+
+.main-page-cnt > .navigation > .control-block > .icon.graph-details > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+}
+
+.main-page-cnt > .navigation > .control-block > .icon.graph-details > div > svg {
+    width: 100%;
+    height: 100%;
+}
 
 .main-page-cnt > .navigation > .element-help-menu {
     position: absolute;
@@ -134,4 +162,20 @@
 .main-page-cnt .control-icon.pen.activated {
     border: 1px solid rgba(141, 2, 3, 0.4);
     color: rgba(141, 2, 3, 0.4);
+}
+
+.main-page-cnt > .navigation > .graph-inspector-wrapper  {
+    position: absolute;
+    top: 0;
+    left: -25%;
+    height: 100%;
+    width: 25%;
+    transition: left 0.5s ease;
+    border-right: 1px solid #CED3E0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.main-page-cnt > .navigation > .graph-inspector-wrapper.show {
+    left: 0;
 }
