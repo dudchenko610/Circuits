@@ -18,7 +18,6 @@ public partial class NavigationPlaneComponent : IDisposable
     [Inject] private IJSUtilsService _jsUtilsService { get; set; } = null!;
     [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
     [Parameter] public RenderFragment<NavigationPlaneContext> ContentTemplate { get; set; } = null!;
-    [Parameter] public RenderFragment ControlTemplate { get; set; } = null!;
     [Parameter] public NavigationPlaneContext NavigationPlaneContext { get; set; } = null!;
 
     private readonly string _navigationId = $"_id_{Guid.NewGuid()}";
@@ -43,6 +42,16 @@ public partial class NavigationPlaneComponent : IDisposable
     protected override void OnInitialized()
     {
         IJSUtilsService.OnResize += OnResizeAsync;
+        NavigationPlaneContext.ZoomUp += OnZoomUp;
+        NavigationPlaneContext.ZoomDown += OnZoomDownAsync;
+    }
+    
+    public void Dispose()
+    {
+        _dotNetObjectReference?.Dispose();
+        IJSUtilsService.OnResize -= OnResizeAsync;
+        NavigationPlaneContext.ZoomUp -= OnZoomUp;
+        NavigationPlaneContext.ZoomDown -= OnZoomDownAsync;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -55,12 +64,6 @@ public partial class NavigationPlaneComponent : IDisposable
             await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _navigationId, _dotNetObjectReference);
             await OnResizeAsync();
         }
-    }
-
-    public void Dispose()
-    {
-        _dotNetObjectReference?.Dispose();
-        IJSUtilsService.OnResize -= OnResizeAsync;
     }
 
     private async Task OnResizeAsync()

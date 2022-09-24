@@ -4,52 +4,6 @@
     position: relative;
 }
 
-    .navigation-cnt > .control-block {
-        position: absolute;
-        right: 1px;
-        top: 1px;
-        display: flex;
-        gap: 10px;
-        background: white;
-        z-index: 100;
-        padding: 10px;
-        border-bottom: 1px solid #CED3E0;
-        border-left: 1px solid #CED3E0;
-        border-bottom-left-radius: 20px;
-        border-top-right-radius: 20px;
-        opacity: 0.2;
-        transition: opacity 0.2s ease;
-    }
-
-        .navigation-cnt > .control-block:hover {
-            opacity: 1.0;
-        }
-
-        .navigation-cnt > .control-block > .icon {
-            width: 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(3, 2, 41, 0.4);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            outline: none;
-        }
-
-            .navigation-cnt > .control-block > .icon:hover {
-                transform: scale(1.05);
-            }
-
-            .navigation-cnt > .control-block > .icon > div {
-                font-family: 'Nunito';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 20px;
-                color: rgba(3, 2, 41, 0.4);
-            }
-
     .navigation-cnt > .scroll-cnt {
         width: 100%;
         height: 100%;

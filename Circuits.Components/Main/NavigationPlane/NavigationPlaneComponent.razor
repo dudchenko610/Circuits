@@ -1,22 +1,5 @@
 ﻿<div class="navigation-cnt">
-    <div class="control-block">
-
-        @ControlTemplate
-
-        <div class="icon min"
-             @onmousedown="async () => { await OnZoomDownAsync(-0.1f); }"
-             @onmouseup="OnZoomUp"
-             @onmouseout="OnZoomUp">
-            <div class="noselectable-text">-</div>
-        </div>
-        <div class="icon mag"
-             @onmousedown="async () => { await OnZoomDownAsync(+0.1f); }"
-             @onmouseup="OnZoomUp"
-             @onmouseout="OnZoomUp">
-            <div class="noselectable-text">+</div>
-        </div>
-    </div>
-
+    
     <div 
         id="@_wrapperId" 
         class="scroll-cnt navigation-cs-container" 

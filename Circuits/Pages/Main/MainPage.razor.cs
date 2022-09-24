@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Circuits.Services.Services.Interfaces;
+﻿using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering;

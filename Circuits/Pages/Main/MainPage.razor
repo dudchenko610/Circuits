@@ -4,12 +4,36 @@
 <div class="main-page-cnt">
     <div class="navigation">
 
+        <div class="control-block">
+
+            <div @onclick="() => { OnPenClicked(6); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 6 ? "activated" : "")">Tₙₚₙ</div>
+            <div @onclick="() => { OnPenClicked(5); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 5 ? "activated" : "")">Tₚₙₚ</div>
+            <div @onclick="() => { OnPenClicked(4); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 4 ? "activated" : "")">DC</div>
+            <div @onclick="() => { OnPenClicked(3); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 3 ? "activated" : "")">I</div>
+            <div @onclick="() => { OnPenClicked(2); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 2 ? "activated" : "")">C</div>
+            <div @onclick="() => { OnPenClicked(1); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 1 ? "activated" : "")">R</div>
+            <div @onclick="() => { OnPenClicked(0); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 0 ? "activated" : "")">W</div>
+
+            <div class="icon min"
+                 @onmousedown="async () => { await _navPlaneContext.ZoomDown!.Invoke(-0.1f); }"
+                 @onmouseup="() => { _navPlaneContext.ZoomUp!.Invoke(); }"
+                 @onmouseout="() => { _navPlaneContext.ZoomUp!.Invoke(); }">
+                <div class="noselectable-text">-</div>
+            </div>
+            <div class="icon mag"
+                 @onmousedown="async () => { await _navPlaneContext.ZoomDown!.Invoke(+0.1f); }"
+                 @onmouseup="() => { _navPlaneContext.ZoomUp!.Invoke(); }"
+                 @onmouseout="() => { _navPlaneContext.ZoomUp!.Invoke(); }">
+                <div class="noselectable-text">+</div>
+            </div>
+        </div>
+
         @if (_selectedElement != null!)
         {
             <div
                 class="element-help-menu"
                 style="@($"top: {_selectedPos.Y}px; left: {_selectedPos.X}px;")">
-                
+
                 <div class="icon" @onclick="() => { RemoveElement(_selectedElement); }">
                     <div class="noselectable-text">&#x2715;</div>
                 </div>
@@ -31,17 +55,7 @@
         }
 
         <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
-
-            <ControlTemplate>
-                <div @onclick="() => { OnPenClicked(6); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 6 ? "activated" : "")">Tₙₚₙ</div>
-                <div @onclick="() => { OnPenClicked(5); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 5 ? "activated" : "")">Tₚₙₚ</div>
-                <div @onclick="() => { OnPenClicked(4); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 4 ? "activated" : "")">DC</div>
-                <div @onclick="() => { OnPenClicked(3); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 3 ? "activated" : "")">I</div>
-                <div @onclick="() => { OnPenClicked(2); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 2 ? "activated" : "")">C</div>
-                <div @onclick="() => { OnPenClicked(1); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 1 ? "activated" : "")">R</div>
-                <div @onclick="() => { OnPenClicked(0); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 0 ? "activated" : "")">W</div>
-            </ControlTemplate>
-
+            
             <ContentTemplate Context="_navCtx">
 
                 <SchemeRendererComponent
