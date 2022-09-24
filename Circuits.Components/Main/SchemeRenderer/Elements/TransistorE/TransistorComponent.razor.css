@@ -5,219 +5,199 @@
     transform: translate(2px, 2px);
 }
 
-.transistor.disabled {
-    pointer-events: none;
-}
+    .transistor.disabled {
+        pointer-events: none;
+    }
 
-.transistor.dragged {
-    z-index: 1000;
-}
+    .transistor.dragged {
+        z-index: 1000;
+    }
 
-.transistor.dragging {
-    opacity: 0.3;
-}
+    .transistor.dragging {
+        opacity: 0.3;
+    }
 
-.transistor > .transistor-content {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
+    .transistor > .transistor-content {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
 
-.transistor > .transistor-content > .main-circle {
-    position: absolute;
-    width: 80%;
-    height: 80%;
-    top: 10%;
-    left: 45%;
-    border: 2.25px solid #abadbb;
-    border-radius: 60px;
-    overflow: hidden;
-    box-shadow: 0px 0px 7px 1px #CED3E000;
-    z-index: 10;
-}
+        .transistor > .transistor-content > .main-circle {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 45%;
+            border: 2.25px solid #abadbb;
+            border-radius: 60px;
+            overflow: hidden;
+            box-shadow: 0px 0px 7px 1px #CED3E000;
+            z-index: 10;
+        }
 
-.transistor > .transistor-content > .main-circle > .w2 {
-    position: absolute;
-    height: 2.5px;
-    width: 28px;
-    left: 9.5px;
-    top: 7px;
-    transform: rotate(-45deg) skew(-45deg);
-    background: #abadbb;
-}
-
-
-.transistor > .transistor-content > .main-circle > .w3 {
-    position: absolute;
-    height: 2.5px;
-    width: 28px;
-    left: 9.5px;
-    bottom: 7px;
-    transform: rotate(45deg) skew(45deg);
-    background: linear-gradient(to right, #abadbb 0, #abadbb 60%, #00000000 60%, #00000000 100%);
-    z-index: 9;
-}
-
-.transistor.pnp > .transistor-content > .main-circle > .w3 {
-    background: linear-gradient(to right, #00000000 0, #00000000 35%, #abadbb 35%, #abadbb 100%);
-}
-
-.transistor > .transistor-content > .main-circle > .arrow {
-    position: absolute;
-    left: 23px;
-    bottom: 0px;
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 11px solid #abadbb;
-    transform: rotate(-45deg) translateX(-0.3px);
-}
-
-.transistor.pnp > .transistor-content > .main-circle > .arrow {
-    transform: rotate(135deg) translateX(-0.3px);
-    left: 14px;
-    bottom: 8px;
-}
-
-.transistor > .transistor-content > .base {
-    position: absolute;
-    top: 30%;
-    left: 41px;
-    height: 40%;
-    width: 2.5px;
-    background: #abadbb;
-}
-
-.transistor > .transistor-content > .w1 {
-    position: absolute;
-    top: 30px;
-    left: 0;
-    transform: translateY(-50%);
-    height: 2.5px;
-    width: 70%;
-    background: #abadbb;
-}
-
-.transistor > .transistor-content > .w2 {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translateX(50%);
-    width: 2.5px;
-    height: 9px;
-    background: #abadbb;
-}
-
-.transistor > .transistor-content > .w3 {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    transform: translateX(50%);
-    width: 2.5px;
-    height: 9px;
-    background: #abadbb;
-}
-
-.transistor > .transistor-content > .circle {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: #CED3E0;
-    box-shadow: 0px 0px 7px 1px #CED3E000;
-    z-index: 100;
-}
-
-.transistor > .transistor-content > .circle:nth-child(1) {
-    top: calc(50% - 4px);
-    left: -4px;
-}
-
-.transistor > .transistor-content > .circle:nth-child(2) {
-    top: -4px;
-    right: -4px;
-}
-
-.transistor > .transistor-content > .circle:nth-child(3) {
-    bottom: -4px;
-    right: -4px;
-}
-
-.transistor > .transistor-content > .block {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
-    box-shadow: 0px 0px 7px 1px #CED3E000;
-
-    border: 2.5px solid #abadbb;
-    /*background: white;*/
-}
+            .transistor > .transistor-content > .main-circle > .w2 {
+                position: absolute;
+                height: 2.5px;
+                width: 28px;
+                left: 9.5px;
+                top: 7px;
+                transform: rotate(-45deg) skew(-45deg);
+                background: #abadbb;
+            }
 
 
+            .transistor > .transistor-content > .main-circle > .w3 {
+                position: absolute;
+                height: 2.5px;
+                width: 28px;
+                left: 9.5px;
+                bottom: 7px;
+                transform: rotate(45deg) skew(45deg);
+                background: linear-gradient(to right, #abadbb 0, #abadbb 60%, #00000000 60%, #00000000 100%);
+                z-index: 9;
+            }
 
-.transistor:hover .selectable {
-    box-shadow: 0px 0px 7px 1px #CED3E0;
-}
+    .transistor.pnp > .transistor-content > .main-circle > .w3 {
+        background: linear-gradient(to right, #00000000 0, #00000000 35%, #abadbb 35%, #abadbb 100%);
+    }
 
-.transistor:hover .main-circle {
-    box-shadow: 0px 0px 7px 1px #CED3E0;
-}
+    .transistor > .transistor-content > .main-circle > .arrow {
+        position: absolute;
+        left: 23px;
+        bottom: 0px;
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 11px solid #abadbb;
+        transform: rotate(-45deg) translateX(-0.3px);
+    }
 
-/*.transistor:hover .main-circle > .arrow {*/
-/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
-/*}*/
+    .transistor.pnp > .transistor-content > .main-circle > .arrow {
+        transform: rotate(135deg) translateX(-0.3px);
+        left: 14px;
+        bottom: 8px;
+    }
 
-.transistor:hover .circle.selectable {
-    box-shadow: 0px 0px 7px 1px #CED3E0;
-}
+    .transistor > .transistor-content > .base {
+        position: absolute;
+        top: 30%;
+        left: 41px;
+        height: 40%;
+        width: 2.5px;
+        background: #abadbb;
+    }
 
-/*.transistor:hover > .transistor-content > .w1,*/
-/*.transistor:hover > .transistor-content > .base {*/
-/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
-/*}*/
+    .transistor > .transistor-content > .w1 {
+        position: absolute;
+        top: 30px;
+        left: 0;
+        transform: translateY(-50%);
+        height: 2.5px;
+        width: 70%;
+        background: #abadbb;
+    }
 
-/*.transistor.npn:hover > .transistor-content > .main-circle > .w3 {*/
-/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
-/*}*/
+    .transistor > .transistor-content > .w2 {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translateX(50%);
+        width: 2.5px;
+        height: 9px;
+        background: #abadbb;
+    }
 
-/*.transistor.pnp:hover > .transistor-content > .main-circle > .w3 {*/
-/*    box-shadow: 0px 0px 7px 1px #CED3E0;*/
-/*}*/
+    .transistor > .transistor-content > .w3 {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        transform: translateX(50%);
+        width: 2.5px;
+        height: 9px;
+        background: #abadbb;
+    }
+
+    .transistor > .transistor-content > .circle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        background: #CED3E0;
+        box-shadow: 0px 0px 7px 1px #CED3E000;
+        z-index: 100;
+    }
+
+        .transistor > .transistor-content > .circle:nth-child(1) {
+            top: calc(50% - 4px);
+            left: -4px;
+        }
+
+        .transistor > .transistor-content > .circle:nth-child(2) {
+            top: -4px;
+            right: -4px;
+        }
+
+        .transistor > .transistor-content > .circle:nth-child(3) {
+            bottom: -4px;
+            right: -4px;
+        }
+
+    .transistor > .transistor-content > .block {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+        box-shadow: 0px 0px 7px 1px #CED3E000;
+        border: 2.5px solid #abadbb;
+        /*background: white;*/
+    }
 
 
 
-.transistor.selected .selectable {
-    background: #e5a4aa;
-    box-shadow: 0px 0px 7px 1px #e5a4aa;
-}
+    .transistor:hover .selectable {
+        box-shadow: 0px 0px 7px 1px #CED3E0;
+    }
 
-.transistor.selected .main-circle {
-    border: 2.25px solid #e5a4aa;
-    box-shadow: 0px 0px 7px 1px #e5a4aa, inset 0px 0px 7px 1px #e5a4aa; 
-}
+    .transistor:hover .main-circle {
+        box-shadow: 0px 0px 7px 1px #CED3E0;
+    }
 
-.transistor.selected .main-circle > .arrow {
-    border-top: 11px solid #e5a4aa;
-}
+    .transistor:hover .circle.selectable {
+        box-shadow: 0px 0px 7px 1px #CED3E0;
+    }
 
-.transistor.selected .circle.selectable {
-    box-shadow: 0px 0px 7px 1px #e5a4aa;
-    background: #e8c5c9;
-    z-index: 110;
-}
+    .transistor.selected .selectable {
+        background: #e5a4aa;
+        box-shadow: 0px 0px 7px 1px #e5a4aa;
+    }
 
-.transistor.selected > .transistor-content > .w1,
-.transistor.selected > .transistor-content > .base,
-.transistor.selected > .transistor-content > .main-circle > .w2 {
-    background: #e5a4aa;
-}
+    .transistor.selected .main-circle {
+        border: 2.25px solid #e5a4aa;
+        box-shadow: 0px 0px 7px 1px #e5a4aa, inset 0px 0px 7px 1px #e5a4aa;
+    }
 
-.transistor.npn.selected > .transistor-content > .main-circle > .w3 {
-    background: linear-gradient(to right, #e5a4aa 0, #e5a4aa 60%, #00000000 60%, #00000000 100%);
-}
+        .transistor.selected .main-circle > .arrow {
+            border-top: 11px solid #e5a4aa;
+        }
 
-.transistor.pnp.selected > .transistor-content > .main-circle > .w3 {
-    background: linear-gradient(to right, #00000000 0, #00000000 35%, #e5a4aa 35%, #e5a4aa 100%);
-}
+    .transistor.selected .circle.selectable {
+        box-shadow: 0px 0px 7px 1px #e5a4aa;
+        background: #e8c5c9;
+        z-index: 110;
+    }
+
+    .transistor.selected > .transistor-content > .w1,
+    .transistor.selected > .transistor-content > .base,
+    .transistor.selected > .transistor-content > .main-circle > .w2 {
+        background: #e5a4aa;
+    }
+
+    .transistor.npn.selected > .transistor-content > .main-circle > .w3 {
+        background: linear-gradient(to right, #e5a4aa 0, #e5a4aa 60%, #00000000 60%, #00000000 100%);
+    }
+
+    .transistor.pnp.selected > .transistor-content > .main-circle > .w3 {
+        background: linear-gradient(to right, #00000000 0, #00000000 35%, #e5a4aa 35%, #e5a4aa 100%);
+    }

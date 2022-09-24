@@ -1,0 +1,96 @@
+﻿@typeparam TItem
+
+<div id="@_conteinerId"
+     class="@(
+        $"bch-select-container noselectable-text " +
+        $"{(IsOpened ? "show" : "")} " +
+        $"{(_selectedValue != null ? "has-selected" : "")} " +
+        $"{CssClass}"
+     )"
+     style="@($"width: {Width}px;")"
+     tabindex="-1">
+
+    <div class="bch-button noselectable-text"
+         @onclick="OnSelectClicked">
+
+        @if (Filtering)
+        {
+            <div class="search-icon noselectable-text @(IsOpened ? "opened" : "")"></div>
+        }
+
+        <input id="@_inputId"
+               class="@(!Filtering ? "removed" : "")"
+               @ref="@_inputRef"
+               @bind-value="@Filter"
+               @bind-value:event="oninput"
+               @onkeydown="OnInputKeyDownAsync"
+               placeholder="@_placeholder"
+               type='text'
+               autocomplete="unrechable-filter-to-autocomplete" />
+
+        @if (!Filtering)
+        {
+            <label class="noselectable-text">@_placeholder</label>
+        }
+
+        <span></span>
+    </div>
+
+    <div id="@_contentId"
+         class="bch-content noselectable-text"
+         style="@(
+            $"max-height: {Height}px; "
+         )">
+
+        @if (IsOpened)
+        {
+            <div id="@_scrollerId" class="bch-scroller noselectable-text">
+
+                @foreach (var group in _groups)
+                {
+                    <div @key="@group"
+                 class="@(
+                                $"bch-group noselectable-text " +
+                                $"{(group.Expanded ? "expanded" : "")} "
+                            )"
+                 style="@(
+                                $"max-height: {(group.Expanded ? (ItemHeight * (group.Elements.Count + 1)) : ItemHeight)}px"
+                            )">
+
+                        @if (Grouping)
+                        {
+                            <div class="bch-group-wrapper noselectable-text"
+                     style="@($"height: {ItemHeight}px;")"
+                     @onclick="() => { OnGroupClicked(group); }">
+                                <div class="name noselectable-text">@group.Name</div>
+                                <span></span>
+                            </div>
+                        }
+
+                        @foreach (var element in group.Elements)
+                        {
+                            <div @key="element"
+                     style="@($"height: {ItemHeight}px;")"
+                     class="@(
+                                        $"bch-option noselectable-text " +
+                                        $"{(IsSelected(element.Item) ? "selected" : "")} " +
+                                        $"{CssItemPredicate.Invoke(element.Item)}"
+                                     )"
+                     @onclick='async () => { await OnOptionClickedAsync(element.Item); }'>
+                                @if (RowTemplate == null)
+                                {
+                                    @element.Name
+                                }
+                                else
+                                {
+                                    @RowTemplate(element.Item)
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+

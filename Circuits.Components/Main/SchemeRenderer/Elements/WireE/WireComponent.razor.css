@@ -6,68 +6,67 @@
     z-index: 80;
 }
 
-.wire:hover {
-    box-shadow: 0px 0px 7px 1px #CED3E0;
-}
+    .wire:hover {
+        box-shadow: 0px 0px 7px 1px #CED3E0;
+    }
 
-.wire.disabled {
-    pointer-events: none;
-}
+    .wire.disabled {
+        pointer-events: none;
+    }
 
-.wire.dragged {
-    z-index: 1000;
-}
+    .wire.dragged {
+        z-index: 1000;
+    }
 
-.wire.dragging {
-    opacity: 0.3;
-}
+    .wire.dragging {
+        opacity: 0.3;
+    }
 
-.wire > .wire-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .wire > .wire-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.wire > .wire-content  > .circle {
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: #CED3E0;
-    box-shadow: 0px 0px 7px 1px #CED3E000;
-    z-index: 100;
-}
+        .wire > .wire-content > .circle {
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: #CED3E0;
+            box-shadow: 0px 0px 7px 1px #CED3E000;
+            z-index: 100;
+        }
 
-.wire.selected > .wire-content  {
-    box-shadow: 0px 0px 7px 1px #e5a4aa;
-    background: #e5a4aa;
-    z-index: 90;
-}
+    .wire.selected > .wire-content {
+        box-shadow: 0px 0px 7px 1px #e5a4aa;
+        background: #e5a4aa;
+        z-index: 90;
+    }
 
-.wire:hover > .wire-content > .circle {
-    box-shadow: 0px 0px 7px 1px #CED3E0;
-}
+    .wire:hover > .wire-content > .circle {
+        box-shadow: 0px 0px 7px 1px #CED3E0;
+    }
 
-.wire.selected > .wire-content  > .circle {
-    box-shadow: 0px 0px 7px 1px #e5a4aa;
-    background: #e8c5c9;
-    z-index: 110;
-}
+    .wire.selected > .wire-content > .circle {
+        box-shadow: 0px 0px 7px 1px #e5a4aa;
+        background: #e8c5c9;
+        z-index: 110;
+    }
 
 .wire {
     height: 4px !important;
-    
 }
 
-.wire > .wire-content {
-    flex-direction: row;
-}
+    .wire > .wire-content {
+        flex-direction: row;
+    }
 
-.wire > .wire-content  > .circle:nth-child(1) {
-    margin-left: -4px;
-}
+        .wire > .wire-content > .circle:nth-child(1) {
+            margin-left: -4px;
+        }
 
-.wire > .wire-content  > .circle:nth-child(2) {
-    margin-right: -4px;
-}
+        .wire > .wire-content > .circle:nth-child(2) {
+            margin-right: -4px;
+        }

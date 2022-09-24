@@ -6,54 +6,53 @@
     height: 100%;
 }
 
-.scheme-renderer-container > .scheme-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
+    .scheme-renderer-container > .scheme-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 
-.scheme-renderer-container > .scheme-content > .horizontal-delimiter {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    border-top: 0.5px solid rgba(3, 2, 41, 0.1);
-    pointer-events: none;
-    transform: translateY(1.75px);
-}
+        .scheme-renderer-container > .scheme-content > .horizontal-delimiter {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            border-top: 0.5px solid rgba(3, 2, 41, 0.1);
+            pointer-events: none;
+            transform: translateY(1.75px);
+        }
 
-.scheme-renderer-container > .scheme-content > .vertical-delimiter {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    border-left: 0.5px solid rgba(3, 2, 41, 0.1);
-    pointer-events: none;
-    transform: translateX(1.75px);
-}
+        .scheme-renderer-container > .scheme-content > .vertical-delimiter {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border-left: 0.5px solid rgba(3, 2, 41, 0.1);
+            pointer-events: none;
+            transform: translateX(1.75px);
+        }
 
-.scheme-renderer-container > .scheme-content > .wire-pointer {
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle at center, #CED3E0aa 1%, #00000000 100%);
-    border-radius: 20px;
-    position: absolute;
-    transition: all 0.095s ease;
+        .scheme-renderer-container > .scheme-content > .wire-pointer {
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at center, #CED3E0aa 1%, #00000000 100%);
+            border-radius: 20px;
+            position: absolute;
+            transition: all 0.095s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 1100;
+        }
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    z-index: 1100;
-}
+            .scheme-renderer-container > .scheme-content > .wire-pointer.first {
+                transition: none;
+            }
 
-.scheme-renderer-container > .scheme-content > .wire-pointer.first {
-    transition: none;
-}
-
-.scheme-renderer-container > .scheme-content > .wire-pointer > .center {
-    width: 5px;
-    height: 5px;
-    border-radius: 2.5px;
-    background: #CED3E0;
-}
+            .scheme-renderer-container > .scheme-content > .wire-pointer > .center {
+                width: 5px;
+                height: 5px;
+                border-radius: 2.5px;
+                background: #CED3E0;
+            }

@@ -46,7 +46,7 @@
         {
             <div
                 class="element-help-menu"
-                style="@($"top: {_selectedPos.Y}px; left: {_selectedPos.X}px;")">
+                style="@($"top: {_selectedPos.Y.ToString(_nF)}px; left: {_selectedPos.X.ToString(_nF)}px;")">
 
                 <div class="icon" @onclick="() => { RemoveElement(_selectedElement); }">
                     <div class="noselectable-text">&#x2715;</div>

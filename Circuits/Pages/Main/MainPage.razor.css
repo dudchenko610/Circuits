@@ -4,178 +4,177 @@
     display: flex;
 }
 
-.main-page-cnt > .navigation {
-    margin: 16px;
-    flex: 1 1;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #CED3E0;
-    box-sizing: border-box;
-    box-shadow: 0px 2px 4px rgb(0 0 0 / 12%);
-    border-radius: 20px;
-}
-
-    .main-page-cnt > .navigation > .control-block {
-        position: absolute;
-        top: 0;
-        display: flex;
-        gap: 10px;
-        background: white;
-        z-index: 100;
-        padding: 10px;
-        border-bottom: 1px solid #CED3E0;
-        opacity: 0.2;
-        transition: opacity 0.2s ease;
+    .main-page-cnt > .navigation {
+        margin: 16px;
+        flex: 1 1;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #CED3E0;
+        box-sizing: border-box;
+        box-shadow: 0px 2px 4px rgb(0 0 0 / 12%);
+        border-radius: 20px;
     }
 
-        .main-page-cnt > .navigation > .control-block.right {
-            right: 0;
-            border-bottom-left-radius: 20px;
-            border-top-right-radius: 20px;
-            border-left: 1px solid #CED3E0;
-        }
-
-        .main-page-cnt > .navigation > .control-block.left {
-            left: 0;
-            border-bottom-right-radius: 20px;
-            border-top-left-radius: 20px;
-            border-right: 1px solid #CED3E0;
-        }
-    
-        .main-page-cnt > .navigation > .control-block:hover {
-            opacity: 1.0;
-        }
-        
-        .main-page-cnt > .navigation > .control-block > .icon {
-            width: 30px;
-            height: 30px;
+        .main-page-cnt > .navigation > .control-block {
+            position: absolute;
+            top: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(3, 2, 41, 0.4);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            outline: none;
+            gap: 10px;
+            background: white;
+            z-index: 100;
+            padding: 10px;
+            border-bottom: 1px solid #CED3E0;
+            opacity: 0.2;
+            transition: opacity 0.2s ease;
         }
-            
-            .main-page-cnt > .navigation > .control-block > .icon:hover {
-                transform: scale(1.05);
-            }
-            
-            .main-page-cnt > .navigation > .control-block > .icon > div {
-                font-family: 'Nunito';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 20px;
-                color: rgba(3, 2, 41, 0.4);
+
+            .main-page-cnt > .navigation > .control-block.right {
+                right: 0;
+                border-bottom-left-radius: 20px;
+                border-top-right-radius: 20px;
+                border-left: 1px solid #CED3E0;
             }
 
-.main-page-cnt > .navigation > .control-block > .icon.graph-details > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 16px;
-    height: 16px;
-}
+            .main-page-cnt > .navigation > .control-block.left {
+                left: 0;
+                border-bottom-right-radius: 20px;
+                border-top-left-radius: 20px;
+                border-right: 1px solid #CED3E0;
+            }
 
-.main-page-cnt > .navigation > .control-block > .icon.graph-details > div > svg {
-    width: 100%;
-    height: 100%;
-}
+            .main-page-cnt > .navigation > .control-block:hover {
+                opacity: 1.0;
+            }
 
-.main-page-cnt > .navigation > .element-help-menu {
-    position: absolute;
-    height: 30px;
-    transform: translateY(calc(-100% - 15px));
-    border: 1px solid #CED3E0;
-    background: white;
-    border-radius: 20px;
-    z-index: 10;
-    opacity: 0.2;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding-left: 6px;
-    padding-right: 6px;
-}
+            .main-page-cnt > .navigation > .control-block > .icon {
+                width: 30px;
+                height: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid rgba(3, 2, 41, 0.4);
+                border-radius: 20px;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+                outline: none;
+            }
 
-.main-page-cnt > .navigation > .element-help-menu > .icon {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgba(3, 2, 41, 0.4);
-    border-radius: 20px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    outline: none;
-    margin-left: 0.5px;
-}
+                .main-page-cnt > .navigation > .control-block > .icon:hover {
+                    transform: scale(1.05);
+                }
 
-.main-page-cnt > .navigation > .element-help-menu > .icon.rotate {
-    font-size: 16px;
-    margin-bottom: 1px;
-    margin-left: 1px;
-}
+                .main-page-cnt > .navigation > .control-block > .icon > div {
+                    font-family: 'Nunito';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 20px;
+                    color: rgba(3, 2, 41, 0.4);
+                }
 
-.main-page-cnt > .navigation > .element-help-menu > .icon:hover {
-    transform: scale(1.05);
-}
+                .main-page-cnt > .navigation > .control-block > .icon.graph-details > div {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 16px;
+                    height: 16px;
+                }
 
-.main-page-cnt > .navigation > .element-help-menu > .icon > div {
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    color: rgba(3, 2, 41, 0.4);
-}
+                    .main-page-cnt > .navigation > .control-block > .icon.graph-details > div > svg {
+                        width: 100%;
+                        height: 100%;
+                    }
 
-.main-page-cnt > .navigation > .element-help-menu:hover {
-    opacity: 1.0;
-}
+        .main-page-cnt > .navigation > .element-help-menu {
+            position: absolute;
+            height: 30px;
+            transform: translateY(calc(-100% - 15px));
+            border: 1px solid #CED3E0;
+            background: white;
+            border-radius: 20px;
+            z-index: 10;
+            opacity: 0.2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
 
-.main-page-cnt .control-icon {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgba(3, 2, 41, 0.4);
-    border-radius: 20px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    outline: none;
+            .main-page-cnt > .navigation > .element-help-menu > .icon {
+                width: 20px;
+                height: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid rgba(3, 2, 41, 0.4);
+                border-radius: 20px;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+                outline: none;
+                margin-left: 0.5px;
+            }
 
-    font-family: Nunito;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 18px;
-    color: rgba(3, 2, 41, 0.4);
-}
+                .main-page-cnt > .navigation > .element-help-menu > .icon.rotate {
+                    font-size: 16px;
+                    margin-bottom: 1px;
+                    margin-left: 1px;
+                }
 
-.main-page-cnt .control-icon:hover {
-    transform: scale(1.05);
-}
+                .main-page-cnt > .navigation > .element-help-menu > .icon:hover {
+                    transform: scale(1.05);
+                }
 
-.main-page-cnt .control-icon.pen.activated {
-    border: 1px solid rgba(141, 2, 3, 0.4);
-    color: rgba(141, 2, 3, 0.4);
-}
+                .main-page-cnt > .navigation > .element-help-menu > .icon > div {
+                    font-family: 'Nunito';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 12px;
+                    color: rgba(3, 2, 41, 0.4);
+                }
 
-.main-page-cnt > .navigation > .graph-inspector-wrapper  {
-    position: absolute;
-    top: 0;
-    left: -25%;
-    height: 100%;
-    width: 25%;
-    transition: left 0.5s ease;
-    border-right: 1px solid #CED3E0;
-    overflow: hidden;
-    z-index: 1;
-}
+            .main-page-cnt > .navigation > .element-help-menu:hover {
+                opacity: 1.0;
+            }
 
-.main-page-cnt > .navigation > .graph-inspector-wrapper.show {
-    left: 0;
-}
+    .main-page-cnt .control-icon {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid rgba(3, 2, 41, 0.4);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        outline: none;
+        font-family: Nunito;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 18px;
+        color: rgba(3, 2, 41, 0.4);
+    }
+
+        .main-page-cnt .control-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .main-page-cnt .control-icon.pen.activated {
+            border: 1px solid rgba(141, 2, 3, 0.4);
+            color: rgba(141, 2, 3, 0.4);
+        }
+
+    .main-page-cnt > .navigation > .graph-inspector-wrapper {
+        position: absolute;
+        top: 0;
+        left: -25%;
+        height: 100%;
+        width: 25%;
+        transition: left 0.5s ease;
+        border-right: 1px solid #CED3E0;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+        .main-page-cnt > .navigation > .graph-inspector-wrapper.show {
+            left: 0;
+        }

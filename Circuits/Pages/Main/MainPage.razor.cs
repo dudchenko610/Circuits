@@ -4,6 +4,7 @@ using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
+using System.Globalization;
 
 namespace Circuits.Pages.Main;
 
@@ -11,6 +12,7 @@ public partial class MainPage : IDisposable
 {
     [Inject] private ISchemeService _schemeService { get; set; } = null!;
 
+    private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private readonly NavigationPlaneContext _navPlaneContext = new();
     private readonly SchemeRendererContext _context = new();
     private readonly Vec2 _firstPoint = new();

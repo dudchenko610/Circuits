@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Circuits.Components.Common\Circuits.Components.Common.csproj" />
     <ProjectReference Include="..\Circuits.Services\Circuits.Services.csproj" />
   </ItemGroup>
 
