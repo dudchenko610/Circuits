@@ -8,7 +8,7 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"transistor element {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == Transistor ? "selected" : "")} {(_draggingElement == Transistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
+     class="@($"transistor element {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == Transistor ? "selected" : "")} {(_draggingElement == Transistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(Transistor) ? "highlighted" : "")}")"
      style="@($"left: {(Transistor.P1.X - Transistor.ShiftFromTopLeft.X) * CellSize}px; top: {(Transistor.P1.Y - Transistor.ShiftFromTopLeft.Y) * CellSize}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
     <div @onclick="OnElementClickedAsync"
@@ -42,7 +42,7 @@
 {
     var draggingElement = (Transistor)_draggingElement;
 
-    <div class="@($"transistor dragged {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == draggingElement ? "selected" : "")}")"
+    <div class="@($"transistor dragged {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(Transistor) ? "highlighted" : "")}")"
          style="@($"left: {_draggingPos.X.ToString(_nF)}px; top: {_draggingPos.Y.ToString(_nF)}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
         <div class="transistor-content" 

@@ -4,11 +4,13 @@ using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
+using Circuits.Services.Services.Interfaces;
 
 namespace Circuits.Components.Main.SchemeRenderer.Elements.WireE;
 
 public partial class WireComponent : IDisposable
 {
+    [Inject] private IHighlightService _highlightService { get; set; } = null!;
     [CascadingParameter(Name="SchemeRenderReference")] public SchemeRendererComponent SchemeRenderer { get; set; } = null!;
     [Parameter] public Wire Wire { get; set; } = null!;
 
@@ -21,7 +23,8 @@ public partial class WireComponent : IDisposable
     private bool _eventsDisabled => SchemeRenderer.SchemeRendererContext.PencilMode;
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
-
+    private Vec2 _pos = new();
+    
     // protected override void OnAfterRender(bool firstRender)
     // {
     //     Console.WriteLine("OnAfterRender Wire");
@@ -30,11 +33,13 @@ public partial class WireComponent : IDisposable
     protected override void OnInitialized()
     {
         SchemeRenderer.OnDragUpdate += OnDraggingUpdate;
+        _highlightService.OnUpdate += StateHasChanged;
     }
 
     public void Dispose()
     {
         SchemeRenderer.OnDragUpdate -= OnDraggingUpdate;
+        _highlightService.OnUpdate -= StateHasChanged;
     }
 
     private void OnDraggingUpdate()
@@ -42,7 +47,7 @@ public partial class WireComponent : IDisposable
         if (_draggingElement == Wire && _firstDragOver)
         {
             StateHasChanged();
-        }    
+        }
     }
 
     private void OnDragStart(ExtMouseEventArgs e)
@@ -60,8 +65,6 @@ public partial class WireComponent : IDisposable
         await SchemeRenderer.OnElementClickedAsync(Wire);
     }
 
-    private Vec2 _pos = new();
-    
     private Vec2 GetPosition(bool subtractP1 = false)
     {
         if (subtractP1)

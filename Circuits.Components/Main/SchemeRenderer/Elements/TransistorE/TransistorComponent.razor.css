@@ -173,18 +173,38 @@
         box-shadow: 0px 0px 7px 1px #e5a4aa;
     }
 
+    .transistor.highlighted .selectable {
+        background: #a4e5aa;
+        box-shadow: 0px 0px 7px 1px #a4e5aa;
+    }
+
     .transistor.selected .main-circle {
         border: 2.25px solid #e5a4aa;
         box-shadow: 0px 0px 7px 1px #e5a4aa, inset 0px 0px 7px 1px #e5a4aa;
+    }
+
+    .transistor.highlighted .main-circle {
+        border: 2.25px solid #a4e5aa;
+        box-shadow: 0px 0px 7px 1px #a4e5aa, inset 0px 0px 7px 1px #a4e5aa;
     }
 
         .transistor.selected .main-circle > .arrow {
             border-top: 11px solid #e5a4aa;
         }
 
+        .transistor.highlighted .main-circle > .arrow {
+            border-top: 11px solid #a4e5aa;
+        }
+
     .transistor.selected .circle.selectable {
         box-shadow: 0px 0px 7px 1px #e5a4aa;
         background: #e8c5c9;
+        z-index: 110;
+    }
+
+    .transistor.highlighted .circle.selectable {
+        box-shadow: 0px 0px 7px 1px #a4e5aa;
+        background: #c5e8c9;
         z-index: 110;
     }
 
@@ -194,10 +214,25 @@
         background: #e5a4aa;
     }
 
+    .transistor.highlighted > .transistor-content > .w1,
+    .transistor.highlighted > .transistor-content > .base,
+    .transistor.highlighted > .transistor-content > .main-circle > .w2 {
+        background: #a4e5aa;
+    }
+
     .transistor.npn.selected > .transistor-content > .main-circle > .w3 {
         background: linear-gradient(to right, #e5a4aa 0, #e5a4aa 60%, #00000000 60%, #00000000 100%);
     }
 
     .transistor.pnp.selected > .transistor-content > .main-circle > .w3 {
-        background: linear-gradient(to right, #00000000 0, #00000000 35%, #e5a4aa 35%, #e5a4aa 100%);
+        background: linear-gradient(to right, #00000000 0, #00000000 35%, #e5a4aa 35%, #a4e5aa 100%);
     }
+
+    .transistor.npn.highlighted > .transistor-content > .main-circle > .w3 {
+        background: linear-gradient(to right, #a4e5aa 0, #a4e5aa 60%, #00000000 60%, #00000000 100%);
+    }
+    
+    .transistor.pnp.highlighted > .transistor-content > .main-circle > .w3 {
+        background: linear-gradient(to right, #00000000 0, #00000000 35%, #a4e5aa 35%, #a4e5aa 100%);
+    }
+

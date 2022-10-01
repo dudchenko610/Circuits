@@ -13,7 +13,7 @@ public interface IJSUtilsService
     [JSInvokable]
     static async Task OnBrowserResizeAsync()
     {
-        if (OnResize != null)
+        if (OnResize != null!)
         {
             await OnResize.Invoke();
         }

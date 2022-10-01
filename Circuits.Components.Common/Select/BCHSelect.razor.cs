@@ -204,7 +204,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
             Selected = option;
             Filter = string.Empty;
 
-            if (Selected != null)
+            if (Selected != null!)
             {
                 _placeholder = ElementNamePredicate.Invoke(Selected);
             }

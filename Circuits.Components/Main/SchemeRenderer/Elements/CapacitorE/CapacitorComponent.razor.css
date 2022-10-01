@@ -73,9 +73,20 @@
     z-index: 90;
 }
 
+.capacitor.highlighted > .capacitor-content {
+    background: linear-gradient(to right, #a4e5aa 0, #a4e5aa 42%, #00000000 42%, #00000000 58%, #a4e5aa 58%, #a4e5aa 100%);
+    z-index: 90;
+}
+
 .capacitor.selected  > .capacitor-content > .block > .delimiter {
     box-shadow: 0px 0px 7px 1px #e5a4aa;
     background: #e5a4aa;
+    z-index: 90;
+}
+
+.capacitor.highlighted  > .capacitor-content > .block > .delimiter {
+    box-shadow: 0px 0px 7px 1px #a4e5aa;
+    background: #a4e5aa;
     z-index: 90;
 }
 
@@ -86,6 +97,12 @@
 .capacitor.selected > .capacitor-content > .circle {
     box-shadow: 0px 0px 7px 1px #e5a4aa;
     background: #e8c5c9;
+    z-index: 110;
+}
+
+.capacitor.highlighted > .capacitor-content > .circle {
+    box-shadow: 0px 0px 7px 1px #a4e5aa;
+    background: #c5e8c9;
     z-index: 110;
 }
 

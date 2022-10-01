@@ -12,6 +12,8 @@ var services = builder.Services;
 
 services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 services.AddScoped<IJSUtilsService, JSUtilsService>();
-services.AddScoped<ISchemeService, SchemeService>();
+services.AddScoped<IElementService, ElementService>();
+services.AddScoped<IGraphService, GraphService>();
+services.AddScoped<IHighlightService, HighlightService>();
 
 await builder.Build().RunAsync();

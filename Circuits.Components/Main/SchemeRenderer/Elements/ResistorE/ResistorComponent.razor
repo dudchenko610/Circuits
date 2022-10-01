@@ -12,7 +12,7 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"resistor element {(_selectedElement == Resistor ? "selected" : "")} {(_draggingElement == Resistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
+     class="@($"resistor element {(_selectedElement == Resistor ? "selected" : "")} {(_draggingElement == Resistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(Resistor) ? "highlighted" : "")}")"
      style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({Resistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
     <div @onclick="OnElementClickedAsync"
@@ -34,7 +34,7 @@
     var draggingElement = (Resistor)_draggingElement;
     var dragPos = GetPosition(true);
 
-    <div class="@($"resistor dragged {(_selectedElement == draggingElement ? "selected" : "")}")"
+    <div class="@($"resistor dragged {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(Resistor) ? "highlighted" : "")}")"
          style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({Resistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
         <div class="resistor-content">

@@ -4,7 +4,7 @@ using Circuits.ViewModels.Math;
 
 namespace Circuits.Services.Services;
 
-public class SchemeService : ISchemeService
+public class ElementService : IElementService
 {
     class NodeData
     {
@@ -12,18 +12,13 @@ public class SchemeService : ISchemeService
         public int PointIndex { get; set; }
     }
 
-    public IReadOnlyList<Element> Elements { get; }
+    public IReadOnlyList<Element> Elements => _elements;
 
     public event Action? OnUpdate;
 
     private readonly List<Element> _elements = new();
     private readonly Dictionary<int, List<NodeData>> _nodesHashMap = new();
-
-    public SchemeService()
-    {
-        Elements = _elements;
-    }
-
+    
     public void Add(Element element)
     {
         // 1. Find touching sides
@@ -110,6 +105,8 @@ public class SchemeService : ISchemeService
         {
             AddWithoutCheck(element);
         }
+        
+        OnUpdate?.Invoke();
     }
 
     private void SeparateWire(Vec2 point, bool isHorizontal)
@@ -210,6 +207,8 @@ public class SchemeService : ISchemeService
                 }
             }
         }
+        
+        OnUpdate?.Invoke();
     }
 
     public bool Overlap(Element e1, Element e2)

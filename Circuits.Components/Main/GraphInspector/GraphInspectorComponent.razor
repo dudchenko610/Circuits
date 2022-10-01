@@ -1,14 +1,18 @@
+@using Circuits.ViewModels.Entities.Elements
 <div class="graph-inspector">
 
-    <BCHSelect TItem="string"
-               Options="_items"
-               Height="300"
-               Filtering="false"
-               Grouping="true"
-               MultipleSelect="true"
-               ElementNamePredicate="x => x"
-               GroupPredicate='x => x.Contains("s")'
-               GroupNamePredicate='x => x.Contains("s") ? "Even" : "Odd"'
-               @bind-SelectedItems="_selectedItems" />
-
+    @if (_elementService.Elements.Count > 0)
+    {
+        <BCHSelect TItem="Element"
+                   Options="@_elementService.Elements"
+                   Height="300"
+                   Filtering="false"
+                   Grouping="true"
+                   MultipleSelect="true"
+                   ElementNamePredicate="x => x.GetType().Name.ToLower()"
+                   GroupPredicate='x => x.GetType().Name'
+                   GroupNamePredicate='x => $"{x.GetType().Name}s"' 
+                   SelectedItemsChanged="OnSelectElements"/>
+    }
+    
 </div>

@@ -1,4 +1,5 @@
 using System.Globalization;
+using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
@@ -9,6 +10,8 @@ namespace Circuits.Components.Main.SchemeRenderer.Elements.DCSourceE;
 
 public partial class DCSourceComponent : IDisposable
 {
+    [Inject] private IHighlightService _highlightService { get; set; } = null!;
+    
     [CascadingParameter(Name="SchemeRenderReference")] public SchemeRendererComponent SchemeRenderer { get; set; } = null!;
     [Parameter] public DCSource DCSource { get; set; } = null!;
 
@@ -30,11 +33,13 @@ public partial class DCSourceComponent : IDisposable
     protected override void OnInitialized()
     {
         SchemeRenderer.OnDragUpdate += OnDraggingUpdate;
+        _highlightService.OnUpdate += StateHasChanged;
     }
 
     public void Dispose()
     {
         SchemeRenderer.OnDragUpdate -= OnDraggingUpdate;
+        _highlightService.OnUpdate -= StateHasChanged;
     }
 
     private void OnDraggingUpdate()

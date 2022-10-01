@@ -12,7 +12,7 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"inductor element {(_selectedElement == Inductor ? "selected" : "")} {(_draggingElement == Inductor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")}")"
+     class="@($"inductor element {(_selectedElement == Inductor ? "selected" : "")} {(_draggingElement == Inductor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(Inductor) ? "highlighted" : "")}")"
      style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({Inductor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
     <div @onclick="OnElementClickedAsync"
@@ -38,7 +38,7 @@
     var draggingElement = (Inductor)_draggingElement;
     var dragPos = GetPosition(true);
 
-    <div class="@($"inductor dragged {(_selectedElement == draggingElement ? "selected" : "")}")"
+    <div class="@($"inductor dragged {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(Inductor) ? "highlighted" : "")}")"
          style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({Inductor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
         <div class="inductor-content">

@@ -61,12 +61,22 @@
     z-index: 90;
 }
 
+.resistor.highlighted > .resistor-content {
+    background: linear-gradient(to right, #a4e5aa 0, #a4e5aa 17.5%, #00000000 17.5%, #00000000 82.5%, #a4e5aa 82.5%, #a4e5aa 100%);
+    z-index: 90;
+}
+
 .resistor.selected > .resistor-content > .block {
     box-shadow: 0px 0px 7px 1px #e5a4aa;
     border: 2.5px solid #e5a4aa;
     z-index: 90;
 }
 
+.resistor.highlighted > .resistor-content > .block {
+    box-shadow: 0px 0px 7px 1px #a4e5aa;
+    border: 2.5px solid #a4e5aa;
+    z-index: 90;
+}
 
 
 .resistor:hover > .resistor-content > .block,
@@ -77,6 +87,12 @@
 .resistor.selected > .resistor-content > .circle {
     box-shadow: 0px 0px 7px 1px #e5a4aa;
     background: #e8c5c9;
+    z-index: 110;
+}
+
+.resistor.highlighted > .resistor-content > .circle {
+    box-shadow: 0px 0px 7px 1px #a4e5aa;
+    background: #c5e8c9;
     z-index: 110;
 }
 

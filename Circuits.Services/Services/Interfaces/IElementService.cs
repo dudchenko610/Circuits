@@ -2,7 +2,7 @@ using Circuits.ViewModels.Entities.Elements;
 
 namespace Circuits.Services.Services.Interfaces;
 
-public interface ISchemeService
+public interface IElementService
 {
     public IReadOnlyList<Element> Elements { get; }
     public event Action OnUpdate; 

@@ -10,7 +10,7 @@ namespace Circuits.Pages.Main;
 
 public partial class MainPage : IDisposable
 {
-    [Inject] private ISchemeService _schemeService { get; set; } = null!;
+    [Inject] private IElementService _schemeService { get; set; } = null!;
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private readonly NavigationPlaneContext _navPlaneContext = new();
