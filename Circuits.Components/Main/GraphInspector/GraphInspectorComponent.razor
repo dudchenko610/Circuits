@@ -1,10 +1,11 @@
 @using Circuits.ViewModels.Entities.Elements
+@using Circuits.ViewModels.Entities.Structures
 <div class="graph-inspector">
 
-    @if (_elementService.Elements.Count > 0)
+    @if (_schemeService.Elements.Count > 0)
     {
         <BCHSelect TItem="Element"
-                   Options="@_elementService.Elements"
+                   Options="@_schemeService.Elements"
                    Height="300"
                    Filtering="false"
                    Grouping="true"
@@ -13,6 +14,22 @@
                    GroupPredicate='x => x.GetType().Name'
                    GroupNamePredicate='x => $"{x.GetType().Name}s"' 
                    SelectedItemsChanged="OnSelectElements"/>
+    }
+    
+    <div 
+        class="btn noselectable-text" 
+        @onclick="OnBuildBranchClicked">Build Branches</div>
+    
+    @if (_schemeService.Branches.Count > 0)
+    {
+        <BCHSelect TItem="Branch"
+                   Options="@_schemeService.Branches"
+                   Height="300"
+                   Filtering="false"
+                   Grouping="false"
+                   MultipleSelect="true"
+                   ElementNamePredicate='x => $"branch {((List<Branch>) _schemeService.Branches).IndexOf(x)}"'
+                   SelectedItemsChanged="OnSelectBranches"/>
     }
     
 </div>

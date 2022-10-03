@@ -13,7 +13,9 @@ namespace Circuits.Components.Main.SchemeRenderer;
 public partial class SchemeRendererComponent : IDisposable
 {
     [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
-    [Inject] private IElementService _schemeService { get; set; } = null!;
+    [Inject] private IElementService _elementService { get; set; } = null!;
+    [Inject] private ISchemeService _schemeService { get; set; } = null!;
+    
     [Parameter] public RenderFragment ChildContent { get; set; } = null!;
     [Parameter] public SchemeRendererContext SchemeRendererContext { get; set; } = null!;
     [Parameter] public float Scale { get; set; } = 1.0f;
@@ -197,12 +199,12 @@ public partial class SchemeRendererComponent : IDisposable
             
             DraggingElement.Translate(dS);
             
-            if (!_schemeService.Intersects(DraggingElement))
+            if (!_elementService.Intersects(DraggingElement))
             {
                 DraggingElement.Translate(dS.Multiply(-1));
-                _schemeService.Remove(DraggingElement);
+                _elementService.Remove(DraggingElement);
                 DraggingElement.Translate(dS.Multiply(-1));
-                _schemeService.Add(DraggingElement);
+                _elementService.Add(DraggingElement);
             }
             else
             {

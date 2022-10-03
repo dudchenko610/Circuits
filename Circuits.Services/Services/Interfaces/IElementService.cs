@@ -4,7 +4,6 @@ namespace Circuits.Services.Services.Interfaces;
 
 public interface IElementService
 {
-    public IReadOnlyList<Element> Elements { get; }
     public event Action OnUpdate; 
 
     void Add(Element element);

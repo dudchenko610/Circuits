@@ -2,7 +2,7 @@ using Circuits.ViewModels.Entities.Elements;
 
 namespace Circuits.ViewModels.Entities.Structures;
 
-public class Branch
+public class Node
 {
-    public List<Element> Elements { get; set; } = new();
+    public List<NodeElement> NodeElements = new();
 }

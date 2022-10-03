@@ -1,24 +1,25 @@
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
+using Circuits.ViewModels.Entities.Structures;
 using Circuits.ViewModels.Math;
 
 namespace Circuits.Services.Services;
 
 public class ElementService : IElementService
 {
-    class NodeData
-    {
-        public Element Element { get; set; }
-        public int PointIndex { get; set; }
-    }
-
     public IReadOnlyList<Element> Elements => _elements;
 
     public event Action? OnUpdate;
 
-    private readonly List<Element> _elements = new();
-    private readonly Dictionary<int, List<NodeData>> _nodesHashMap = new();
-    
+    private readonly List<Element> _elements;
+    private readonly Dictionary<int, Node> _nodesHashMap;
+
+    public ElementService(ISchemeService schemeService)
+    {
+        _elements = (List<Element>) schemeService.Elements;
+        _nodesHashMap = (Dictionary<int, Node>) schemeService.Nodes;
+    }
+
     public void Add(Element element)
     {
         // 1. Find touching sides
@@ -38,18 +39,18 @@ public class ElementService : IElementService
 
             var hashCodeP1 = ((int)wire.P1.X << 16) | (int)wire.P1.Y;
             var hashCodeP2 = ((int)wire.P2.X << 16) | (int)wire.P2.Y;
-            var nodeDataListP1 = GetNodeData(hashCodeP1);
-            var nodeDataListP2 = GetNodeData(hashCodeP2);
+            var nodeP1 = GetNodeData(hashCodeP1);
+            var nodeP2 = GetNodeData(hashCodeP2);
 
-            if (nodeDataListP1.Count == 1 && nodeDataListP1[0].Element is Wire leftWire &&
-                nodeDataListP1[0].Element.IsHorizontal() == isHorizontal)
+            if (nodeP1.NodeElements.Count == 1 && nodeP1.NodeElements[0].Element is Wire leftWire &&
+                nodeP1.NodeElements[0].Element.IsHorizontal() == isHorizontal)
             {
                 wire.P1.Set(leftWire.P1);
                 RemoveWithoutCheck(leftWire);
             }
 
-            if (nodeDataListP2.Count == 1 && nodeDataListP2[0].Element is Wire rightWire &&
-                nodeDataListP2[0].Element.IsHorizontal() == isHorizontal)
+            if (nodeP2.NodeElements.Count == 1 && nodeP2.NodeElements[0].Element is Wire rightWire &&
+                nodeP2.NodeElements[0].Element.IsHorizontal() == isHorizontal)
             {
                 wire.P2.Set(rightWire.P2);
                 RemoveWithoutCheck(rightWire);
@@ -64,9 +65,9 @@ public class ElementService : IElementService
                 for (var i = (int)wire.P1.X + 1; i < (int)wire.P2.X; i++)
                 {
                     var hashCode = (i << 16) | (int)wire.P1.Y;
-                    var nodeDataList = GetNodeData(hashCode);
+                    var node = GetNodeData(hashCode);
 
-                    if (nodeDataList.Count == 0) continue;
+                    if (node.NodeElements.Count == 0) continue;
                     // should be perpendicular, in theory
 
                     dividePoints.Add(new Vec2(i, wire.P1.Y));
@@ -77,9 +78,9 @@ public class ElementService : IElementService
                 for (var i = (int)wire.P1.Y + 1; i < (int)wire.P2.Y; i++)
                 {
                     var hashCode = ((int)wire.P1.X << 16) | i;
-                    var nodeDataList = GetNodeData(hashCode);
+                    var node = GetNodeData(hashCode);
 
-                    if (nodeDataList.Count == 0) continue;
+                    if (node.NodeElements.Count == 0) continue;
                     // should be perpendicular, in theory
 
                     dividePoints.Add(new Vec2(wire.P1.X, i));
@@ -185,13 +186,13 @@ public class ElementService : IElementService
         foreach (var point in element.Points)
         {
             var hashCode = ((int)point.X << 16) | (int)point.Y;
-            var nodeDataList = GetNodeData(hashCode);
+            var node = GetNodeData(hashCode);
 
-            if (nodeDataList.Count == 2 &&
-                nodeDataList[0].Element is Wire w1 && nodeDataList[1].Element is Wire w2 &&
+            if (node.NodeElements.Count == 2 &&
+                node.NodeElements[0].Element is Wire w1 && node.NodeElements[1].Element is Wire w2 &&
                 w1.IsHorizontal() == w2.IsHorizontal())
             {
-                if (nodeDataList[0].PointIndex == 0)
+                if (node.NodeElements[0].PointIndex == 0)
                 {
                     RemoveWithoutCheck(w1);
                     RemoveWithoutCheck(w2);
@@ -239,13 +240,13 @@ public class ElementService : IElementService
         foreach (var point in element.Points)
         {
             var hashCode = ((int)point.X << 16) | (int)point.Y;
-            var nodeDataList = GetNodeData(hashCode);
+            var node = GetNodeData(hashCode);
 
-            var nodeData = nodeDataList.FirstOrDefault(x => x.Element == element);
+            var nodeData = node.NodeElements.FirstOrDefault(x => x.Element == element);
 
             if (nodeData is not null)
             {
-                nodeDataList.Remove(nodeData);
+                node.NodeElements.Remove(nodeData);
             }
         }
     }
@@ -259,9 +260,9 @@ public class ElementService : IElementService
             var point = element.Points[i];
 
             var hashCode = ((int)point.X << 16) | (int)point.Y;
-            var nodeDataList = GetNodeData(hashCode);
+            var node = GetNodeData(hashCode);
 
-            nodeDataList.Add(new NodeData
+            node.NodeElements.Add(new NodeElement
             {
                 PointIndex = i,
                 Element = element
@@ -269,14 +270,14 @@ public class ElementService : IElementService
         }
     }
 
-    private List<NodeData> GetNodeData(int hashCode)
+    private Node GetNodeData(int hashCode)
     {
-        if (_nodesHashMap.TryGetValue(hashCode, out var nodeDataList)) return nodeDataList;
+        if (_nodesHashMap.TryGetValue(hashCode, out var node)) return node;
 
-        nodeDataList = new List<NodeData>();
-        _nodesHashMap.Add(hashCode, nodeDataList);
+        node = new Node();
+        _nodesHashMap.Add(hashCode, node);
 
-        return nodeDataList;
+        return node;
     }
 
     private bool Intersects(Element e1, Element e2)

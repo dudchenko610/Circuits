@@ -33,9 +33,21 @@ public class HighlightService : IHighlightService
         OnUpdate?.Invoke();
     }
 
-    public void Highlight(Branch branch, bool add)
+    public void Highlight(List<Branch> branches)
     {
-        throw new NotImplementedException();
+        if (branches == null!) return;
+        
+        _highlightedElements.Clear();
+
+        foreach (var branch in branches)
+        {
+            foreach (var element in branch.Elements)
+            {
+                _highlightedElements.Add(element);
+            }
+        }
+        
+        OnUpdate?.Invoke();
     }
 
     public void Clear()

@@ -15,5 +15,6 @@ services.AddScoped<IJSUtilsService, JSUtilsService>();
 services.AddScoped<IElementService, ElementService>();
 services.AddScoped<IGraphService, GraphService>();
 services.AddScoped<IHighlightService, HighlightService>();
+services.AddScoped<ISchemeService, SchemeService>();
 
 await builder.Build().RunAsync();
