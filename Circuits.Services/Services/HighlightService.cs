@@ -19,7 +19,7 @@ public class HighlightService : IHighlightService
         return false;
     }
 
-    public void Highlight(List<Element> elements)
+    public void Highlight(IEnumerable<Element> elements)
     {
         if (elements == null!) return;
         
@@ -33,7 +33,7 @@ public class HighlightService : IHighlightService
         OnUpdate?.Invoke();
     }
 
-    public void Highlight(List<Branch> branches)
+    public void Highlight(IEnumerable<Branch> branches)
     {
         if (branches == null!) return;
         
@@ -44,6 +44,26 @@ public class HighlightService : IHighlightService
             foreach (var element in branch.Elements)
             {
                 _highlightedElements.Add(element);
+            }
+        }
+        
+        OnUpdate?.Invoke();
+    }
+
+    public void Highlight(IEnumerable<Circuit> circuits)
+    {
+        if (circuits == null!) return;
+        
+        _highlightedElements.Clear();
+
+        foreach (var circuit in circuits)
+        {
+            foreach (var branch in circuit.Branches)
+            {
+                foreach (var element in branch.Elements)
+                {
+                    _highlightedElements.Add(element);
+                }
             }
         }
         

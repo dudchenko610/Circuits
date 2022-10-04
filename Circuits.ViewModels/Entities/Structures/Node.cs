@@ -4,5 +4,6 @@ namespace Circuits.ViewModels.Entities.Structures;
 
 public class Node
 {
-    public List<NodeElement> NodeElements = new();
+    public List<NodeElement> NodeElements { get; set; } = new();
+    public List<Branch> Branches { get; set; } = new();
 }

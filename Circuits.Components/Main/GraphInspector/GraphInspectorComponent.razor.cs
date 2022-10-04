@@ -32,10 +32,35 @@ public partial class GraphInspectorComponent : IDisposable
         _highlightService.Highlight(branches);
     }
 
-    private void OnBuildBranchClicked()
+    private void OnBuildBranchesClicked()
     {
         _graphService.BuildBranches();
-        
         StateHasChanged();
+    }
+
+    private void OnBuildSpanningTree()
+    {
+        _graphService.BuildSpanningTree();
+    }
+    
+    private void OnHighlightSpanningTree()
+    {
+        _highlightService.Highlight(_schemeService.SpanningTree);
+    }
+    
+    private void OnHighlightLeftoverBranches()
+    {
+        _highlightService.Highlight(_schemeService.LeftoverBranches);
+    }
+
+    private void OnFindIndependentCircuits()
+    {
+        _graphService.FindFundamentalCycles();
+        StateHasChanged();
+    }
+
+    private void OnSelectCircuits(List<Circuit> circuits)
+    {
+        _highlightService.Highlight(circuits);
     }
 }

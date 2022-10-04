@@ -12,14 +12,16 @@
                    MultipleSelect="true"
                    ElementNamePredicate="x => x.GetType().Name.ToLower()"
                    GroupPredicate='x => x.GetType().Name'
-                   GroupNamePredicate='x => $"{x.GetType().Name}s"' 
+                   GroupNamePredicate='x => $"{x.GetType().Name}s"'
                    SelectedItemsChanged="OnSelectElements"/>
     }
-    
-    <div 
-        class="btn noselectable-text" 
-        @onclick="OnBuildBranchClicked">Build Branches</div>
-    
+
+    <div
+        class="btn noselectable-text"
+        @onclick="OnBuildBranchesClicked">
+        Build Branches
+    </div>
+
     @if (_schemeService.Branches.Count > 0)
     {
         <BCHSelect TItem="Branch"
@@ -28,8 +30,41 @@
                    Filtering="false"
                    Grouping="false"
                    MultipleSelect="true"
-                   ElementNamePredicate='x => $"branch {((List<Branch>) _schemeService.Branches).IndexOf(x)}"'
+                   ElementNamePredicate='x => $"branch {((List<Branch>)_schemeService.Branches).IndexOf(x)}"'
                    SelectedItemsChanged="OnSelectBranches"/>
     }
-    
+
+    <div class="btn noselectable-text"
+         @onclick="OnBuildSpanningTree">
+        Build Spanning Tree
+    </div>
+
+    <div class="btn noselectable-text"
+         @onclick="OnHighlightSpanningTree">
+        Highlight Spanning Tree
+    </div>
+
+
+    <div class="btn noselectable-text"
+         @onclick="OnHighlightLeftoverBranches">
+        Highlight Leftover Branches
+    </div>
+
+    <div class="btn noselectable-text"
+         @onclick="OnFindIndependentCircuits">
+        Find Independent Circuits
+    </div>
+
+    @if (_schemeService.Circuits.Count > 0)
+    {
+        <BCHSelect TItem="Circuit"
+                   Options="@_schemeService.Circuits"
+                   Height="300"
+                   Filtering="false"
+                   Grouping="false"
+                   MultipleSelect="true"
+                   ElementNamePredicate='x => $"circuit {((List<Circuit>)_schemeService.Circuits).IndexOf(x)}"'
+                   SelectedItemsChanged="OnSelectCircuits"/>
+    }
+
 </div>

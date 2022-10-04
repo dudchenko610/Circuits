@@ -7,7 +7,8 @@ public interface IHighlightService
 {
     public event Action OnUpdate;
     bool IsHighlighted(Element element);
-    void Highlight(List<Element> elements);
-    void Highlight(List<Branch> branches);
+    void Highlight(IEnumerable<Element> elements);
+    void Highlight(IEnumerable<Branch> branches);
+    void Highlight(IEnumerable<Circuit> circuits);
     void Clear();
 }
