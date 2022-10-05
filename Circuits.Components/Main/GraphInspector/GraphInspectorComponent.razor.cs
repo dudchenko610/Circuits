@@ -16,7 +16,6 @@ public partial class GraphInspectorComponent : IDisposable
 
     private List<Element> _selectedElements = new();
     private List<Branch> _selectedBranches = new();
-    private List<Circuit> _selectedCircuits = new();
     
     protected override void OnInitialized()
     {
@@ -59,30 +58,32 @@ public partial class GraphInspectorComponent : IDisposable
         StateHasChanged();
     }
 
-    private void OnBuildSpanningTree()
+    private void OnBuildSpanningTrees()
     {
-        _graphService.BuildSpanningTree();
+        _graphService.BuildSpanningTrees();
     }
     
-    private void OnHighlightSpanningTree()
+    private void OnHighlightSpanningTrees()
     {
         var removeElements = _selectedElements.ToList();
         
         _selectedElements.Clear();
-
         _highlightService.Highlight(removeElements, false);
-        
-        foreach (var branch in _schemeService.SpanningTree)
+
+        foreach (var graph in _schemeService.Graphs)
         {
-            foreach (var element in branch.Elements)
+            foreach (var branch in graph.SpanningTree)
             {
-                if (!_selectedElements.Contains(element))
+                foreach (var element in branch.Elements)
                 {
-                    _selectedElements.Add(element);
+                    if (!_selectedElements.Contains(element))
+                    {
+                        _selectedElements.Add(element);
+                    }
                 }
-            }
             
-            _highlightService.Highlight(branch.Elements, true);
+                _highlightService.Highlight(branch.Elements, true);
+            }
         }
     }
     
@@ -91,20 +92,22 @@ public partial class GraphInspectorComponent : IDisposable
         var removeElements = _selectedElements.ToList();
         
         _selectedElements.Clear();
-
         _highlightService.Highlight(removeElements, false);
-        
-        foreach (var branch in _schemeService.LeftoverBranches)
+
+        foreach (var graph in _schemeService.Graphs)
         {
-            foreach (var element in branch.Elements)
+            foreach (var branch in graph.LeftoverBranches)
             {
-                if (!_selectedElements.Contains(element))
+                foreach (var element in branch.Elements)
                 {
-                    _selectedElements.Add(element);
+                    if (!_selectedElements.Contains(element))
+                    {
+                        _selectedElements.Add(element);
+                    }
                 }
-            }
             
-            _highlightService.Highlight(branch.Elements, true);
+                _highlightService.Highlight(branch.Elements, true);
+            }
         }
     }
 

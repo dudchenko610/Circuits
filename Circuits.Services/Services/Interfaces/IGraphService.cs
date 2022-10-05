@@ -3,6 +3,6 @@ namespace Circuits.Services.Services.Interfaces;
 public interface IGraphService
 {
     void BuildBranches();
-    void BuildSpanningTree();
+    void BuildSpanningTrees();
     void FindFundamentalCycles();
 }

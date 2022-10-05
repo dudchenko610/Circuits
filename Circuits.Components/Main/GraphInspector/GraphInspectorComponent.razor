@@ -39,13 +39,13 @@
     }
 
     <div class="btn noselectable-text"
-         @onclick="OnBuildSpanningTree">
-        Build Spanning Tree
+         @onclick="OnBuildSpanningTrees">
+        Build Spanning Trees
     </div>
 
     <div class="btn noselectable-text"
-         @onclick="OnHighlightSpanningTree">
-        Highlight Spanning Tree
+         @onclick="OnHighlightSpanningTrees">
+        Highlight Spanning Trees
     </div>
 
 
@@ -59,18 +59,20 @@
         Find Independent Circuits
     </div>
 
-    @if (_schemeService.Circuits.Count > 0)
+    @foreach (var graph in _schemeService.Graphs)
     {
-        <BCHSelect TItem="Circuit"
-                   Options="@_schemeService.Circuits"
-                   Height="300"
-                   Filtering="false"
-                   Grouping="false"
-                   MultipleSelect="true"
-                   ElementNamePredicate='x => $"circuit {((List<Circuit>)_schemeService.Circuits).IndexOf(x)}"'
-                   SelectedItems="_selectedCircuits"
-                   OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
-                   OnDeselectItem="(e) => { OnSelectCircuit(e, false); }"/>
+        @if (graph.Circuits.Count > 0)
+        {
+            <BCHSelect TItem="Circuit"
+                       Options="@graph.Circuits"
+                       Height="300"
+                       Filtering="false"
+                       Grouping="false"
+                       MultipleSelect="true"
+                       ElementNamePredicate='x => $"circuit {(graph.Circuits).IndexOf(x)}"'
+                       OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
+                       OnDeselectItem="(e) => { OnSelectCircuit(e, false); }"/>
+        }
     }
 
 </div>

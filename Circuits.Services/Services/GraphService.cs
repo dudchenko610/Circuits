@@ -10,20 +10,15 @@ public class GraphService : IGraphService
     private readonly ISchemeService _schemeService;
 
     private readonly List<Branch> _branches;
-    private readonly List<Branch> _spanningTree;
-    private readonly List<Branch> _leftoverBranches;
-    private readonly List<Circuit> _circuits;
+    private readonly List<Graph> _graphs;
 
     private readonly HashSet<Element> _checkedElements = new();
-    private readonly HashSet<Node> _spanningTreeNodes = new();
 
     public GraphService(ISchemeService schemeService)
     {
         _schemeService = schemeService;
         _branches = (List<Branch>) _schemeService.Branches;
-        _spanningTree = (List<Branch>) _schemeService.SpanningTree;
-        _leftoverBranches = (List<Branch>) _schemeService.LeftoverBranches;
-        _circuits = (List<Circuit>) _schemeService.Circuits;
+        _graphs = (List<Graph>) _schemeService.Graphs;
     }
 
     public void BuildBranches()
@@ -57,13 +52,14 @@ public class GraphService : IGraphService
             {
                 branch.Elements.Add(element);
             }
-
+            
             _checkedElements.Add(element);
             
             var hashCode = GetPointHashCode(point!);
             var node = _schemeService.Nodes[hashCode];
+            var nextElement = node.NodeElements.FirstOrDefault(x => x.Element != element)?.Element;
 
-            if (node.NodeElements.Count != 2)
+            if (node.NodeElements.Count != 2 || (nextElement != null! && branch.Elements.Contains(nextElement))) // branching or loop
             {
                 element = null!;
                 // save point as branch point
@@ -81,7 +77,7 @@ public class GraphService : IGraphService
             }
             else
             {
-                element = node.NodeElements.FirstOrDefault(x => x.Element != element)!.Element;
+                element = nextElement!;
                 point = element.Points.FirstOrDefault(x => GetPointHashCode(x) != hashCode)!;
             }
         }
@@ -92,60 +88,102 @@ public class GraphService : IGraphService
         return ((int)point.X << 16) | (int)point.Y;
     }
 
-    public void BuildSpanningTree()
+    public void BuildSpanningTrees() // problem here
     {
         if (_branches.Count == 0) return;
-        
-        _spanningTreeNodes.Clear();
-        _spanningTree.Clear();
-        _leftoverBranches.Clear();
 
-        _spanningTreeNodes.Add(_branches[0].NodeLeft);
+        var spanningTreeNodes = new HashSet<Node>();
+        var branches = _branches.ToList();
+        var usedBranches = new List<Branch>();
         
-        foreach (var branch in _branches)
+        _graphs.Clear();
+
+        while (branches.Count != 0)
         {
-            var leftNode = _spanningTreeNodes.Contains(branch.NodeLeft);
-            var rightNode = _spanningTreeNodes.Contains(branch.NodeRight);
+            spanningTreeNodes.Clear();
+            spanningTreeNodes.Add(branches[0].NodeLeft);
+            var graph = new Graph();
+
+            TraverseSpanningTree(branches[0], graph, spanningTreeNodes, usedBranches);
+
+            branches.RemoveAll(x => usedBranches.Contains(x));
+            usedBranches.Clear();
             
-            if (leftNode && !rightNode)
-            {
-                _spanningTree.Add(branch);
-                _spanningTreeNodes.Add(branch.NodeRight);
-            }
+            _graphs.Add(graph);
+        }
+    }
 
-            if (!leftNode && rightNode)
-            {
-                _spanningTree.Add(branch);
-                _spanningTreeNodes.Add(branch.NodeLeft);
-            }
+    private void TraverseSpanningTree(Branch branch, Graph graph, HashSet<Node> spanningTreeNodes, List<Branch> usedBranches)
+    {
+        var leftNode = spanningTreeNodes.Contains(branch.NodeLeft);
+        var rightNode = spanningTreeNodes.Contains(branch.NodeRight);
+            
+        if (leftNode && !rightNode)
+        {
+            graph.SpanningTree.Add(branch);
+            spanningTreeNodes.Add(branch.NodeRight);
+            usedBranches.Add(branch);
+        }
 
-            if (
-                _spanningTreeNodes.Contains(branch.NodeLeft) && 
-                _spanningTreeNodes.Contains(branch.NodeRight) &&
-                !_spanningTree.Contains(branch))
+        if (!leftNode && rightNode)
+        {
+            graph.SpanningTree.Add(branch);
+            spanningTreeNodes.Add(branch.NodeLeft);
+            usedBranches.Add(branch);
+        }
+
+        if (
+            spanningTreeNodes.Contains(branch.NodeLeft) && 
+            spanningTreeNodes.Contains(branch.NodeRight) &&
+            !graph.SpanningTree.Contains(branch))
+        {
+            graph.LeftoverBranches.Add(branch);
+            usedBranches.Add(branch);
+        }
+
+        if (!leftNode)
+        {
+            var branches = branch.NodeLeft.Branches
+                .Where(x => x != branch && !usedBranches.Contains(x));
+
+            foreach (var nextBranch in branches)
             {
-                _leftoverBranches.Add(branch);
+                TraverseSpanningTree(nextBranch, graph, spanningTreeNodes, usedBranches);
+            }
+        }
+        
+        if (!rightNode)
+        {
+            var branches = branch.NodeRight.Branches
+                .Where(x => x != branch && !usedBranches.Contains(x));
+
+            foreach (var nextBranch in branches)
+            {
+                TraverseSpanningTree(nextBranch, graph, spanningTreeNodes, usedBranches);
             }
         }
     }
 
     public void FindFundamentalCycles()
     {
-        _circuits.Clear();
-        
-        var traversed = new List<Branch>();
-        
-        foreach (var branch in _leftoverBranches)
+        foreach (var graph in _graphs)
         {
-            var circuit = new Circuit();
+            graph.Circuits.Clear();
             
-            circuit.Branches.Add(branch);
-            circuit.Branches.AddRange(_spanningTree);
-            traversed.Clear();
+            var traversed = new List<Branch>();
+        
+            foreach (var branch in graph.LeftoverBranches)
+            {
+                var circuit = new Circuit();
             
-            TraverseGraph(circuit, traversed, branch, true);
+                circuit.Branches.Add(branch);
+                circuit.Branches.AddRange(graph.SpanningTree);
+                traversed.Clear();
             
-            _circuits.Add(circuit);
+                TraverseGraph(circuit, traversed, branch, true);
+            
+                graph.Circuits.Add(circuit);
+            }
         }
     }
 
