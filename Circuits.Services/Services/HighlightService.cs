@@ -1,6 +1,5 @@
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
-using Circuits.ViewModels.Entities.Structures;
 
 namespace Circuits.Services.Services;
 
@@ -19,54 +18,37 @@ public class HighlightService : IHighlightService
         return false;
     }
 
-    public void Highlight(IEnumerable<Element> elements)
+    public void Highlight(Element element, bool show)
     {
-        if (elements == null!) return;
-        
-        _highlightedElements.Clear();
-
-        foreach (var element in elements)
+        if (show)
         {
             _highlightedElements.Add(element);
         }
-        
+        else
+        {
+            _highlightedElements.Remove(element);
+        }
+
         OnUpdate?.Invoke();
     }
 
-    public void Highlight(IEnumerable<Branch> branches)
+    public void Highlight(List<Element> elements, bool show)
     {
-        if (branches == null!) return;
-        
-        _highlightedElements.Clear();
-
-        foreach (var branch in branches)
+        if (show)
         {
-            foreach (var element in branch.Elements)
+            foreach (var element in elements)
             {
                 _highlightedElements.Add(element);
             }
         }
-        
-        OnUpdate?.Invoke();
-    }
-
-    public void Highlight(IEnumerable<Circuit> circuits)
-    {
-        if (circuits == null!) return;
-        
-        _highlightedElements.Clear();
-
-        foreach (var circuit in circuits)
+        else
         {
-            foreach (var branch in circuit.Branches)
+            foreach (var element in elements)
             {
-                foreach (var element in branch.Elements)
-                {
-                    _highlightedElements.Add(element);
-                }
+                _highlightedElements.Remove(element);
             }
         }
-        
+
         OnUpdate?.Invoke();
     }
 

@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Entities.Structures;
@@ -12,6 +14,10 @@ public partial class GraphInspectorComponent : IDisposable
     [Inject] private IGraphService _graphService { get; set; } = null!;
     [Inject] private IHighlightService _highlightService { get; set; } = null!;
 
+    private List<Element> _selectedElements = new();
+    private List<Branch> _selectedBranches = new();
+    private List<Circuit> _selectedCircuits = new();
+    
     protected override void OnInitialized()
     {
         _elementService.OnUpdate += StateHasChanged;
@@ -22,14 +28,29 @@ public partial class GraphInspectorComponent : IDisposable
         _elementService.OnUpdate -= StateHasChanged;
     }
 
-    private void OnSelectElements(List<Element> elements)
+    private void OnElementSelected(Element element, bool added)
     {
-        _highlightService.Highlight(elements);
+        _highlightService.Highlight(element, added);
     }
-
-    private void OnSelectBranches(List<Branch> branches)
+    
+    private void OnBranchSelected(Branch branch, bool added)
     {
-        _highlightService.Highlight(branches);
+        _highlightService.Highlight(branch.Elements, added);
+        
+        foreach (var element in branch.Elements)
+        {
+            if (added)
+            {
+                if (!_selectedElements.Contains(element))
+                {
+                    _selectedElements.Add(element);
+                }
+            }
+            else
+            {
+                _selectedElements.Remove(element);
+            }  
+        }
     }
 
     private void OnBuildBranchesClicked()
@@ -45,12 +66,46 @@ public partial class GraphInspectorComponent : IDisposable
     
     private void OnHighlightSpanningTree()
     {
-        _highlightService.Highlight(_schemeService.SpanningTree);
+        var removeElements = _selectedElements.ToList();
+        
+        _selectedElements.Clear();
+
+        _highlightService.Highlight(removeElements, false);
+        
+        foreach (var branch in _schemeService.SpanningTree)
+        {
+            foreach (var element in branch.Elements)
+            {
+                if (!_selectedElements.Contains(element))
+                {
+                    _selectedElements.Add(element);
+                }
+            }
+            
+            _highlightService.Highlight(branch.Elements, true);
+        }
     }
     
     private void OnHighlightLeftoverBranches()
     {
-        _highlightService.Highlight(_schemeService.LeftoverBranches);
+        var removeElements = _selectedElements.ToList();
+        
+        _selectedElements.Clear();
+
+        _highlightService.Highlight(removeElements, false);
+        
+        foreach (var branch in _schemeService.LeftoverBranches)
+        {
+            foreach (var element in branch.Elements)
+            {
+                if (!_selectedElements.Contains(element))
+                {
+                    _selectedElements.Add(element);
+                }
+            }
+            
+            _highlightService.Highlight(branch.Elements, true);
+        }
     }
 
     private void OnFindIndependentCircuits()
@@ -59,8 +114,26 @@ public partial class GraphInspectorComponent : IDisposable
         StateHasChanged();
     }
 
-    private void OnSelectCircuits(List<Circuit> circuits)
+    private void OnSelectCircuit(Circuit circuit, bool added)
     {
-        _highlightService.Highlight(circuits);
+        foreach (var branch in circuit.Branches)
+        {
+            _highlightService.Highlight(branch.Elements, added);
+
+            foreach (var element in branch.Elements)
+            {
+                if (added)
+                {
+                    if (!_selectedElements.Contains(element))
+                    {
+                        _selectedElements.Add(element);
+                    }
+                }
+                else
+                {
+                    _selectedElements.Remove(element);
+                }
+            }
+        }
     }
 }

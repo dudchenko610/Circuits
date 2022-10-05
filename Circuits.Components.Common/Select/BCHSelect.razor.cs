@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Circuits.Services.Services.Interfaces;
@@ -43,10 +46,8 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
     [Parameter] public Func<TItem, object> GroupPredicate { get; set; } = x => string.Empty;
     [Parameter] public Func<TItem, string> CssItemPredicate { get; set; } = x => string.Empty;
     [Parameter] public EventCallback<KeyboardEventArgs> OnFilterKeyDown { get; set; }
-
     [Parameter] public EventCallback<TItem> SelectedChanged { get; set; }
-    [Parameter]
-    public TItem Selected
+    [Parameter] public TItem Selected
     {
         get => _selectedValue;
         set
@@ -59,8 +60,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
     }
 
     [Parameter] public EventCallback<string> FilterChanged { get; set; }
-    [Parameter]
-    public string Filter
+    [Parameter] public string Filter
     {
         get => _typedFilterValue;
         set
@@ -73,8 +73,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
     }
 
     [Parameter] public EventCallback<bool> IsOpenedChanged { get; set; }
-    [Parameter]
-    public bool IsOpened
+    [Parameter] public bool IsOpened
     {
         get => _isOpened;
         set
@@ -85,27 +84,12 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         }
     }
 
-    [Parameter] public EventCallback<List<TItem>> SelectedItemsChanged { get; set; }
-    [Parameter]
-    public List<TItem> SelectedItems
-    {
-        get => _selectedItems;
-        set
-        {
-            if (CheckListEquality(_selectedItems, value))
-            {
-                return;
-            }
-
-            _selectedItems.Clear();
-            _selectedItems.AddRange(value);
-            SelectedItemsChanged.InvokeAsync(value);
-        }
-    }
-
+    [Parameter] public IList<TItem> SelectedItems { get; set; } = null!;
+    [Parameter] public EventCallback<TItem> OnSelectItem { get; set; }
+    [Parameter] public EventCallback<TItem> OnDeselectItem { get; set; }
     [Parameter] public RenderFragment<TItem> RowTemplate { get; set; } = null!;
 
-    private string _conteinerId = $"_id{Guid.NewGuid()}";
+    private string _containerId = $"_id{Guid.NewGuid()}";
     private string _contentId = $"_id{Guid.NewGuid()}";
     private string _inputId = $"_id{Guid.NewGuid()}";
     private string _scrollerId = $"_id{Guid.NewGuid()}";
@@ -122,23 +106,24 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
     private DotNetObjectReference<BCHSelect<TItem>> _dotNetObjectReference = null!;
     private bool _scrolled = false;
 
-    private List<TItem> _selectedItems = new();
-
     protected override async Task OnInitializedAsync()
     {
-        if (FilterByPredicate is null)
+        SelectedItems = new ObservableCollection<TItem>();
+        ((ObservableCollection<TItem>)SelectedItems).CollectionChanged += OnSelectedItemsChanged;
+        
+        _dotNetObjectReference = DotNetObjectReference.Create(this);
+        
+        if (FilterByPredicate == null!)
         {
             FilterByPredicate = ElementNamePredicate;
         }
 
         if (!MultipleSelect)
         {
-            Selected = DefaultValue == null ? null! : DefaultValue;
+            Selected = DefaultValue == null! ? null! : DefaultValue;
         }
 
-        _placeholder = Selected == null ? DefaultText : ElementNamePredicate.Invoke(Selected);
-
-        await SelectedItemsChanged.InvokeAsync(_selectedItems);
+        _placeholder = Selected == null! ? DefaultText : ElementNamePredicate.Invoke(Selected);
 
         StateHasChanged();
 
@@ -147,22 +132,22 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
     public void Dispose()
     {
-        _dotNetObjectReference?.Dispose();
+        ((ObservableCollection<TItem>)SelectedItems).CollectionChanged -= OnSelectedItemsChanged;
+        _dotNetObjectReference.Dispose();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _dotNetObjectReference = DotNetObjectReference.Create(this);
-            await _jsRuntime.InvokeVoidAsync("bchSelectAddOnOuterFocusOut", _inputId, _conteinerId, _dotNetObjectReference, "OnContainerFocusOutAsync");
+            await _jsRuntime.InvokeVoidAsync("bchSelectAddOnOuterFocusOut", _inputId, _containerId, _dotNetObjectReference, "OnContainerFocusOutAsync");
         }
 
         if (IsOpened)
         {
             await _inputRef.FocusAsync();
 
-            if (ScrollToSelected && Selected != null && !MultipleSelect && !_scrolled)
+            if (ScrollToSelected && Selected != null! && !MultipleSelect && !_scrolled)
             {
                 _scrolled = true;
 
@@ -183,7 +168,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
                     index++;
                 }
-                int offset = index * ItemHeight;
+                var offset = index * ItemHeight;
 
                 await _jsUtilsService.ScrollToAsync(_scrollerId, "0", $"{offset}", "auto");
             }
@@ -196,6 +181,8 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         }
     }
 
+    private void OnSelectedItemsChanged(object? s, NotifyCollectionChangedEventArgs e) => StateHasChanged();
+    
     private async Task OnOptionClickedAsync(TItem option)
     {
         if (!MultipleSelect)
@@ -211,16 +198,16 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         }
         else
         {
-            if (_selectedItems.Contains(option))
+            if (SelectedItems.Contains(option))
             {
-                _selectedItems.Remove(option);
+                SelectedItems.Remove(option);
+                await OnDeselectItem.InvokeAsync(option);
             }
             else
             {
-                _selectedItems.Add(option);
+                SelectedItems.Add(option);
+                await OnSelectItem.InvokeAsync(option);
             }
-
-            await SelectedItemsChanged.InvokeAsync(_selectedItems);
         }
 
         _scrolled = false;
@@ -232,7 +219,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
     {
         if (MultipleSelect)
         {
-            return _selectedItems.Contains(option);
+            return SelectedItems.Contains(option);
         }
 
         return _selectedValue == option;
@@ -264,7 +251,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
         foreach (var group in groups)
         {
-            if (group.Count() == 0) continue;
+            if (!group.Any()) continue;
 
             var gr = new Group
             {
@@ -328,23 +315,5 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         Filter = string.Empty;
         await OnFocusOut.InvokeAsync();
         StateHasChanged();
-    }
-
-    private bool CheckListEquality(List<TItem> list1, List<TItem> list2)
-    {
-        if (list1.Count != list2.Count)
-        {
-            return false;
-        }
-
-        for (int i = 0; i < list1.Count; i++)
-        {
-            if (list1[i] != list2[i])
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

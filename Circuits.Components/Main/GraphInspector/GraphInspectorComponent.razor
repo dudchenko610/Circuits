@@ -13,7 +13,9 @@
                    ElementNamePredicate="x => x.GetType().Name.ToLower()"
                    GroupPredicate='x => x.GetType().Name'
                    GroupNamePredicate='x => $"{x.GetType().Name}s"'
-                   SelectedItemsChanged="OnSelectElements"/>
+                   SelectedItems="_selectedElements"
+                   OnSelectItem="(e) => { OnElementSelected(e, true); }"
+                   OnDeselectItem="(e) => { OnElementSelected(e, false); }"/>
     }
 
     <div
@@ -31,7 +33,9 @@
                    Grouping="false"
                    MultipleSelect="true"
                    ElementNamePredicate='x => $"branch {((List<Branch>)_schemeService.Branches).IndexOf(x)}"'
-                   SelectedItemsChanged="OnSelectBranches"/>
+                   SelectedItems="_selectedBranches"
+                   OnSelectItem="(e) => { OnBranchSelected(e, true); }"
+                   OnDeselectItem="(e) => { OnBranchSelected(e, false); }"/>
     }
 
     <div class="btn noselectable-text"
@@ -64,7 +68,9 @@
                    Grouping="false"
                    MultipleSelect="true"
                    ElementNamePredicate='x => $"circuit {((List<Circuit>)_schemeService.Circuits).IndexOf(x)}"'
-                   SelectedItemsChanged="OnSelectCircuits"/>
+                   SelectedItems="_selectedCircuits"
+                   OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
+                   OnDeselectItem="(e) => { OnSelectCircuit(e, false); }"/>
     }
 
 </div>

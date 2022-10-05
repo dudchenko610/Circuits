@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 
-<div id="@_conteinerId"
-     class="@($"bch-select-container noselectable-text " + $"{(IsOpened ? "show" : "")} " + $"{(_selectedValue != null ? "has-selected" : "")} " + $"{CssClass}")"
+<div id="@_containerId"
+     class="@($"bch-select-container noselectable-text " + $"{(IsOpened ? "show" : "")} " + $"{(_selectedValue != null! ? "has-selected" : "")} " + $"{CssClass}")"
      style="@($"width: {Width}px;")"
      tabindex="-1">
 
