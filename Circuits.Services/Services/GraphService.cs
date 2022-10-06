@@ -73,7 +73,34 @@ public class GraphService : IGraphService
                     branch.NodeRight = node;
                 }
 
-                node.Branches.Add(branch);
+                // it should happen always on right node
+                if (branch.NodeLeft == branch.NodeRight) // leftover branch creates cycle, solution is to divide it into two branches
+                {
+                    var el1 = branch.Elements.LastOrDefault(); // guaranteed to be contained in right node 
+                    branch.Elements.Remove(el1!);
+                    
+                    // step back or smth like that
+                    var anotherPoint = el1!.Points.FirstOrDefault(x => GetPointHashCode(x) != hashCode)!; // PROBLEMATIC FOR TRANSISTORS ( or maybe not :) )
+                    var anotherHashCode = GetPointHashCode(anotherPoint!);
+                    var anotherNode = _schemeService.Nodes[anotherHashCode];
+                    
+                    anotherNode.Branches.Add(branch);
+                    branch.NodeRight = anotherNode;
+                    
+                    var branch1 = new Branch();
+                    branch1.Elements.Add(el1);
+                    branch1.NodeLeft = anotherNode;
+                    branch1.NodeRight = branch.NodeLeft;
+                    
+                    anotherNode.Branches.Add(branch1);
+                    branch.NodeLeft.Branches.Add(branch1);
+
+                    _branches.Add(branch1);
+                }
+                else
+                {
+                    node.Branches.Add(branch);
+                }
             }
             else
             {
