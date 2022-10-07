@@ -176,7 +176,7 @@ public partial class MainPage : IDisposable
         if (element != null! && !_schemeService.Intersects(element))
         {
             _schemeService.Add(element);
-            _context.PencilMode = false;
+            //_context.PencilMode = false;
         }
     }
 

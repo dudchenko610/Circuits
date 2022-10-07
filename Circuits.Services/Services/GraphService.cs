@@ -168,26 +168,20 @@ public class GraphService : IGraphService
             usedBranches.Add(branch);
         }
 
-        if (!leftNode)
-        {
-            var branches = branch.NodeLeft.Branches
-                .Where(x => x != branch && !usedBranches.Contains(x));
+        var leftBranches = branch.NodeLeft.Branches
+            .Where(x => x != branch && !usedBranches.Contains(x));
 
-            foreach (var nextBranch in branches)
-            {
-                TraverseSpanningTree(nextBranch, graph, spanningTreeNodes, usedBranches);
-            }
+        foreach (var nextBranch in leftBranches)
+        {
+            TraverseSpanningTree(nextBranch, graph, spanningTreeNodes, usedBranches);
         }
-        
-        if (!rightNode)
-        {
-            var branches = branch.NodeRight.Branches
-                .Where(x => x != branch && !usedBranches.Contains(x));
 
-            foreach (var nextBranch in branches)
-            {
-                TraverseSpanningTree(nextBranch, graph, spanningTreeNodes, usedBranches);
-            }
+        var rightBranches = branch.NodeRight.Branches
+            .Where(x => x != branch && !usedBranches.Contains(x));
+
+        foreach (var nextBranch in rightBranches)
+        {
+            TraverseSpanningTree(nextBranch, graph, spanningTreeNodes, usedBranches);
         }
     }
 
