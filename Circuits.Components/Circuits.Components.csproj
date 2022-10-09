@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Main\SchemeInspector\EquationsInspector" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\js\" />
     <Folder Include="Main\SchemeRenderer\" />
@@ -35,5 +36,6 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Main\SchemeRenderer\Wire\WireComponent.razor" />
     <_ContentIncludedByDefault Remove="Main\SchemeRenderer\WireE\WireComponent.razor" />
+    <_ContentIncludedByDefault Remove="Main\GraphInspector\GraphInspectorComponent.razor" />
   </ItemGroup>
 </Project>

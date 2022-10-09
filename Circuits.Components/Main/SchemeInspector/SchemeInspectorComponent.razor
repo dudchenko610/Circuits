@@ -1,0 +1,31 @@
+<div class="scheme-inspector">
+    <BCHTabContext TabContext="_context">
+        <div class="content-holder">
+            <div class="tabs">
+                <BCHTabPanel TabContext="_context"
+                             PanelId="0"
+                             MinimalTabsCount="1"
+                             ScrollTabWidth="150"
+                             SelectOnDragAndDrop="true"
+                             ScrollToCenterOnClick="true"/>
+            </div>
+            <div class="content">
+                <BCHTabContent TabContext="_context"
+                               PanelId="0">
+                    <Template Context="selectedTab">
+                        @switch (selectedTab.Type)
+                        {
+                            case "graph-inspector":
+                                <GraphInspectorComponent/>
+                                break;
+
+                            case "equations-inspector":
+                                <div>equations-inspector</div>
+                                break;
+                        }
+                    </Template>
+                </BCHTabContent>
+            </div>
+        </div>
+    </BCHTabContext>
+</div>

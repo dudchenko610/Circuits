@@ -1,0 +1,42 @@
+<div id="@_tabContainerId"
+     class="bch-tabs-panel @TabContext.ClassIdentifier bch-panel-id-@PanelId"
+     style="height: @(Height)px;"
+     @key="_updateKey">
+    <div id="@_tabDraggableId"
+         class="bch-tabs-dropzone"
+         style="@($"left:{_scrollStr}px; gap: {Gap}px;")"
+         ondragover="event.preventDefault();"
+         @ondrop="OnDrop">
+
+        @foreach (var tabModel in _panel.TabModels)
+        {
+            <BCHTab TabContext="TabContext"
+                    PanelModel="_panel"
+                    TabModel="tabModel"
+                    Gap="Gap"
+                    Height="Height"
+                    OnClick="async () => { OnSelect(tabModel); if (ScrollToCenterOnClick) { await ScrollAsync(tabModel); } }"
+                    OnClose="async () => { await OnCloseAsync(tabModel); }" />
+        }
+    </div>
+
+    @if (_showLeft)
+    {
+        <div class="bch-tab-btn bch-left"
+             @onclick="() => {}"
+             @onclick:stopPropagation
+             @onclick:preventDefault>
+            <div @onclick="OnLeftClickAsync" class="bch-icon"></div>
+        </div>
+    }
+
+    @if (_showRight)
+    {
+        <div class="bch-tab-btn bch-right"
+             @onclick="() => {}"
+             @onclick:stopPropagation
+             @onclick:preventDefault>
+            <div @onclick="OnRightClickAsync" class="bch-icon"></div>
+        </div>
+    }
+</div>

@@ -1,0 +1,27 @@
+<div id="@_mainId"
+     @key="_selectedTabModel"
+     class="bch-tab-content @TabContext.ClassIdentifier @($"{(IsMainContentDragging() ? "bch-dragging" : "")}")"
+     style="@((IsMainContentDragging() ? GetStyleString() : ""))">
+    @Template(_selectedTabModel)
+
+    <div class="bch-tab">
+        <BCHFakeTab TabContext="TabContext"
+                    PanelModel="_panelModel"
+                    TabModel="_selectedTabModel" />
+    </div>
+</div>
+
+@if (IsExtraContentDragging())
+{
+    <div id="@_extraId"
+         class="bch-tab-content bch-dragging"
+         style="@GetStyleString()">
+        @Template(TabContext.DraggingTabModel)
+
+        <div class="bch-tab">
+            <BCHFakeTab TabContext="TabContext"
+                        PanelModel="_panelModel"
+                        TabModel="TabContext.DraggingTabModel" />
+        </div>
+    </div>
+}

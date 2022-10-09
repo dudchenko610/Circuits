@@ -1,11 +1,9 @@
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Entities.Structures;
 using Microsoft.AspNetCore.Components;
 
-namespace Circuits.Components.Main.GraphInspector;
+namespace Circuits.Components.Main.SchemeInspector.GraphInspector;
 
 public partial class GraphInspectorComponent : IDisposable
 {
@@ -14,8 +12,8 @@ public partial class GraphInspectorComponent : IDisposable
     [Inject] private IGraphService _graphService { get; set; } = null!;
     [Inject] private IHighlightService _highlightService { get; set; } = null!;
 
-    private List<Element> _selectedElements = new();
-    private List<Branch> _selectedBranches = new();
+    private readonly List<Element> _selectedElements = new();
+    private readonly List<Branch> _selectedBranches = new();
     
     protected override void OnInitialized()
     {
@@ -138,5 +136,10 @@ public partial class GraphInspectorComponent : IDisposable
                 }
             }
         }
+    }
+
+    private void OnClearSelection()
+    {
+        _highlightService.Clear();
     }
 }

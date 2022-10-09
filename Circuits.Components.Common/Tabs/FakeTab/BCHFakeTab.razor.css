@@ -1,0 +1,60 @@
+
+.bch-tab-element {
+    height: 34px;
+    display: flex;
+}
+
+.bch-tab-element .bch-wrapper {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: relative;
+    border-radius: 5px 5px 0px 0px;
+    background: #ABABAB;
+}
+
+.bch-tab-element.bch-selected .bch-wrapper {
+    background: #F8F8F8;
+}
+
+.bch-tab-element > .bch-wrapper > .bch-name {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #F8F8F8;
+}
+
+.bch-tab-element.bch-selected > .bch-wrapper > .bch-name {
+    color: #2D73B8;
+}
+
+.bch-tab-element > .bch-wrapper > .bch-bottom-line {
+    display: none;
+}
+
+.bch-tab-element.bch-selected > .bch-wrapper > .bch-bottom-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #86B7E8;
+}
+
+.bch-tab-element > .bch-wrapper > .bch-icon {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+}
+
+.bch-tab-element > .bch-wrapper > .bch-close {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+}
