@@ -84,7 +84,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         }
     }
 
-    [Parameter] public IList<TItem> SelectedItems { get; set; } = null!;
+    [Parameter] public IList<TItem> SelectedItems { get; set; } = new List<TItem>();
     [Parameter] public EventCallback<TItem> OnSelectItem { get; set; }
     [Parameter] public EventCallback<TItem> OnDeselectItem { get; set; }
     [Parameter] public RenderFragment<TItem> RowTemplate { get; set; } = null!;
@@ -108,9 +108,6 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
     protected override async Task OnInitializedAsync()
     {
-        SelectedItems = new ObservableCollection<TItem>();
-        ((ObservableCollection<TItem>)SelectedItems).CollectionChanged += OnSelectedItemsChanged;
-        
         _dotNetObjectReference = DotNetObjectReference.Create(this);
         
         if (FilterByPredicate == null!)
@@ -132,7 +129,6 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
     public void Dispose()
     {
-        ((ObservableCollection<TItem>)SelectedItems).CollectionChanged -= OnSelectedItemsChanged;
         _dotNetObjectReference.Dispose();
     }
 
@@ -180,8 +176,6 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
             StateHasChanged();
         }
     }
-
-    private void OnSelectedItemsChanged(object? s, NotifyCollectionChangedEventArgs e) => StateHasChanged();
     
     private async Task OnOptionClickedAsync(TItem option)
     {
