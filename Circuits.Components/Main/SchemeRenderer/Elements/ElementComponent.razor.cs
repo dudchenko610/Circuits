@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Circuits.Components.Main.SchemeRenderer.Elements;
 
-public partial class ElementComponent
+public class ElementComponent : ComponentBase
 {
     [CascadingParameter(Name="SchemeRenderReference")] public SchemeRendererComponent SchemeRenderer { get; set; } = null!;
     [Parameter] public RenderFragment<Element> Template { get; set; } = null!;

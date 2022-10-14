@@ -1,9 +1,32 @@
 .scheme-inspector {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    /*left: -25%;*/
     height: 100%;
+    /*width: 25%;*/
+    transition: left 0.5s ease;
+    border-right: 1px solid #CED3E0;
     background: white;
-    padding: 2px;
+    overflow: hidden;
+    z-index: 1;
     display: flex;
+}
+
+.scheme-inspector.show {
+    left: 0 !important;
+}
+
+.scheme-inspector > .content-container {
+    height: 100%;
+    padding: 2px;
+    width: calc(100% - 5px);
+}
+
+.scheme-inspector > .resize-block {
+    height: 100%;
+    width: 5px;
+    background: #B3BBC5;
+    cursor: col-resize;
 }
 
 .scheme-inspector .content-holder {

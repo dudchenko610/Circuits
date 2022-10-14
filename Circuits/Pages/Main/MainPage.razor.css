@@ -162,19 +162,3 @@
             border: 1px solid rgba(141, 2, 3, 0.4);
             color: rgba(141, 2, 3, 0.4);
         }
-
-    .main-page-cnt > .navigation > .graph-inspector-wrapper {
-        position: absolute;
-        top: 0;
-        left: -25%;
-        height: 100%;
-        width: 25%;
-        transition: left 0.5s ease;
-        border-right: 1px solid #CED3E0;
-        overflow: hidden;
-        z-index: 1;
-    }
-
-        .main-page-cnt > .navigation > .graph-inspector-wrapper.show {
-            left: 0;
-        }

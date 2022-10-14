@@ -1,0 +1,44 @@
+using Circuits.Services.Services.Interfaces;
+using Circuits.ViewModels.Entities.Equations;
+using Microsoft.AspNetCore.Components;
+
+namespace Circuits.Components.Main.SchemeInspector.EquationsInspector;
+
+public partial class EquationsInspectorComponent
+{
+    [Inject] private IEquationSystemService _equationSystemService { get; set; } = null!;
+
+    private static ExpressionVariable _e = new() { Label = "ε" };
+    private static ExpressionVariable _i1 = new() { Label = "i₁" };
+    private static ExpressionVariable _i2 = new() { Label = "i₂" };
+    private static ExpressionVariable _i3 = new() { Label = "i₃" };
+    private static ExpressionVariable _uc = new() { Label = "Uc₁" };
+    
+    private ExpressionDerivative _i1Derivative = new() { Variable = _i1, Label = "d(i₁)/dt" };
+    private ExpressionDerivative _ucDerivative = new() { Variable = _uc, Label = "d(Uc₁)/dt" };
+
+    private double _l = 1.0;
+    private double _c = 1.0;
+    private double _r = 1.0;
+
+    private EquationSystem _equationSystem;
+
+    public EquationsInspectorComponent()
+    {
+        _equationSystem = new EquationSystem(_i2, _i3, _i1Derivative, _ucDerivative)
+        {
+            Matrix = new []
+            {
+                new Expression[] { new ExpressionValue(-1), new ExpressionValue(-1), new ExpressionValue(0), new ExpressionValue(0), null },
+                new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_l), new ExpressionValue(0), null },
+                new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_c), null },
+                new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_l), new ExpressionValue(0), _i1 },
+            }
+        };
+    }
+
+    private void OnPerformKirchhoffElimination()
+    {
+        
+    }
+}

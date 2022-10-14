@@ -223,55 +223,55 @@ function subscribeOnMouseMove(contextId, dotNetHelper) {
     });
 }
 
-Blazor.registerCustomEventType('extdragstart', {
-    browserEventName: 'dragstart',
-    createEventArgs: event => {
-
-        event.dataTransfer.effectAllowed = "copyMove";
-
-        if (!bchGhostElementAppended) {
-            document.body.appendChild(bchGhostElement);
-            bchGhostElementAppended = true;
-        }
-
-        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
-
-        if (!isSafari) {
-            event.dataTransfer.setDragImage(bchGhostElement, 0, 0);
-        } else {
-            event.dataTransfer.setDragImage(drgimg, 0, 0);
-        }
-
-        setTimeout(function () {
-            event.target.setAttribute('dragging', '');
-        }, 0);
-
-        const pathCoordinates = event.path.map(element => {
-            if (element.getBoundingClientRect) {
-                var viewportOffset = element.getBoundingClientRect();
-
-                return {
-                    x: event.pageX - viewportOffset.left,
-                    y: event.pageY - viewportOffset.top,
-                    scrollTop: element.scrollTop,
-                    classList: element.classList.value,
-                    id: element.id
-                };
-            }
-        }).filter(x => x);
-
-        return {
-            offsetX: event.offsetX,
-            offsetY: event.offsetY,
-            pageX: event.pageX,
-            pageY: event.pageY,
-            screenX: event.screenX,
-            screenY: event.screenY,
-
-            pathCoordinates: pathCoordinates
-        };
-    }
-});
+// Blazor.registerCustomEventType('extdragstart', {
+//     browserEventName: 'dragstart',
+//     createEventArgs: event => {
+//
+//         event.dataTransfer.effectAllowed = "copyMove";
+//
+//         if (!bchGhostElementAppended) {
+//             document.body.appendChild(bchGhostElement);
+//             bchGhostElementAppended = true;
+//         }
+//
+//         var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+//
+//         if (!isSafari) {
+//             event.dataTransfer.setDragImage(bchGhostElement, 0, 0);
+//         } else {
+//             event.dataTransfer.setDragImage(drgimg, 0, 0);
+//         }
+//
+//         setTimeout(function () {
+//             event.target.setAttribute('dragging', '');
+//         }, 0);
+//
+//         const pathCoordinates = event.path.map(element => {
+//             if (element.getBoundingClientRect) {
+//                 var viewportOffset = element.getBoundingClientRect();
+//
+//                 return {
+//                     x: event.pageX - viewportOffset.left,
+//                     y: event.pageY - viewportOffset.top,
+//                     scrollTop: element.scrollTop,
+//                     classList: element.classList.value,
+//                     id: element.id
+//                 };
+//             }
+//         }).filter(x => x);
+//
+//         return {
+//             offsetX: event.offsetX,
+//             offsetY: event.offsetY,
+//             pageX: event.pageX,
+//             pageY: event.pageY,
+//             screenX: event.screenX,
+//             screenY: event.screenY,
+//
+//             pathCoordinates: pathCoordinates
+//         };
+//     }
+// });
 
 
 function subscribeOnDragOver(contextId, dotNetHelper) {

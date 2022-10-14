@@ -68,10 +68,8 @@
             </div>
         }
 
-        <div class="graph-inspector-wrapper @(_showGraphInspector ? "show" : "")">
-            <SchemeInspectorComponent/>
-        </div>
-        
+        <SchemeInspectorComponent @bind-Opened="_showGraphInspector"/>
+
         <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
 
             <ContentTemplate Context="_navCtx">

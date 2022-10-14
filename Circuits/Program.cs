@@ -16,5 +16,6 @@ services.AddScoped<IElementService, ElementService>();
 services.AddScoped<IGraphService, GraphService>();
 services.AddScoped<IHighlightService, HighlightService>();
 services.AddScoped<ISchemeService, SchemeService>();
+services.AddScoped<IEquationSystemService, EquationSystemService>();
 
 await builder.Build().RunAsync();
