@@ -2,7 +2,7 @@ namespace Circuits.ViewModels.Entities.Equations;
 
 public class ExpressionMultipliers : Expression
 {
-    public List<bool> Multipliers { get; } = new();
+    public List<MathOperation> Multipliers { get; } = new();
     public List<Expression> Nodes { get; } = new();
     
     public override double Value
@@ -13,7 +13,7 @@ public class ExpressionMultipliers : Expression
 
             for (var i = 0; i < Nodes.Count; i ++)
             {
-                if (Multipliers[i])
+                if (Multipliers[i] == MathOperation.Multiply)
                 {
                     result *= Nodes[i].Value;
                 }

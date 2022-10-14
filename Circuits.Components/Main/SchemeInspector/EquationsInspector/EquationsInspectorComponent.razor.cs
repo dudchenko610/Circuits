@@ -1,3 +1,5 @@
+using System.Globalization;
+using Circuits.Services.Helpers;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Equations;
 using Microsoft.AspNetCore.Components;
@@ -22,16 +24,18 @@ public partial class EquationsInspectorComponent
     private double _r = 1.0;
 
     private EquationSystem _equationSystem;
+    
+    private readonly NumberFormatInfo _nF = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
-    public EquationsInspectorComponent()
+    protected override void OnInitialized()
     {
         _equationSystem = new EquationSystem(_i2, _i3, _i1Derivative, _ucDerivative)
         {
             Matrix = new []
             {
-                new Expression[] { new ExpressionValue(-1), new ExpressionValue(-1), new ExpressionValue(0), new ExpressionValue(0), null },
-                new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_l), new ExpressionValue(0), null },
-                new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_c), null },
+                new Expression[] { new ExpressionValue(-1), new ExpressionValue(-1), new ExpressionValue(0), new ExpressionValue(0), ExpressionHelper.Multiply(new ExpressionValue(-1), _i1) },
+                new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_l), new ExpressionValue(0), ExpressionHelper.Subtract(_e, ExpressionHelper.Multiply(_i1, new ExpressionValue(_r))) },
+                new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_c), ExpressionHelper.Multiply(new ExpressionValue(-1), _uc) },
                 new Expression[] { new ExpressionValue(0), new ExpressionValue(0), new ExpressionValue(_l), new ExpressionValue(0), _i1 },
             }
         };

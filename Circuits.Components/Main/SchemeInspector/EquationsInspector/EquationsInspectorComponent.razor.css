@@ -20,3 +20,21 @@
     font-weight: 400;
     line-height: 19px;
 }
+
+.equation-inspector > table {
+    width: calc(100% - 20px);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.equation-inspector > table > thead > tr > th {
+    font-weight: 400;
+    font-size: 12px;
+    text-align: center;
+}
+
+.equation-inspector > table > tbody > tr > td {
+    font-weight: 400;
+    font-size: 11px;
+    text-align: center;
+}

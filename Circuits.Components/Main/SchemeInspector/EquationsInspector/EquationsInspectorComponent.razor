@@ -1,6 +1,35 @@
+@using Circuits.Services.Extensions
+
 <div class="equation-inspector">
-        <div class="btn noselectable-text"
-             @onclick="OnPerformKirchhoffElimination">
-            Perform Kirchhoff Elimination
-        </div>
+    
+    <table>
+        <thead>
+            <tr>
+                @foreach (var variable in _equationSystem.Variables)
+                {
+                    <th class="noselectable-text">@variable.GetLabel()</th>
+                }
+            </tr>
+        </thead>
+        
+        <tbody>
+            @foreach (var equation in _equationSystem.Matrix)
+            {
+                <tr>
+                    @foreach (var expression in equation)
+                    {
+                        <td 
+                            class="noselectable-text"
+                            style="@($"width: {(100d / _equationSystem.Matrix.Length).ToString(_nF)}px;")"
+                            >@expression.GetLabel()</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <div class="btn noselectable-text"
+         @onclick="OnPerformKirchhoffElimination">
+        Perform Kirchhoff Elimination
+    </div>
 </div>

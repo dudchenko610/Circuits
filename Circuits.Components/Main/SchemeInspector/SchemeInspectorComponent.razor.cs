@@ -28,7 +28,6 @@ public partial class SchemeInspectorComponent : IDisposable
     private readonly TabContextModel _context = new(1) { Orderable = true };
     private DotNetObjectReference<SchemeInspectorComponent> _dotNetRef = null!;
     private readonly string _key = $"_key_{Guid.NewGuid()}";
-
     private int _blockWidth = 300;
     
     protected override void OnInitialized()
@@ -74,7 +73,7 @@ public partial class SchemeInspectorComponent : IDisposable
     [JSInvokable]
     public Task OnMouseMoveAsync(MouseEventArgs args)
     {
-        _blockWidth = Math.Clamp((int) args.ClientX - 16, 300, 600);
+        _blockWidth = Math.Clamp((int) args.ClientX - 16, 300, 1000);
         StateHasChanged();
 
         return Task.CompletedTask;
