@@ -8,4 +8,6 @@ public class ExpressionValue : Expression
     }
 
     public override double Value { get; }
+    
+    public static explicit operator ExpressionValue(double value) => new (value);
 }

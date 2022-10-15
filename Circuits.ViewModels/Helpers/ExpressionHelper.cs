@@ -1,6 +1,6 @@
 using Circuits.ViewModels.Entities.Equations;
 
-namespace Circuits.Services.Helpers;
+namespace Circuits.ViewModels.Helpers;
 
 public static class ExpressionHelper
 {
@@ -26,11 +26,21 @@ public static class ExpressionHelper
 
     private static Expression Add(Expression ex1, Expression ex2, MathOperation operation)
     {
+        if (ex1 is ExpressionValue { Value: 0 })
+        {
+            return ex2;
+        }
+        
+        if (ex2 is ExpressionValue { Value: 0 })
+        {
+            return ex1;
+        }
+        
         if (ex1 is ExpressionValue && ex2 is ExpressionValue)
         {
             return new ExpressionValue(ex1.Value + ex2.Value);
         }
-        
+
         var additions = new ExpressionAdditions();
         
         if (ex1 is ExpressionAdditions exAdd1 && ex2 is ExpressionAdditions exAdd2)
@@ -76,6 +86,11 @@ public static class ExpressionHelper
 
     private static Expression Multiply(Expression ex1, Expression ex2, MathOperation operation)
     {
+        if (operation == MathOperation.Multiply && (ex1 is ExpressionValue { Value: 0 } || ex2 is ExpressionValue { Value: 0 }))
+        {
+            return new ExpressionValue(0);
+        }
+        
         if (ex1 is ExpressionValue && ex2 is ExpressionValue)
         {
             return new ExpressionValue(
@@ -83,7 +98,7 @@ public static class ExpressionHelper
                     ? ex1.Value * ex2.Value 
                     : ex1.Value / ex2.Value);
         }
-        
+
         var multipliers = new ExpressionMultipliers();
         
         if (ex1 is ExpressionMultipliers exMul1 && ex2 is ExpressionMultipliers exMul2)
@@ -119,7 +134,7 @@ public static class ExpressionHelper
 
             return multipliers;
         }
-        
+
         multipliers.Multipliers.Add(operation);
         multipliers.Nodes.Add(ex1);
         multipliers.Nodes.Add(ex2);

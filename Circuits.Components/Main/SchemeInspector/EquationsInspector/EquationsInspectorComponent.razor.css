@@ -28,12 +28,14 @@
 }
 
 .equation-inspector > table > thead > tr > th {
+    font-family: Nunito;
     font-weight: 400;
     font-size: 12px;
     text-align: center;
 }
 
 .equation-inspector > table > tbody > tr > td {
+    font-family: Nunito;
     font-weight: 400;
     font-size: 11px;
     text-align: center;
