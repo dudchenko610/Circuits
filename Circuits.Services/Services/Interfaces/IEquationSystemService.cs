@@ -4,5 +4,5 @@ namespace Circuits.Services.Services.Interfaces;
 
 public interface IEquationSystemService
 {
-    void PerformKirchhoffElimination(EquationSystem system);
+    string PerformKirchhoffElimination(EquationSystem equationSystem);
 }

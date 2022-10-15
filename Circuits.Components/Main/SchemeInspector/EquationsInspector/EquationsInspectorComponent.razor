@@ -1,35 +1,48 @@
 @using Circuits.Services.Extensions
 
 <div class="equation-inspector">
-    
-    <table>
-        <thead>
+
+    @if (_eliminationStatus == "Success")
+    {
+        <table>
+            <thead>
             <tr>
                 @foreach (var variable in _equationSystem.Variables)
                 {
                     <th class="noselectable-text">@variable.GetLabel()</th>
                 }
             </tr>
-        </thead>
-        
-        <tbody>
+            </thead>
+
+            <tbody>
             @foreach (var equation in _equationSystem.Matrix)
             {
                 <tr>
                     @foreach (var expression in equation)
                     {
-                        <td 
+                        <td
                             class="noselectable-text"
-                            style="@($"width: {(100d / _equationSystem.Matrix.Length).ToString(_nF)}px;")"
-                            >@expression.GetLabel()</td>
+                            style="@($"width: {(100d / _equationSystem.Matrix.Length).ToString(_nF)}px;")">
+                            @expression.GetLabel()
+                        </td>
                     }
                 </tr>
             }
-        </tbody>
-    </table>
-    
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noselectable-text">Status: @_eliminationStatus</div>
+    }
+
     <div class="btn noselectable-text"
          @onclick="OnPerformKirchhoffElimination">
         Perform Kirchhoff Elimination
+    </div>
+
+    <div class="btn noselectable-text"
+         @onclick="OnClear">
+        Clear
     </div>
 </div>
