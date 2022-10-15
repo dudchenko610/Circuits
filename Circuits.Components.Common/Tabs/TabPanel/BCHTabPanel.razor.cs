@@ -166,11 +166,8 @@ public partial class BCHTabPanel : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await UpdateControlButtonsAsync();
-            await UpdateScrollAsync();
-        }
+        await UpdateControlButtonsAsync();
+        await UpdateScrollAsync();
     }
 
     private void OnDragStart()
@@ -200,20 +197,23 @@ public partial class BCHTabPanel : IDisposable
         var containerRect = await _jsUtilsService.GetBoundingClientRectAsync(_tabContainerId);
         var draggableRect = await _jsUtilsService.GetBoundingClientRectAsync(_tabDraggableId);
 
-        if (containerRect is null || draggableRect is null)
-        {
-            return;
-        }
+        if (containerRect == null! || draggableRect == null!) return;
 
-        float rightValue = Math.Min((float)(containerRect.Width - draggableRect.Width), 0.0f);
+        var rightValue = Math.Min((float)(containerRect.Width - draggableRect.Width), 0.0f);
 
+        var oldShowLeft = _showLeft;
+        var oldShowRight = _showRight;
+        
         _showLeft = _scrollOffset != 0.0f;
         _showRight = _scrollOffset != rightValue;
 
         LeftReached = _showLeft;
         RightReached = _showRight || Math.Abs(_scrollOffset) < containerRect.Width;
 
-        StateHasChanged();
+        if (oldShowLeft != _showLeft || oldShowRight != _showRight)
+        {
+            StateHasChanged();
+        }
     }
 
     private async Task OnLeftClickAsync() => await UpdateScrollAsync(ScrollTabWidth);
