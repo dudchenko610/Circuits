@@ -7,6 +7,12 @@ namespace Circuits.Services.Services;
 
 public class ElementService : IElementService
 {
+    private static int WireCounter = 1;
+    private static int ResistorCounter = 1;
+    private static int CapacitorCounter = 1;
+    private static int InductanceCounter = 1;
+    private static int DCCounter = 1;
+    private static int TransistorCounter = 1;
     public IReadOnlyList<Element> Elements => _elements;
 
     public event Action? OnUpdate;
@@ -254,6 +260,7 @@ public class ElementService : IElementService
     private void AddWithoutCheck(Element element)
     {
         _elements.Add(element);
+        AddNextNumber(element);
 
         for (var i = 0; i < element.Points.Count; i++)
         {
@@ -307,5 +314,30 @@ public class ElementService : IElementService
 
         return (areHorizontalInOneLine && !((p12.X <= p21.X) || (p22.X <= p11.X))) ||
                (areVerticalInOneLine && !((p12.Y <= p21.Y) || (p22.Y <= p11.Y)));
+    }
+
+    private void AddNextNumber(Element element)
+    {
+        switch (element)
+        {
+            case Wire:
+                element.Number = WireCounter++;
+                break; 
+            case Resistor:
+                element.Number = ResistorCounter++;
+                break;
+            case Capacitor:
+                element.Number = CapacitorCounter++;
+                break;
+            case Inductor:
+                element.Number = InductanceCounter++;
+                break;
+            case DCSource:
+                element.Number = DCCounter++;
+                break;
+            case Transistor:
+                element.Number = TransistorCounter++;
+                break;
+        }
     }
 }

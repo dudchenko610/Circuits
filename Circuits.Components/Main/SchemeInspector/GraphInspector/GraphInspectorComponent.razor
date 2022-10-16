@@ -15,7 +15,16 @@
                    GroupNamePredicate='x => $"{x.GetType().Name}s"'
                    SelectedItems="_selectedElements"
                    OnSelectItem="(e) => { OnElementSelected(e, true); }"
-                   OnDeselectItem="(e) => { OnElementSelected(e, false); }"/>
+                   OnDeselectItem="(e) => { OnElementSelected(e, false); }">
+
+            <RowTemplate Context="element">
+                <div class="element-name">
+                    <div class="name noselectable-text">@element.GetType().Name[0]</div>
+                    <i class="noselectable-text">@element.Number</i>
+                </div>
+            </RowTemplate>
+
+        </BCHSelect>
     }
 
     <div
@@ -86,3 +95,10 @@
     </div>
 
 </div>
+
+<style>
+    .graph-inspector .bch-option.selected .element-name i,
+    .graph-inspector .bch-option.selected .element-name .name {
+        color: #FEFEFE;
+    }
+</style>

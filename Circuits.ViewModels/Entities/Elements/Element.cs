@@ -13,20 +13,11 @@ public enum Direction
     LEFT = 2,
     [DirectionValue(Angle = 270)]
     TOP = 3,
-    
-    
-    // [DirectionValue(Angle = 0)]
-    // LEFT = 0,
-    // [DirectionValue(Angle = 270)]
-    // BOTTOM = 1,
-    // [DirectionValue(Angle = 180)]
-    // RIGHT = 2,
-    // [DirectionValue(Angle = 90)]
-    // TOP = 3,
 }
 
 public abstract class Element
 {
+    public int Number { get; set; }
     public IReadOnlyList<Vec2> Points { get; }
     protected readonly List<Vec2> _points;
 

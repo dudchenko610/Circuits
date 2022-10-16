@@ -20,3 +20,29 @@
     font-weight: 400;
     line-height: 19px;
 }
+
+.graph-inspector .element-name {
+    display: flex;
+    align-items: baseline;
+}
+
+    .graph-inspector .element-name > .name {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+        color: #131212aa;
+        white-space: nowrap;
+    }
+    
+    .graph-inspector .element-name > i {
+        height: 10px;
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 8px;
+        line-height: 19px;
+        color: #131212aa;
+        white-space: nowrap;
+    }

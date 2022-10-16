@@ -139,9 +139,13 @@
           @bind-Show="_showElementOptions">
     <div class="element-options">
         <div class="line">
-            <div class="text noselectable-text">Name:</div>
+            <div class="text noselectable-text">Number:</div>
             <div class="input-wrapper">
-                <input placeholder="Type Name"/>
+                <input 
+                    type="number" 
+                    placeholder="Type Number"
+                    @bind-value="_selectedElement!.Number"
+                    @bind-value:event="oninput"/>
             </div>
         </div>
     </div>
