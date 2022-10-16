@@ -22,6 +22,7 @@ public partial class MainPage : IDisposable
     private readonly Vec2 _selectedPos = new();
 
     private bool _showGraphInspector = false;
+    private bool _showElementOptions = false;
 
     private static int CellSize => SchemeRendererContext.CellSize;
 
@@ -183,6 +184,7 @@ public partial class MainPage : IDisposable
     private void OnSelectElement(Element element)
     {
         _selectedElement = element;
+        _showElementOptions = false;
 
         if (element != null!)
         {
@@ -207,6 +209,12 @@ public partial class MainPage : IDisposable
         
         _schemeService.Add(element);
 
+        StateHasChanged();
+    }
+
+    private void OpenElementOptions()
+    {
+        _showElementOptions = true;
         StateHasChanged();
     }
 }

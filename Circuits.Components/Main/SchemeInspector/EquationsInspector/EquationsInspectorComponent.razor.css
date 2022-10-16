@@ -21,6 +21,11 @@
     line-height: 19px;
 }
 
+.equation-inspector > .equation-system-container {
+    width: 100%;
+    height: fit-content;
+}
+
 .equation-inspector > table {
     width: calc(100% - 20px);
     padding-left: 10px;

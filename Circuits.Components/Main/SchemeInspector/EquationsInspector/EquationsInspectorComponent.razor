@@ -2,39 +2,10 @@
 
 <div class="equation-inspector">
 
-    @if (_eliminationStatus == "Success")
-    {
-        <table>
-            <thead>
-            <tr>
-                @foreach (var variable in _equationSystem.Variables)
-                {
-                    <th class="noselectable-text">@variable.GetLabel()</th>
-                }
-            </tr>
-            </thead>
-
-            <tbody>
-            @foreach (var equation in _equationSystem.Matrix)
-            {
-                <tr>
-                    @foreach (var expression in equation)
-                    {
-                        <td
-                            class="noselectable-text"
-                            style="@($"width: {(100d / _equationSystem.Matrix.Length).ToString(_nF)}px;")">
-                            @expression.GetLabel()
-                        </td>
-                    }
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="noselectable-text">Status: @_eliminationStatus</div>
-    }
+    <div class="btn noselectable-text"
+         @onclick="OnBuildEquationSystems">
+        Build Equation Systems
+    </div>
 
     <div class="btn noselectable-text"
          @onclick="OnPerformKirchhoffElimination">
@@ -45,4 +16,11 @@
          @onclick="OnClear">
         Clear
     </div>
+
+    @foreach (var equationSystem in _equationSystems)
+    {
+        <div class="equation-system-container">
+            <GraphEquationSystemComponent EquationSystem="equationSystem"/>
+        </div>
+    }
 </div>

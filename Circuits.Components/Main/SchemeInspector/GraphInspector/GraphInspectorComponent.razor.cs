@@ -142,4 +142,12 @@ public partial class GraphInspectorComponent : IDisposable
     {
         _highlightService.Clear();
     }
+
+    private void OnPerformAllSteps()
+    {
+        _graphService.BuildBranches();
+        _graphService.BuildSpanningTrees();
+        _graphService.FindFundamentalCycles();
+        StateHasChanged();
+    }
 }

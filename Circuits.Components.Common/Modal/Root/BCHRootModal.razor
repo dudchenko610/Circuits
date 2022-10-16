@@ -1,0 +1,28 @@
+@if (_modalModel?.Fragment != null)
+{
+    <div class="bch-modal-overlay @_modalModel.CssClass" @onclick="OnOverlayClicked">
+        <div @onclick:stopPropagation
+            class="bch-modal-content-container"
+            style="@($"width: {_modalModel.Width}; height: {_modalModel.Height}; " +
+                     $"position: {(IsCenter() ? "static" : "absolute")}; left: {_modalModel.X}; top: {_modalModel.Y}")">
+            @_modalModel.Fragment
+        </div>
+    </div>
+}
+
+<style>
+    .bch-modal-overlay {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .bch-modal-overlay > .bch-modal-content-container {
+            display: flex;
+        }
+</style>

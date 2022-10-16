@@ -61,7 +61,7 @@
 
     @foreach (var graph in _schemeService.Graphs)
     {
-        @if (graph.Circuits.Count > 0)
+        if (graph.Circuits.Count > 0)
         {
             <BCHSelect TItem="Circuit"
                        Options="@graph.Circuits"
@@ -78,6 +78,11 @@
     <div class="btn noselectable-text"
          @onclick="OnClearSelection">
         Clear Selection
+    </div>
+
+    <div class="btn noselectable-text"
+         @onclick="OnPerformAllSteps">
+        Perform all steps
     </div>
 
 </div>
