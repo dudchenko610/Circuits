@@ -5,7 +5,7 @@
         <tr>
             @foreach (var variable in EquationSystem.Variables)
             {
-                <th class="noselectable-text">@variable.GetLabel()</th>
+                <th class="noselectable-text">@((MarkupString)variable.GetLabel())</th>
             }
         </tr>
         </thead>
@@ -27,3 +27,37 @@
         </tbody>
     </table>
 </div>
+
+<style>
+        .graph-equation-system-component > table > thead > tr > th i {
+            height: 10px;
+            font-family: Nunito;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 9px;
+            line-height: 19px;
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /*Internet Explorer/Edge */
+            user-select: none; /*Non-prefixed version, currently
+                                          supported by Chrome, Edge, Opera and Firefox */
+        }
+    
+            .graph-equation-system-component > table > thead > tr > th sub-i {
+                height: 8px;
+                font-family: Nunito;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 7px;
+                line-height: 19px;
+                -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Old versions of Firefox */
+                -ms-user-select: none; /*Internet Explorer/Edge */
+                user-select: none; /*Non-prefixed version, currently
+                                                  supported by Chrome, Edge, Opera and Firefox */
+            }
+</style>

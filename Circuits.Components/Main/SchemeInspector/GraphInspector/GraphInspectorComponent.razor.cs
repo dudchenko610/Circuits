@@ -148,6 +148,7 @@ public partial class GraphInspectorComponent : IDisposable
         _graphService.BuildBranches();
         _graphService.BuildSpanningTrees();
         _graphService.FindFundamentalCycles();
+        _graphService.CollectProperties();
         StateHasChanged();
     }
 }

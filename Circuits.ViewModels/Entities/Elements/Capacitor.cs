@@ -6,6 +6,8 @@ namespace Circuits.ViewModels.Entities.Elements;
 
 public class Capacitor : Element
 {
+    public double Capacity { get; set; } = 1.0;
+
     public Vec2 P1
     {
         get => _points[0];

@@ -5,4 +5,5 @@ public interface IGraphService
     void BuildBranches();
     void BuildSpanningTrees();
     void FindFundamentalCycles();
+    void CollectProperties();
 }

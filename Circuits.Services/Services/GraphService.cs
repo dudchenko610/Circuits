@@ -1,6 +1,7 @@
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Entities.Structures;
+using Circuits.ViewModels.Entities.Structures.Properties;
 using Circuits.ViewModels.Math;
 
 namespace Circuits.Services.Services;
@@ -204,6 +205,40 @@ public class GraphService : IGraphService
                 TraverseGraph(circuit, traversed, branch, true);
             
                 graph.Circuits.Add(circuit);
+            }
+        }
+    }
+
+    public void CollectProperties()
+    {
+        foreach (var branch in _schemeService.Branches)
+        {
+            var resistors = branch.Elements.OfType<Resistor>().ToList();
+            var capacitors = branch.Elements.OfType<Capacitor>().ToList();
+            var inductors = branch.Elements.OfType<Inductor>().ToList();
+
+            if (resistors != null!)
+            {
+                var resistance = resistors!.Sum(resistor => resistor.Resistance);
+
+                branch.Resistance =
+                    resistors!.Count > 0 ? new Resistance { Resistors = resistors, Value = resistance } : null!;
+            }
+
+            if (capacitors != null!)
+            {
+                var capacity = capacitors!.Sum(capacitor => 1.0 / capacitor.Capacity);
+
+                branch.Capacity =
+                    capacitors!.Count > 0 ? new Capacity { Capacitors = capacitors, Value = capacity } : null!;
+            }
+
+            if (inductors != null!)
+            {
+                var inductance = inductors!.Sum(inductor => inductor.Inductance);
+
+                branch.Inductance =
+                    inductors!.Count > 0 ? new Inductance { Inductors = inductors, Value = inductance } : null!;
             }
         }
     }
