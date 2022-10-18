@@ -6,5 +6,5 @@ namespace Circuits.Services.Services.Interfaces;
 public interface IEquationSystemService
 {
     List<EquationSystem> BuildEquationSystemsFromGraphs(IEnumerable<Graph> graphs);
-    string PerformKirchhoffElimination(EquationSystem equationSystem);
+    string PerformGaussianElimination(EquationSystem equationSystem);
 }

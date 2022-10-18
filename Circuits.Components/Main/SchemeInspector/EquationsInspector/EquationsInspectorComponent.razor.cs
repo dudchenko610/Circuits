@@ -25,11 +25,11 @@ public partial class EquationsInspectorComponent
         StateHasChanged();
     }
     
-    private void OnPerformKirchhoffElimination()
+    private void OnPerformGaussianElimination()
     {
         foreach (var equationSystem in _equationSystems)
         {
-            _equationSystemService.PerformKirchhoffElimination(equationSystem);
+            _equationSystemService.PerformGaussianElimination(equationSystem);
         }
         
         // _eliminationStatus = _equationSystemService.PerformKirchhoffElimination(_equationSystem);
