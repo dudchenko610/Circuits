@@ -7,8 +7,6 @@ namespace Circuits.ViewModels.Entities.Elements;
 
 public class DCSource : Element
 {
-    public ExpressionVariable Variable { get; set; } = null!;
-
     public Vec2 P1
     {
         get => _points[0];

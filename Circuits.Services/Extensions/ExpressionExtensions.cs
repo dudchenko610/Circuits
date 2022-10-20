@@ -10,7 +10,7 @@ public static class ExpressionExtensions
     {
         if (expression is ExpressionValue)
         {
-            return $"{expression.Value}";
+            return expression.Value < 0 ? $"({expression.Value})" : $"{expression.Value}";
         }
         
         if (expression is ExpressionVariable expVar)

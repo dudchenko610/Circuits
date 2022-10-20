@@ -8,6 +8,7 @@ namespace Circuits.Components.Main.SchemeInspector.EquationsInspector;
 public partial class EquationsInspectorComponent
 {
     [Inject] private IEquationSystemService _equationSystemService { get; set; } = null!;
+    [Inject] private IElectricalSystemService _electricalSystemService { get; set; } = null!;
     [Inject] private ISchemeService _schemeService { get; set; } = null!;
 
     // private string _eliminationStatus = "Success";
@@ -21,7 +22,7 @@ public partial class EquationsInspectorComponent
 
     private void OnBuildEquationSystems()
     {
-        _equationSystems = _equationSystemService.BuildEquationSystemsFromGraphs(_schemeService.Graphs);
+        _equationSystems = _electricalSystemService.BuildEquationSystemsFromGraphs(_schemeService.Graphs);
         StateHasChanged();
     }
     

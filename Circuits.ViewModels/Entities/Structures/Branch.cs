@@ -19,4 +19,5 @@ public class Branch
     public ExpressionVariable CapacityVoltage { get; set; } = null!;
     public ExpressionDerivative CapacityVoltageFirstDerivative { get; set; } = null!;
     public ExpressionDerivative CapacityVoltageSecondDerivative { get; set; } = null!;
+    public List<Expression> DCVariables { get; set; } = new();
 }

@@ -1,6 +1,5 @@
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
-using Circuits.ViewModels.Entities.Equations;
 using Circuits.ViewModels.Entities.Structures;
 using Circuits.ViewModels.Entities.Structures.Properties;
 using Circuits.ViewModels.Math;
@@ -240,15 +239,6 @@ public class GraphService : IGraphService
 
                 branch.Inductance =
                     inductors!.Count > 0 ? new Inductance { Inductors = inductors, Value = inductance } : null!;
-            }
-
-            foreach (var dcSource in branch.Elements.OfType<DCSource>())
-            {
-                dcSource.Variable = new ExpressionVariable
-                {
-                    Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
-                    Payload = dcSource
-                };
             }
         }
     }
