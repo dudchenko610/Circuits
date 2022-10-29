@@ -1,0 +1,8 @@
+.element-details {
+    position: absolute;
+    left: 0;
+    top: -20px;
+    width: 100%;
+    height: 1px;
+    background: red;
+}

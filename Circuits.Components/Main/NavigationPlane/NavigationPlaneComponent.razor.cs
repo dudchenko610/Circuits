@@ -17,7 +17,7 @@ public partial class NavigationPlaneComponent : IDisposable
 {
     [Inject] private IJSUtilsService _jsUtilsService { get; set; } = null!;
     [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
-    [Parameter] public RenderFragment<NavigationPlaneContext> ContentTemplate { get; set; } = null!;
+    [Parameter] public RenderFragment<NavigationPlaneContext> ChildContent { get; set; } = null!;
     [Parameter] public NavigationPlaneContext NavigationPlaneContext { get; set; } = null!;
 
     private readonly string _navigationId = $"_id_{Guid.NewGuid()}";

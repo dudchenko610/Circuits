@@ -1,97 +1,110 @@
 @using Circuits.ViewModels.Entities.Elements
 @using Circuits.ViewModels.Entities.Structures
-<div class="graph-inspector">
+<div class="graph-inspector scroll">
 
-    @if (_schemeService.Elements.Count > 0)
-    {
-        <BCHSelect TItem="Element"
-                   Options="@_schemeService.Elements"
-                   Height="300"
-                   Filtering="false"
-                   Grouping="true"
-                   MultipleSelect="true"
-                   ElementNamePredicate="x => x.GetType().Name.ToLower()"
-                   GroupPredicate='x => x.GetType().Name'
-                   GroupNamePredicate='x => $"{x.GetType().Name}s"'
-                   SelectedItems="_selectedElements"
-                   OnSelectItem="(e) => { OnElementSelected(e, true); }"
-                   OnDeselectItem="(e) => { OnElementSelected(e, false); }">
+    <div class="scroller">
+        <div class="selections-block">
+            <div class="selections">
+                <BCHSelect TItem="Element"
+                           Options="@_schemeService.Elements"
+                           Height="300"
+                           Filtering="false"
+                           Grouping="true"
+                           MultipleSelect="true"
+                           DefaultText="Elements"
+                           ElementNamePredicate="x => x.GetType().Name.ToLower()"
+                           GroupPredicate='x => x.GetType().Name'
+                           GroupNamePredicate='x => $"{x.GetType().Name}s"'
+                           SelectedItems="_selectedElements"
+                           OnSelectItem="(e) => { OnElementSelected(e, true); }"
+                           OnDeselectItem="(e) => { OnElementSelected(e, false); }">
 
-            <RowTemplate Context="element">
-                <div class="element-name">
-                    <div class="name noselectable-text">@element.GetType().Name[0]</div>
-                    <i class="noselectable-text">@element.Number</i>
+                    <RowTemplate Context="element">
+                        <div class="element-name">
+                            <div class="name noselectable-text">@element.GetType().Name[0]</div>
+                            <i class="noselectable-text">@element.Number</i>
+                        </div>
+                    </RowTemplate>
+
+                </BCHSelect>
+
+                <BCHSelect TItem="Branch"
+                           Options="@_schemeService.Branches"
+                           Height="300"
+                           Filtering="false"
+                           Grouping="false"
+                           MultipleSelect="true"
+                           DefaultText="Branches"
+                           ElementNamePredicate='x => $"branch {((List<Branch>)_schemeService.Branches).IndexOf(x)}"'
+                           SelectedItems="_selectedBranches"
+                           OnSelectItem="(e) => { OnBranchSelected(e, true); }"
+                           OnDeselectItem="(e) => { OnBranchSelected(e, false); }"/>
+
+            </div>
+
+            <div class="circuits">
+                @for (var i = 0; i < _schemeService.Graphs.Count; i++)
+                {
+                    var graph = _schemeService.Graphs[i];
+
+                    <BCHSelect TItem="Circuit"
+                               Options="@graph.Circuits"
+                               Height="300"
+                               Filtering="false"
+                               Grouping="false"
+                               MultipleSelect="true"
+                               DefaultText="@($"Graph {i}")"
+                               ElementNamePredicate='x => $"circuit {(graph.Circuits).IndexOf(x)}"'
+                               OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
+                               OnDeselectItem="(e) => { OnSelectCircuit(e, false); }"/>
+                }
+            </div>
+
+            <div class="commands">
+
+                <div class="btn noselectable-text"
+                     @onclick="OnHighlightSpanningTrees">
+                    Highlight Spanning Trees
                 </div>
-            </RowTemplate>
 
-        </BCHSelect>
-    }
+                <div class="btn noselectable-text"
+                     @onclick="OnHighlightLeftoverBranches">
+                    Highlight Leftover Branches
+                </div>
 
-    <div
-        class="btn noselectable-text"
-        @onclick="OnBuildBranchesClicked">
-        Build Branches
-    </div>
+                <div class="btn noselectable-text"
+                     @onclick="OnClearSelection">
+                    Clear Selection
+                </div>
+            </div>
+        </div>
 
-    @if (_schemeService.Branches.Count > 0)
-    {
-        <BCHSelect TItem="Branch"
-                   Options="@_schemeService.Branches"
-                   Height="300"
-                   Filtering="false"
-                   Grouping="false"
-                   MultipleSelect="true"
-                   ElementNamePredicate='x => $"branch {((List<Branch>)_schemeService.Branches).IndexOf(x)}"'
-                   SelectedItems="_selectedBranches"
-                   OnSelectItem="(e) => { OnBranchSelected(e, true); }"
-                   OnDeselectItem="(e) => { OnBranchSelected(e, false); }"/>
-    }
+        <div class="separator">
+            <div class="line"></div>
+        </div>
+        
+        <div class="commands">
+            <div
+                class="btn noselectable-text"
+                @onclick="OnBuildBranchesClicked">
+                Build Branches
+            </div>
 
-    <div class="btn noselectable-text"
-         @onclick="OnBuildSpanningTrees">
-        Build Spanning Trees
-    </div>
+            <div class="btn noselectable-text"
+                 @onclick="OnBuildSpanningTrees">
+                Build Spanning Trees
+            </div>
 
-    <div class="btn noselectable-text"
-         @onclick="OnHighlightSpanningTrees">
-        Highlight Spanning Trees
-    </div>
+            <div class="btn noselectable-text"
+                 @onclick="OnFindIndependentCircuits">
+                Find Independent Circuits
+            </div>
 
-
-    <div class="btn noselectable-text"
-         @onclick="OnHighlightLeftoverBranches">
-        Highlight Leftover Branches
-    </div>
-
-    <div class="btn noselectable-text"
-         @onclick="OnFindIndependentCircuits">
-        Find Independent Circuits
-    </div>
-
-    @foreach (var graph in _schemeService.Graphs)
-    {
-        if (graph.Circuits.Count > 0)
-        {
-            <BCHSelect TItem="Circuit"
-                       Options="@graph.Circuits"
-                       Height="300"
-                       Filtering="false"
-                       Grouping="false"
-                       MultipleSelect="true"
-                       ElementNamePredicate='x => $"circuit {(graph.Circuits).IndexOf(x)}"'
-                       OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
-                       OnDeselectItem="(e) => { OnSelectCircuit(e, false); }"/>
-        }
-    }
-
-    <div class="btn noselectable-text"
-         @onclick="OnClearSelection">
-        Clear Selection
-    </div>
-
-    <div class="btn noselectable-text"
-         @onclick="OnPerformAllSteps">
-        Perform all steps
+            <div class="btn noselectable-text"
+                 @onclick="OnPerformAllSteps">
+                Perform all steps
+            </div>
+        </div>
     </div>
 
 </div>
@@ -100,5 +113,10 @@
     .graph-inspector .bch-option.selected .element-name i,
     .graph-inspector .bch-option.selected .element-name .name {
         color: #FEFEFE;
+    }
+    
+    .graph-inspector > .scroller > .selections-block > .circuits > .bch-select-container {
+        display: inline-block;
+        margin: 5px;
     }
 </style>

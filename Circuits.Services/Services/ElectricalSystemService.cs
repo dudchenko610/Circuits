@@ -42,6 +42,8 @@ public class ElectricalSystemService : IElectricalSystemService
             /* 2. Fill equations by circuits */
             Console.WriteLine($"nodeEquationCount = {equationCount}, circuits = {graph.Circuits.Count}");
 
+            equationCount--;
+            
             foreach (var circuit in graph.Circuits)
             {
                 var firstBranch = circuit.Branches[0];

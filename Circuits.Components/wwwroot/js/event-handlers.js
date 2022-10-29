@@ -25,7 +25,7 @@ function getPathCoordinates(event) {
 
     const pathCoordinates = event.path.map(element => {
         if (element.getBoundingClientRect) {
-            var viewportOffset = element.getBoundingClientRect();
+            const viewportOffset = element.getBoundingClientRect();
 
             return {
                 x: event.pageX - viewportOffset.left,

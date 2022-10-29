@@ -33,6 +33,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
     [Parameter] public bool MultipleSelect { get; set; } = false;
     [Parameter] public bool ScrollToSelected { get; set; } = false;
     [Parameter] public string CssClass { get; set; } = string.Empty;
+    [Parameter] public string NoItemsTest { get; set; } = "No items found";
 
     [Parameter] public int ItemHeight { get; set; } = 40;
     [Parameter] public int Height { get; set; } = 200;
@@ -129,13 +130,14 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
     public void Dispose()
     {
-        _dotNetObjectReference.Dispose();
+        _dotNetObjectReference?.Dispose();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            _dotNetObjectReference = DotNetObjectReference.Create(this);
             await _jsRuntime.InvokeVoidAsync("bchSelectAddOnOuterFocusOut", _inputId, _containerId, _dotNetObjectReference, "OnContainerFocusOutAsync");
         }
 
@@ -143,7 +145,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         {
             await _inputRef.FocusAsync();
 
-            if (ScrollToSelected && Selected != null! && !MultipleSelect && !_scrolled)
+            if (ScrollToSelected && Selected != null && !MultipleSelect && !_scrolled)
             {
                 _scrolled = true;
 
@@ -164,7 +166,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
                     index++;
                 }
-                var offset = index * ItemHeight;
+                int offset = index * ItemHeight;
 
                 await _jsUtilsService.ScrollToAsync(_scrollerId, "0", $"{offset}", "auto");
             }
@@ -176,7 +178,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
             StateHasChanged();
         }
     }
-    
+
     private async Task OnOptionClickedAsync(TItem option)
     {
         if (!MultipleSelect)

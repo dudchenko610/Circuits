@@ -28,7 +28,7 @@ public partial class SchemeInspectorComponent : IDisposable
     private readonly TabContextModel _context = new(1) { Orderable = true };
     private DotNetObjectReference<SchemeInspectorComponent> _dotNetRef = null!;
     private readonly string _key = $"_key_{Guid.NewGuid()}";
-    private int _blockWidth = 300;
+    private int _blockWidth = 400;
     
     protected override void OnInitialized()
     {

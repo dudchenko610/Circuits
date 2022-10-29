@@ -73,6 +73,18 @@
                         }
                     </div>
                 }
+
+                @if (_groups.Count == 0)
+                {
+                    <div class="@("bch-group expanded")"
+                         style="@($"max-height: {ItemHeight}px;")">
+                        <div style="@($"height: {ItemHeight}px;")"
+                             class="@($"bch-option empty noselectable-text ")">
+                            @NoItemsTest
+                        </div>
+                    </div>
+                }
+
             </div>
         }
     </div>

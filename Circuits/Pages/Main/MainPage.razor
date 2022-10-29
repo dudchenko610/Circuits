@@ -76,11 +76,9 @@
 
         <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
 
-            <ContentTemplate Context="_navCtx">
-
                 <SchemeRendererComponent
                     SchemeRendererContext="_context"
-                    Scale="_navCtx.Scale"
+                    Scale="_navPlaneContext.Scale"
                     OnFirstPointSet="OnFirstPointSet"
                     OnSecondPointSet="OnSecondPointSet"
                     SelectedElementChanged="OnSelectElement">
@@ -122,8 +120,6 @@
                     </ElementComponent>
 
                 </SchemeRendererComponent>
-
-            </ContentTemplate>
 
         </NavigationPlaneComponent>
     </div>
