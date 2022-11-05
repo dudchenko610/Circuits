@@ -162,6 +162,14 @@ public partial class GraphInspectorComponent : IDisposable
         _highlightService.Clear();
     }
 
+    private void OnClearScheme()
+    {
+        OnClearSelection();
+        _schemeService.Clear();
+        _schemeService.Update();
+        StateHasChanged();
+    }
+
     private void OnPerformAllSteps()
     {
         _graphService.BuildBranches();

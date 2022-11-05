@@ -63,12 +63,14 @@ public partial class SchemeRendererComponent : IDisposable
     protected override void OnInitialized()
     {
         SchemeRendererContext.OnUpdate += Update;
+        _schemeService.OnUpdate += Update;
     }
     
     public void Dispose()
     {
         _dotNetObjectReference?.Dispose();
         SchemeRendererContext.OnUpdate -= Update;
+        _schemeService.OnUpdate -= Update;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

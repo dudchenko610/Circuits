@@ -25,7 +25,50 @@ public partial class SchemeInspectorComponent : IDisposable
 
     private bool _isMouseDown = false;
     private bool _opened = false;
-    private readonly TabContextModel _context = new(1) { Orderable = true };
+    private readonly TabContextModel _context = new(1)
+    {
+        Orderable = true,
+        TabPanels = new TabPanelModel[]
+        {
+            new ()
+            {
+                TabModels = new List<TabModel>
+                {
+                    new ()
+                    {
+                        Type = "graph-inspector",
+                        Name = $"Graph Inspector",
+                        Width = 175,
+                        Height = 35,
+                        Closable = false,
+                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
+                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
+                    },
+                    new ()
+                    {
+                        Type = "equations-inspector",
+                        Name = $"Equations Inspector",
+                        Width = 185,
+                        Height = 35,
+                        Closable = false,
+                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
+                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
+                    },
+                    new ()
+                    {
+                        Type = "storage",
+                        Name = $"Storage",
+                        Width = 150,
+                        Height = 35,
+                        Closable = false,
+                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
+                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
+                    }
+                }
+            }
+        }
+    };
+    
     private DotNetObjectReference<SchemeInspectorComponent> _dotNetRef = null!;
     private readonly string _key = $"_key_{Guid.NewGuid()}";
     private int _blockWidth = 400;
@@ -33,28 +76,6 @@ public partial class SchemeInspectorComponent : IDisposable
     protected override void OnInitialized()
     {
         _dotNetRef = DotNetObjectReference.Create(this);
-        
-        _context.TabPanels[0].TabModels.Add(new TabModel
-        {
-            Type = "graph-inspector",
-            Name = $"Graph Inspector",
-            Width = 175,
-            Height = 35,
-            Closable = false,
-            IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
-            SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
-        });
-
-        _context.TabPanels[0].TabModels.Add(new TabModel
-        {
-            Type = "equations-inspector",
-            Name = $"Equations Inspector",
-            Width = 185,
-            Height = 35,
-            Closable = false,
-            IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
-            SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
-        });
     }
     
     public void Dispose()

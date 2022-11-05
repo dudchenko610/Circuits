@@ -10,6 +10,7 @@ public class SchemeService : ISchemeService
     public IReadOnlyDictionary<int, Node> Nodes { get; }
     public IReadOnlyList<Branch> Branches { get; }
     public IReadOnlyList<Graph> Graphs { get; }
+    public event Action? OnUpdate;
 
     public SchemeService()
     {
@@ -17,5 +18,51 @@ public class SchemeService : ISchemeService
         Nodes = new Dictionary<int, Node>();
         Branches = new List<Branch>();
         Graphs = new List<Graph>();
+    }
+    
+    public void Clear()
+    {
+        ((List<Element>)Elements).Clear();
+        ((Dictionary<int, Node>)Nodes).Clear();
+        ((List<Branch>)Branches).Clear();
+        ((List<Graph>)Graphs).Clear();
+    }
+
+    public void Update()
+    {
+        OnUpdate?.Invoke();
+    }
+
+    public void Reindex()
+    {
+        var nodes = (Dictionary<int, Node>)Nodes;
+        nodes.Clear();
+
+        foreach (var element in Elements)
+        {
+            for (var i = 0; i < element.Points.Count; i++)
+            {
+                var point = element.Points[i];
+
+                var hashCode = ((int)point.X << 16) | (int)point.Y;
+                var node = GetNodeData(nodes, hashCode);
+
+                node.NodeElements.Add(new NodeElement
+                {
+                    PointIndex = i,
+                    Element = element
+                });
+            }
+        }
+    }
+    
+    private Node GetNodeData(Dictionary<int, Node> nodes, int hashCode)
+    {
+        if (nodes.TryGetValue(hashCode, out var node)) return node;
+
+        node = new Node();
+        nodes.Add(hashCode, node);
+
+        return node;
     }
 }

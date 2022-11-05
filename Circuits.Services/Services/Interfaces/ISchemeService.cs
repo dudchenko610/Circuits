@@ -5,8 +5,13 @@ namespace Circuits.Services.Services.Interfaces;
 
 public interface ISchemeService
 {
-    public IReadOnlyList<Element> Elements { get; }
-    public IReadOnlyDictionary<int, Node> Nodes { get; }
-    public IReadOnlyList<Branch> Branches { get; }
-    public IReadOnlyList<Graph> Graphs { get; }
+    IReadOnlyList<Element> Elements { get; }
+    IReadOnlyDictionary<int, Node> Nodes { get; }
+    IReadOnlyList<Branch> Branches { get; }
+    IReadOnlyList<Graph> Graphs { get; }
+
+    event Action OnUpdate;
+    void Clear();
+    void Update();
+    void Reindex();
 }
