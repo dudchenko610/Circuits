@@ -2,6 +2,7 @@ using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Entities.Structures;
 using Circuits.ViewModels.Entities.Structures.Properties;
+using Circuits.ViewModels.Helpers;
 using Circuits.ViewModels.Math;
 
 namespace Circuits.Services.Services;
@@ -56,7 +57,7 @@ public class GraphService : IGraphService
             
             _checkedElements.Add(element);
             
-            var hashCode = GetPointHashCode(point!);
+            var hashCode = GraphHelpers.GetPointHashCode(point!);
             var node = _schemeService.Nodes[hashCode];
             var nextElement = node.NodeElements.FirstOrDefault(x => x.Element != element)?.Element;
 
@@ -81,8 +82,8 @@ public class GraphService : IGraphService
                     branch.Elements.Remove(el1!);
                     
                     // step back or smth like that
-                    var anotherPoint = el1!.Points.FirstOrDefault(x => GetPointHashCode(x) != hashCode)!; // PROBLEMATIC FOR TRANSISTORS ( or maybe not :) )
-                    var anotherHashCode = GetPointHashCode(anotherPoint!);
+                    var anotherPoint = el1!.Points.FirstOrDefault(x => GraphHelpers.GetPointHashCode(x) != hashCode)!; // PROBLEMATIC FOR TRANSISTORS ( or maybe not :) )
+                    var anotherHashCode = GraphHelpers.GetPointHashCode(anotherPoint!);
                     var anotherNode = _schemeService.Nodes[anotherHashCode];
                     
                     anotherNode.Branches.Add(branch);
@@ -106,16 +107,11 @@ public class GraphService : IGraphService
             else
             {
                 element = nextElement!;
-                point = element.Points.FirstOrDefault(x => GetPointHashCode(x) != hashCode)!;
+                point = element.Points.FirstOrDefault(x => GraphHelpers.GetPointHashCode(x) != hashCode)!;
             }
         }
     }
-
-    private int GetPointHashCode(Vec2 point)
-    {
-        return ((int)point.X << 16) | (int)point.Y;
-    }
-
+    
     public void BuildSpanningTrees() // problem here
     {
         if (_branches.Count == 0) return;

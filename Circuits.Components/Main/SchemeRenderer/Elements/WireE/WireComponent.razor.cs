@@ -24,7 +24,8 @@ public partial class WireComponent : IDisposable
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private Vec2 _pos = new();
-    
+    private Vec2 _prevDragPos = new();
+
     // protected override void OnAfterRender(bool firstRender)
     // {
     //     Console.WriteLine("OnAfterRender Wire");
@@ -35,7 +36,7 @@ public partial class WireComponent : IDisposable
         SchemeRenderer.OnDragUpdate += OnDraggingUpdate;
         _highlightService.OnUpdate += StateHasChanged;
     }
-
+    
     public void Dispose()
     {
         SchemeRenderer.OnDragUpdate -= OnDraggingUpdate;
@@ -46,7 +47,11 @@ public partial class WireComponent : IDisposable
     {
         if (_draggingElement == Wire && _firstDragOver)
         {
-            StateHasChanged();
+            if (_draggingPos.X != _prevDragPos.X || _draggingPos.Y != _prevDragPos.Y)
+            {
+                _prevDragPos.Set(_draggingPos);
+                StateHasChanged();
+            }
         }
     }
 

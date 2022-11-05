@@ -54,9 +54,23 @@
                                Grouping="false"
                                MultipleSelect="true"
                                DefaultText="@($"Graph {i}")"
-                               ElementNamePredicate='x => $"circuit {(graph.Circuits).IndexOf(x)}"'
+                               ElementNamePredicate='x => $"circuit {graph.Circuits.IndexOf(x)}"'
                                OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
-                               OnDeselectItem="(e) => { OnSelectCircuit(e, false); }"/>
+                               OnDeselectItem="(e) => { OnSelectCircuit(e, false); }">
+
+                        <RowTemplate Context="circuit">
+                            <div class="circuit-wrapper">
+                                <div class="name noselectable-text">Circuit <i class="noselectable-text">@(graph.Circuits.IndexOf(circuit))</i></div>
+                                <div class="controls">
+                                    <div 
+                                        @onclick="() => { OnShowCircuitDirectionClicked(circuit); }"
+                                        @onclick:stopPropagation
+                                        class="@($"icon {(_highlightService.ShouldShowDirection(circuit) ? "selected" : "")}")">D</div>
+                                </div>
+                            </div>
+                        </RowTemplate>
+
+                    </BCHSelect>
                 }
             </div>
 
@@ -82,7 +96,7 @@
         <div class="separator">
             <div class="line"></div>
         </div>
-        
+
         <div class="commands">
             <div
                 class="btn noselectable-text"

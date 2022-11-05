@@ -85,6 +85,11 @@ public partial class SchemeRendererComponent : IDisposable
             SelectedElement = null!;
         }
     }
+    
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     Console.WriteLine("SchemeRenderer OnAfterRender");
+    // }
 
     private void Update()
     {

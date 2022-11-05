@@ -2,7 +2,7 @@ using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Entities.Equations;
 using Circuits.ViewModels.Entities.Structures;
-using Circuits.ViewModels.Math;
+using Circuits.ViewModels.Helpers;
 
 namespace Circuits.Services.Services;
 
@@ -42,15 +42,11 @@ public class ElectricalSystemService : IElectricalSystemService
             /* 2. Fill equations by circuits */
             Console.WriteLine($"nodeEquationCount = {equationCount}, circuits = {graph.Circuits.Count}");
 
-            equationCount--;
+            // equationCount--;
             
             foreach (var circuit in graph.Circuits)
             {
-                var firstBranch = circuit.Branches[0];
-                var circuitNode = firstBranch.NodeLeft;
-                
                 var matVars = (List<ExpressionVariable>)eqSys.Variables;
-                var circuitBranch = firstBranch;
                 var equationNumber = equationCount++;
                 
                 for (var j = 0; j < eqSys.Matrix[equationNumber].Length; j++)
@@ -58,30 +54,22 @@ public class ElectricalSystemService : IElectricalSystemService
                     eqSys.Matrix[equationNumber][j] = new ExpressionValue(0);
                 }
                 
-                do
+                circuit.IterateCircuit((branch, isCoDirected) =>
                 {
-                    var isCoDirected = circuitBranch!.NodeLeft == circuitNode;
-                    var currentIndex = matVars.IndexOf(circuitBranch.Current);
-                    
-                    if (currentIndex != -1)
-                    {
-                        eqSys.Matrix[equationNumber][currentIndex] =
-                            new ExpressionValue(circuitBranch.Resistance.Value);
-                    }
-
-                    foreach (var dcVar in circuitBranch.DCVariables)
+                    var currentIndex = matVars.IndexOf(branch.Current);
+                        
+                    foreach (var dcVar in branch.DCVariables)
                     {
                         eqSys.Matrix[equationNumber][eqSys.Matrix.Length] -= (isCoDirected ? 1 : -1) * dcVar;
                     }
-
-                    var nextNode = isCoDirected
-                        ? circuitBranch.NodeRight
-                        : circuitBranch.NodeLeft;
-
-                    circuitBranch = nextNode.Branches
-                        .FirstOrDefault(x => circuit.Branches.Contains(x) && x != circuitBranch);
-
-                } while (circuitBranch != firstBranch);
+                    
+                    if (currentIndex != -1)
+                    {
+                        eqSys.Matrix[equationNumber][currentIndex] = new ExpressionValue(branch.Resistance.Value);
+                    }
+                    
+                    // place other variables
+                });
             }
 
             equationSystems.Add(eqSys);
@@ -246,14 +234,8 @@ public class ElectricalSystemService : IElectricalSystemService
                 var input = branch.NodeRight == node; // sign +
                 var indexOfCurrent = matVars.IndexOf(branch.Current);
                         
-                if (indexOfCurrent != -1)
-                {
-                    mat[equationNumber][indexOfCurrent] = new ExpressionValue(input ? 1 : -1);
-                }
-                else
-                {
-                    mat[equationNumber][matVars.Count] -= (input ? 1 : -1) * branch.Current; // right side
-                }
+                if (indexOfCurrent != -1) mat[equationNumber][indexOfCurrent] = new ExpressionValue(input ? 1 : -1);
+                else mat[equationNumber][matVars.Count] -= (input ? 1 : -1) * branch.Current; // right side
             }
         }
 
@@ -262,47 +244,15 @@ public class ElectricalSystemService : IElectricalSystemService
 
     private void FillDcSourceVariables(Branch branch)
     {
-        var currentElement = branch.NodeLeft.NodeElements
-            .FirstOrDefault(x => branch.Elements.Contains(x.Element))!.Element;
-
-        var point = currentElement.Points[0]; // we approach from left side of branch to DC
-
-        while (currentElement != null) // jump over branch and find all of the DC-s (Diodes in future)
+        branch.IterateBranch(_schemeService.Nodes, (element, isCoDirected) =>
         {
-            if (currentElement is DCSource dcSource)
+            if (element is not DCSource dcSource) return;
+            
+            branch.DCVariables.Add((isCoDirected ? 1 : -1) * new ExpressionVariable
             {
-                var pointIndex = ((List<Vec2>) currentElement.Points).IndexOf(point);
-                var multiplier = -1;
-                
-                switch (pointIndex)
-                {
-                    case 0 when dcSource.Direction is Direction.TOP or Direction.RIGHT: // left
-                    case 1 when dcSource.Direction is Direction.BOTTOM or Direction.LEFT: // right
-                        multiplier = 1;
-                        break;
-                }
-
-                branch.DCVariables.Add(multiplier * new ExpressionVariable
-                {
-                    Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
-                    Payload = dcSource
-                });
-            }
-
-            var hashCode = GetPointHashCode(point!);
-            var node = _schemeService.Nodes[hashCode];
-            
-            currentElement = node.NodeElements
-                .FirstOrDefault(
-                    x => x.Element != currentElement && 
-                         branch.Elements.Contains(x.Element))?.Element;
-            
-            point = currentElement?.Points.FirstOrDefault(x => GetPointHashCode(x) != hashCode)!;
-        }
-    }
-
-    private int GetPointHashCode(Vec2 point)
-    {
-        return ((int)point.X << 16) | (int)point.Y;
+                Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
+                Payload = dcSource
+            });
+        });
     }
 }

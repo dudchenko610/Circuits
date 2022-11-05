@@ -61,6 +61,11 @@ public partial class SchemeInspectorComponent : IDisposable
     {
         _dotNetRef.Dispose();
     }
+    
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     Console.WriteLine("ElementDetails OnAfterRender");
+    // }
 
     private async Task OnMouseDownAsync()
     {

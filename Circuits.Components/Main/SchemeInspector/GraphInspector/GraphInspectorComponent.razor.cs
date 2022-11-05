@@ -24,6 +24,11 @@ public partial class GraphInspectorComponent : IDisposable
     {
         _elementService.OnUpdate -= StateHasChanged;
     }
+    
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     Console.WriteLine("ElementDetails OnAfterRender");
+    // }
 
     private void OnElementSelected(Element element, bool added)
     {
@@ -136,6 +141,13 @@ public partial class GraphInspectorComponent : IDisposable
                 }
             }
         }
+    }
+
+    private void OnShowCircuitDirectionClicked(Circuit circuit)
+    {
+        var action = !_highlightService.ShouldShowDirection(circuit);
+        _highlightService.HighlightCircuitDirection(circuit, action);
+        StateHasChanged();
     }
 
     private void OnClearSelection()

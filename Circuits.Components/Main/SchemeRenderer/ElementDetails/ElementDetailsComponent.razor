@@ -1,3 +1,8 @@
-<div class="element-details">
+<div class="element-details @GetTypeClass()">
+    
+    @foreach (var circuitDir in _circuitDirections)
+    {
+        <div class="@($"arrow circuit {(circuitDir.Reversed ? "reverse" : "")}")"></div>
+    }
     
 </div>

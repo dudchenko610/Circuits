@@ -24,6 +24,7 @@ public partial class DCSourceComponent : IDisposable
     private bool _eventsDisabled => SchemeRenderer.SchemeRendererContext.PencilMode;
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
+    private Vec2 _prevDragPos = new();
 
     // protected override void OnAfterRender(bool firstRender)
     // {
@@ -46,7 +47,11 @@ public partial class DCSourceComponent : IDisposable
     {
         if (_draggingElement == DCSource && _firstDragOver)
         {
-            StateHasChanged();
+            if (_draggingPos.X != _prevDragPos.X || _draggingPos.Y != _prevDragPos.Y)
+            {
+                _prevDragPos.Set(_draggingPos);
+                StateHasChanged();
+            }
         }    
     }
 

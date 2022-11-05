@@ -15,5 +15,5 @@ public class SchemeRendererContext
 
     private bool _privateMode = false;
 
-    public Action OnUpdate { get; set; } = null!;
+    public Action? OnUpdate { get; set; } = null!;
 }

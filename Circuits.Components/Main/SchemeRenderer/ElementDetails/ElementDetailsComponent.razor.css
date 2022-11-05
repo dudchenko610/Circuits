@@ -1,8 +1,51 @@
 .element-details {
     position: absolute;
     left: 0;
-    top: -20px;
+    top: calc(50% - 10px);
     width: 100%;
+    height: 20px;
+    pointer-events: none;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.element-details.resistor,
+.element-details.inductor {
+    height: 30px;
+    top: calc(50% - 15px);
+}
+
+.element-details.dc-source,
+.element-details.capacitor {
+    height: 40px;
+    top: calc(50% - 20px);
+}
+
+.element-details .arrow {
+    position: relative;
     height: 1px;
-    background: red;
+    width: calc(100% - 30px);
+    border-top: 1px solid #abadbb;
+    opacity: 0.3;
+}
+
+.element-details .arrow::after {
+    content: ' ';
+    position: absolute;
+    top: -6px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 11px solid #abadbb;
+    transform: rotate(90deg);
+}
+
+.element-details .arrow.reverse::after {
+    right: 0;
+    left: unset;
+    transform: rotate(270deg);
 }

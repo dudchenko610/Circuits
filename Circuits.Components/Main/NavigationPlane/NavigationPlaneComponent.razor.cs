@@ -53,6 +53,11 @@ public partial class NavigationPlaneComponent : IDisposable
         NavigationPlaneContext.ZoomUp -= OnZoomUp;
         NavigationPlaneContext.ZoomDown -= OnZoomDownAsync;
     }
+    
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     Console.WriteLine("NavigationPlane OnAfterRender");
+    // }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

@@ -25,6 +25,7 @@ public partial class InductorComponent
 
     private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private Vec2 _pos = new();
+    private Vec2 _prevDragPos = new();
 
     // protected override void OnAfterRender(bool firstRender)
     // {
@@ -47,7 +48,11 @@ public partial class InductorComponent
     {
         if (_draggingElement == Inductor && _firstDragOver)
         {
-            StateHasChanged();
+            if (_draggingPos.X != _prevDragPos.X || _draggingPos.Y != _prevDragPos.Y)
+            {
+                _prevDragPos.Set(_draggingPos);
+                StateHasChanged();
+            }
         }    
     }
 
