@@ -12,6 +12,7 @@ public class HighlightService : IHighlightService
     public event Action<Element, ElementDetailsModel>? OnElementDetailsUpdate;
     private readonly HashSet<Element> _highlightedElements = new();
     private readonly HashSet<Circuit> _circuitDirections = new();
+    private readonly HashSet<Branch> _branchDirections = new();
 
     public bool IsHighlighted(Element element)
     {
@@ -26,6 +27,11 @@ public class HighlightService : IHighlightService
     public bool ShouldShowDirection(Circuit circuit)
     {
         return _circuitDirections.Contains(circuit);
+    }
+
+    public bool ShouldShowDirection(Branch branch)
+    {
+        return _branchDirections.Contains(branch);
     }
 
     public void Highlight(Element element, bool show)
@@ -74,13 +80,30 @@ public class HighlightService : IHighlightService
                 Circuit = circuit,
                 Branch = branch,
                 CircuitBranchCoDirected = GraphHelpers.IsCoDirected(circuit, branch),
-                ShowCircuitDirection = show
+                ShowDirection = show
             };
             
             foreach (var element in branch.Elements)
             {
                 OnElementDetailsUpdate?.Invoke(element, elementDetailsModel);
             }
+        }
+    }
+
+    public void HighlightBranchDirection(Branch branch, bool show)
+    {
+        if (show) _branchDirections.Add(branch);
+        else _branchDirections.Remove(branch);
+
+        var elementDetailsModel = new ElementDetailsModel
+        {
+            Branch = branch,
+            ShowDirection = show
+        };
+            
+        foreach (var element in branch.Elements)
+        {
+            OnElementDetailsUpdate?.Invoke(element, elementDetailsModel);
         }
     }
 

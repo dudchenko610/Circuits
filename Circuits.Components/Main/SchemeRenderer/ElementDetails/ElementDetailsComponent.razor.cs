@@ -20,7 +20,8 @@ public partial class ElementDetailsComponent : IDisposable
     [Parameter] public Element Element { get; set; } = null!;
 
     private readonly List<CircuitDirection> _circuitDirections = new();
-    
+    private bool? _showBranchDirection = null;
+
     protected override void OnInitialized()
     {
         _highlightService.OnElementDetailsUpdate += OnDetailsUpdate;
@@ -36,6 +37,7 @@ public partial class ElementDetailsComponent : IDisposable
         if (element == null!) //clear
         {
             _circuitDirections.Clear();
+            _showBranchDirection = null;
             StateHasChanged();
             
             return;
@@ -43,15 +45,22 @@ public partial class ElementDetailsComponent : IDisposable
 
         if (element != Element) return;
 
-        if (model.ShowCircuitDirection)
+        if (model.Circuit == null!)
+        {
+            _showBranchDirection = model.ShowDirection 
+                ? GraphHelpers.IsCoDirected(_schemeService.Nodes, model.Branch, element)
+                : null;
+            
+            StateHasChanged();
+            return;
+        }
+
+        if (model.ShowDirection)
         {
             var elementBranchCoDirected = GraphHelpers.IsCoDirected(_schemeService.Nodes, model.Branch, element);
-            var reversed = !(elementBranchCoDirected);
+            var reversed = !elementBranchCoDirected;
 
-            if (!model.CircuitBranchCoDirected)
-            {
-                reversed = !reversed;
-            }
+            if (!model.CircuitBranchCoDirected) reversed = !reversed;
             
             _circuitDirections.Add(new CircuitDirection
             {

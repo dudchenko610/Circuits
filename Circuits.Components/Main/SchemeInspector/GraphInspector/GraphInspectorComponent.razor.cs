@@ -149,6 +149,13 @@ public partial class GraphInspectorComponent : IDisposable
         _highlightService.HighlightCircuitDirection(circuit, action);
         StateHasChanged();
     }
+    
+    private void OnShowBranchDirectionClicked(Branch branch)
+    {
+        var action = !_highlightService.ShouldShowDirection(branch);
+        _highlightService.HighlightBranchDirection(branch, action);
+        StateHasChanged();
+    }
 
     private void OnClearSelection()
     {

@@ -99,6 +99,7 @@
     }
 
 
+.graph-inspector .branch-wrapper,
 .graph-inspector .circuit-wrapper {
     display: flex;
     align-items: baseline;
@@ -107,6 +108,7 @@
     margin-right: 17px;
 }
 
+.graph-inspector .branch-wrapper > .name,
 .graph-inspector .circuit-wrapper > .name {
     font-family: 'Roboto';
     font-style: normal;
@@ -117,10 +119,12 @@
     white-space: nowrap;
 }
 
+.graph-inspector .branch-wrapper > .controls,
 .graph-inspector .circuit-wrapper > .controls {
     display: flex;
 }
 
+.graph-inspector .branch-wrapper > .controls > .icon,
 .graph-inspector .circuit-wrapper > .controls > .icon {
     width: 20px;
     height: 20px;
@@ -139,11 +143,13 @@
     color: rgba(3, 2, 41, 0.4);
 }
 
+.graph-inspector .branch-wrapper > .controls > .icon.selected,
 .graph-inspector .circuit-wrapper > .controls > .icon.selected {
     border: 1px solid rgba(141, 2, 3, 0.4);
     color: rgba(141, 2, 3, 0.4);
 }
 
+.graph-inspector .branch-wrapper  > .name > i,
 .graph-inspector .circuit-wrapper  > .name > i {
     height: 10px;
     font-family: 'Roboto';

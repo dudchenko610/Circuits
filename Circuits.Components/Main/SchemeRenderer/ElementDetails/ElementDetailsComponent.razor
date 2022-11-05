@@ -5,4 +5,9 @@
         <div class="@($"arrow circuit {(circuitDir.Reversed ? "reverse" : "")}")"></div>
     }
     
+    @if (_showBranchDirection is not null)
+    {
+        <div class="@($"arrow branch {(_showBranchDirection.Value ? "reverse" : "")}")"></div>
+    }
+    
 </div>
