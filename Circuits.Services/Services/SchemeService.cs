@@ -1,5 +1,6 @@
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
+using Circuits.ViewModels.Entities.Equations;
 using Circuits.ViewModels.Entities.Structures;
 
 namespace Circuits.Services.Services;
@@ -10,6 +11,8 @@ public class SchemeService : ISchemeService
     public IReadOnlyDictionary<int, Node> Nodes { get; }
     public IReadOnlyList<Branch> Branches { get; }
     public IReadOnlyList<Graph> Graphs { get; }
+    public IReadOnlyList<EquationSystem> EquationSystems { get; }
+    
     public event Action? OnUpdate;
 
     public SchemeService()
@@ -18,6 +21,7 @@ public class SchemeService : ISchemeService
         Nodes = new Dictionary<int, Node>();
         Branches = new List<Branch>();
         Graphs = new List<Graph>();
+        EquationSystems = new List<EquationSystem>();
     }
     
     public void Clear()
@@ -26,6 +30,7 @@ public class SchemeService : ISchemeService
         ((Dictionary<int, Node>)Nodes).Clear();
         ((List<Branch>)Branches).Clear();
         ((List<Graph>)Graphs).Clear();
+        ((List<EquationSystem>)EquationSystems).Clear();
     }
 
     public void Update()

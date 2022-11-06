@@ -17,6 +17,9 @@ public class ElectricalSystemService : IElectricalSystemService
 
     public List<EquationSystem> BuildEquationSystemsFromGraphs(IEnumerable<Graph> graphs)
     {
+        var schemeEquationSystems = (List<EquationSystem>) _schemeService.EquationSystems;
+        schemeEquationSystems.Clear();
+        
         var equationSystems = new List<EquationSystem>();
 
         foreach (var branch in _schemeService.Branches)
@@ -88,6 +91,8 @@ public class ElectricalSystemService : IElectricalSystemService
         //
         // equationSystems.Add(equationSystem);
 
+        schemeEquationSystems.AddRange(equationSystems);
+        
         return equationSystems;
     }
 
