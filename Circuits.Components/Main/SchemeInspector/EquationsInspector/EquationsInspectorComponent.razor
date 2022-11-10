@@ -27,52 +27,34 @@
 
         <div class="circuits">
 
-            <BCHSelect TItem="Branch"
-                       Options="@_schemeService.Branches"
-                       Height="300"
-                       Width="120"
-                       Filtering="false"
-                       Grouping="false"
-                       MultipleSelect="true"
-                       DefaultText="Branches"
-                       ElementNamePredicate='x => $"branch {((List<Branch>)_schemeService.Branches).IndexOf(x)}"'
-                       SelectedItems="_selectedBranches"
-                       OnSelectItem="(e) => { OnBranchSelected(e, true); }"
-                       OnDeselectItem="(e) => { OnBranchSelected(e, false); }">
-
-                <RowTemplate Context="branch">
-                    <div class="branch-wrapper">
-                        <div class="name noselectable-text">Branch <i class="noselectable-text">@($"{((List<Branch>)_schemeService.Branches).IndexOf(branch)}")</i></div>
-                        <div class="controls">
-                            <div
-                                @onclick="() => { OnShowBranchDirectionClicked(branch); }"
-                                @onclick:stopPropagation
-                                class="@($"icon {(_highlightService.ShouldShowDirection(branch) ? "selected" : "")}")">
-                                D
-                            </div>
-                        </div>
-                    </div>
-                </RowTemplate>
-
-            </BCHSelect>
-
             @for (var i = 0; i < _schemeService.Graphs.Count; i++)
             {
                 var graph = _schemeService.Graphs[i];
+                var graphBranches = graph.Circuits.SelectMany(circuit => circuit.Branches).ToList();
+                var circuitBranches = graph.Circuits
+                    .SelectMany(c => c.Branches
+                        .Select(b => new CircuitBranch
+                        {
+                            Circuit = c,
+                            Branch = b
+                        }));
 
-                <BCHSelect TItem="Circuit"
+                <BCHSelect TItem="CircuitBranch"
                            Width="120"
-                           Options="@graph.Circuits"
+                           Options="@circuitBranches"
                            Height="300"
                            Filtering="false"
-                           Grouping="false"
+                           Grouping="true"
                            MultipleSelect="true"
                            DefaultText="@($"Graph {i}")"
-                           ElementNamePredicate='x => $"circuit {graph.Circuits.IndexOf(x)}"'
-                           OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
-                           OnDeselectItem="(e) => { OnSelectCircuit(e, false); }">
+                           GroupPredicate="x => x.Circuit"
+                           FilterByPredicate='x => $"branch {x.Circuit.Branches.IndexOf(x.Branch)}"'
+                           OnSelectItem="(e) => { OnBranchSelected(e.Branch, true); }"
+                           OnDeselectItem="(e) => { OnBranchSelected(e.Branch, false); }">
 
-                    <RowTemplate Context="circuit">
+                    <GroupTemplate Context="circuitObj">
+                        @{ var circuit = (Circuit)circuitObj!; }
+
                         <div class="circuit-wrapper">
                             <div class="name noselectable-text">Circuit <i class="noselectable-text">@(graph.Circuits.IndexOf(circuit))</i></div>
                             <div class="controls">
@@ -80,6 +62,20 @@
                                     @onclick="() => { OnShowCircuitDirectionClicked(circuit); }"
                                     @onclick:stopPropagation
                                     class="@($"icon {(_highlightService.ShouldShowDirection(circuit) ? "selected" : "")}")">
+                                    D
+                                </div>
+                            </div>
+                        </div>
+                    </GroupTemplate>
+
+                    <RowTemplate Context="cb">
+                        <div class="branch-wrapper">
+                            <div class="name noselectable-text">Branch <i class="noselectable-text">@(graphBranches.IndexOf(cb.Branch))</i></div>
+                            <div class="controls">
+                                <div
+                                    @onclick="() => { OnShowBranchDirectionClicked(cb.Branch); }"
+                                    @onclick:stopPropagation
+                                    class="@($"icon {(_highlightService.ShouldShowDirection(cb.Branch) ? "selected" : "")}")">
                                     D
                                 </div>
                             </div>

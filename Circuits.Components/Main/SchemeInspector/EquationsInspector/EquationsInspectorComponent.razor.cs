@@ -9,6 +9,12 @@ namespace Circuits.Components.Main.SchemeInspector.EquationsInspector;
 
 public partial class EquationsInspectorComponent
 {
+    private class CircuitBranch
+    {
+        public Circuit Circuit { get; set; } = null!;
+        public Branch Branch { get; set; } = null!;
+    }
+    
     [Inject] private IEquationSystemService _equationSystemService { get; set; } = null!;
     [Inject] private IElectricalSystemService _electricalSystemService { get; set; } = null!;
     [Inject] private ISchemeService _schemeService { get; set; } = null!;
@@ -24,30 +30,7 @@ public partial class EquationsInspectorComponent
         _electricalSystemService.BuildEquationSystemsFromGraphs(_schemeService.Graphs);
         StateHasChanged();
     }
-    
-    private void OnSelectCircuit(Circuit circuit, bool added)
-    {
-        foreach (var branch in circuit.Branches)
-        {
-            _highlightService.Highlight(branch.Elements, added);
 
-            foreach (var element in branch.Elements)
-            {
-                if (added)
-                {
-                    if (!_selectedElements.Contains(element))
-                    {
-                        _selectedElements.Add(element);
-                    }
-                }
-                else
-                {
-                    _selectedElements.Remove(element);
-                }
-            }
-        }
-    }
-    
     private void OnBranchSelected(Branch branch, bool added)
     {
         _highlightService.Highlight(branch.Elements, added);

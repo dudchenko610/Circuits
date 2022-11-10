@@ -84,6 +84,10 @@
     white-space: nowrap;
 }
 
+.equation-inspector .circuit-wrapper > .name {
+    margin-left: 10px;
+}
+
 .equation-inspector .branch-wrapper > .controls,
 .equation-inspector .circuit-wrapper > .controls {
     display: flex;

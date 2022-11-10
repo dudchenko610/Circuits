@@ -20,6 +20,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
     private class Group
     {
+        public object Key { get; set; } = null!;
         public bool Expanded { get; set; } = true;
         public string Name { get; set; } = string.Empty;
         public List<Element> Elements { get; set; } = new();
@@ -89,6 +90,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
     [Parameter] public EventCallback<TItem> OnSelectItem { get; set; }
     [Parameter] public EventCallback<TItem> OnDeselectItem { get; set; }
     [Parameter] public RenderFragment<TItem> RowTemplate { get; set; } = null!;
+    [Parameter] public RenderFragment<object> GroupTemplate { get; set; } = null!;
 
     private string _containerId = $"_id{Guid.NewGuid()}";
     private string _contentId = $"_id{Guid.NewGuid()}";
@@ -145,13 +147,13 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         {
             await _inputRef.FocusAsync();
 
-            if (ScrollToSelected && Selected != null && !MultipleSelect && !_scrolled)
+            if (ScrollToSelected && Selected != null! && !MultipleSelect && !_scrolled)
             {
                 _scrolled = true;
 
-                int index = Grouping ? -1 : -2;
+                var index = Grouping ? -1 : -2;
 
-                for (int i = 0; i < _groups.Count; i++)
+                for (var i = 0; i < _groups.Count; i++)
                 {
                     foreach (var element in _groups[i].Elements)
                     {
@@ -166,8 +168,8 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
                     index++;
                 }
-                int offset = index * ItemHeight;
-
+                
+                var offset = index * ItemHeight;
                 await _jsUtilsService.ScrollToAsync(_scrollerId, "0", $"{offset}", "auto");
             }
         }
@@ -240,7 +242,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
     private void FilterData(string filter = "")
     {
-        _groups = new();
+        _groups = new List<Group>();
 
         var groups = Options.GroupBy(GroupPredicate);
         _prevCount = Options.Count();
@@ -251,7 +253,8 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
 
             var gr = new Group
             {
-                Name = GroupNamePredicate.Invoke(group.First())
+                Name = GroupNamePredicate.Invoke(group.First()),
+                Key = group.Key
             };
 
             foreach (var item in group)

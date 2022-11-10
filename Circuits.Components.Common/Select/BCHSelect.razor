@@ -50,8 +50,16 @@
                             <div class="bch-group-wrapper noselectable-text"
                                  style="@($"height: {ItemHeight}px;")"
                                  @onclick="() => { OnGroupClicked(group); }">
-                                <div class="name noselectable-text">@group.Name</div>
-                                <span></span>
+                                
+                                @if (GroupTemplate != null!)
+                                {
+                                    @GroupTemplate(group.Key)
+                                }
+                                else
+                                {
+                                    <div class="name noselectable-text">@group.Name</div>
+                                    <span></span>
+                                }
                             </div>
                         }
 
