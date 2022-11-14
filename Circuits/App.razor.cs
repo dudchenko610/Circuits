@@ -19,6 +19,6 @@ public partial class App
         GraphService.FindFundamentalCycles();
         GraphService.CollectProperties();
         
-        ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
+    //    ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
     }
 }

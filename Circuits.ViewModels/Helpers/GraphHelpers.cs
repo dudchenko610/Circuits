@@ -53,6 +53,8 @@ public static class GraphHelpers
             var nextPoint = currentElement.Points[(pointIndex + 1) % 2];
             var node = nodes[GetPointHashCode(nextPoint)];
             
+            if(node == branch.NodeLeft) break; // branch is circular
+            
             currentNodeElement = node.NodeElements
                 .FirstOrDefault(
                     x => x.Element != currentElement && 
@@ -105,12 +107,23 @@ public static class GraphHelpers
         while (currentElement != null!) // jump over branch and find all of the DC-s (Diodes in future)
         {
             var isCoDirected = pointIndex == 0;
-            if (currentElement.Direction is Direction.TOP or Direction.LEFT) isCoDirected = !isCoDirected;
+            
+            // TODO: Maybe check below should be implemented in different way
+            if (currentElement is DCSource) // we just take into account DCSource direction
+            {
+                if (currentElement.Direction is Direction.BOTTOM or Direction.RIGHT) isCoDirected = !isCoDirected;
+            }
+            else
+            {
+                if (currentElement.Direction is Direction.TOP or Direction.LEFT) isCoDirected = !isCoDirected;
+            }
             
             action.Invoke(currentElement, isCoDirected);
 
             var nextPoint = currentElement.Points[(pointIndex + 1) % 2];
             var node = nodes[GetPointHashCode(nextPoint)];
+            
+            if(node == branch.NodeLeft) break; // branch is circular
             
             currentNodeElement = node.NodeElements
                 .FirstOrDefault(
