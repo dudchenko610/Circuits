@@ -4,9 +4,12 @@ namespace Circuits.Components.Common.Services.Interfaces;
 
 public interface IPopupService
 {
-    event Action<ModalModel> OnOpen;
-    event Action<ModalModel> OnOverlayClicked;
+    IReadOnlyList<ModalModel> Modals { get; }
+
+    event Action? OnUpdate;
+    event Action<ModalModel>? OnOverlayClicked;
 
     void Open(ModalModel modalModel);
+    void Close(ModalModel modalModel);
     void FireOverlayClicked(ModalModel modalModel);
 }
