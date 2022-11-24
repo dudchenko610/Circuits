@@ -14,6 +14,8 @@ body,
 
 .scroll::-webkit-scrollbar {
     width: 18px;
+    height: 18px;
+    /*https://stackoverflow.com/questions/44334106/how-can-i-style-horizontal-scrollbar-by-css*/
 }
 
 .scroll::-webkit-scrollbar-track {

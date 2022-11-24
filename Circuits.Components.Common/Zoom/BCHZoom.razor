@@ -1,0 +1,37 @@
+<div class="bch-navigation-cnt">
+
+    <div id="@_wrapperId"
+         class="bch-scroll-cnt bch-navigation-cs-container"
+         @onextmousewheel="OnMouseWheel"
+         @ontouchstart="OnTouchStartAsync"
+         @ontouchend="OnTouchEnd"
+         @ontouchmove="OnTouchMove"
+         @ontouchleave="OnMouseLeaveUp"
+         @ontouchmove:stopPropagation
+
+         @onmousedown="OnMouseDown"
+         @onmouseup="OnMouseLeaveUp"
+         @onmouseleave="OnMouseLeaveUp">
+
+        <div id="@_navigationId"
+             class="bch-scroller bch-navigation-cs-panel"
+             style="@GetNavigationStyle()">
+
+            @ChildContent(ZoomContext)
+
+        </div>
+
+        @if (ShowScrollbars)
+        {
+            <div
+                class="bch-scrollbar bch-horizontal @((_viewPortSize.X / (_size.X * Scale)) >= 1.0f ? "bch-full" : "")"
+                style="@($"width: calc((100% - 20px) * ({(_viewPortSize.X / (_size.X * Scale)).ToString(_nF)})); left: calc(10px + (100% - 20px) * {((-_pos.X / _scale) / _size.X).ToString(_nF)});")">
+            </div>
+            <div
+                class="bch-scrollbar bch-vertical @((_viewPortSize.Y / (_size.Y * Scale)) >= 1.0f ? "bch-full" : "")"
+                style="@($"height: calc((100% - 20px) * ({(_viewPortSize.Y / (_size.Y * Scale)).ToString(_nF)})); top: calc(10px + (100% - 20px) * {((-_pos.Y / _scale) / _size.Y).ToString(_nF)});")">
+            </div>
+        }
+
+    </div>
+</div>

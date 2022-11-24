@@ -1,5 +1,51 @@
 <div id="@_containerId"
-     class="graph-container"
-     style="@($"width: {Width}; height: {Height}")">
-    <canvas id="@_canvasId"></canvas>
+     class="graph-container scroll">
+
+    <BCHZoom ShowScrollbars="false"
+             BoundsByParent="true"
+             UseConstraints="true"
+             ZoomOnMouseWheel="true">
+        <svg class="graph"
+             width="@($"{SvgWidth.ToString(_nF)}px")"
+             height="@($"{SvgHeight.ToString(_nF)}px")">
+
+            @{
+                var verticalLineCount = SvgHeight / CellHeight;
+                var horizontalLineCount = SvgWidth / CellWidth;
+
+                var height = SvgHeight;
+                var median = height * 0.5f;
+                var xRatio = CellWidth / (float) CellXValuesCount;
+
+            }
+
+            @for (var i = 0; i <= verticalLineCount; i++)
+            {
+                var yOffset = $"{(i / verticalLineCount) * 100}%";
+
+                <line x1="0" y1="@yOffset" x2="100%" y2="@yOffset" class="axis-line"/>
+            }
+
+            @for (var i = 0; i <= horizontalLineCount; i++)
+            {
+                var xOffset = $"{(i / horizontalLineCount) * 100}%";
+
+                <line x1="@xOffset" y1="0" x2="@xOffset" y2="100%" class="axis-line"/>
+            }
+            
+            @for (var i = 0; i < DataArray.Count - 1; i++)
+            {
+                var curr = DataArray[i + 0];
+                var next = DataArray[i + 1];
+                
+                <line x1="@((i * xRatio).ToString(_nF))" 
+                      y1="@((median - (CellHeight * curr / CellYValues)).ToString(_nF))" 
+                      x2="@(((i + 1) * xRatio).ToString(_nF))" 
+                      y2="@((median - (CellHeight * next / CellYValues)).ToString(_nF))" 
+                      class="graph-line"/>
+            }
+            
+        </svg>
+    </BCHZoom>
+
 </div>

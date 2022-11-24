@@ -8,6 +8,8 @@ namespace Circuits.Components.Common;
 [EventHandler("onextdragstart", typeof(MouseStartEventArgs), true, true)]
 [EventHandler("onextdragend", typeof(MouseEventArgs), true, true)]
 [EventHandler("onextscroll", typeof(ScrollEventArgs), true, true)]
+[EventHandler("onextmousewheel", typeof(ExtWheelEventArgs), true, true)]
+[EventHandler("onmouseleave", typeof(ExtMouseEventArgs), true, true)]
 public static class EventHandlers
 {
 }

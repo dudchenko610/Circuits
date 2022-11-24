@@ -40,4 +40,8 @@ function bchScrollElementTo(id, x, y, behavior) {
     });
 }
 
+function getPixelRatio() {
+    return window.devicePixelRatio;
+}
+
 
