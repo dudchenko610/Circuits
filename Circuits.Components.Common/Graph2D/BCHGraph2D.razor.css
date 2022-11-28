@@ -20,7 +20,21 @@
             stroke-width: 1;
         }
 
-        .graph-container .graph > .axis-line {
+        .graph-container .graph > .grid-line {
             stroke: rgb(50, 50, 50);
             stroke-width: 0.1;
+        }
+
+        .graph-container .graph > .axis-line {
+            stroke: rgb(20, 20, 20);
+            stroke-width: 0.2;
+        }
+
+        .graph-container .graph > .axis-text {
+            font-family: Nunito;
+            font-size: 4px;
+            font-style: normal;
+            font-weight: 100;
+            line-height: 4px;
+            white-space: nowrap;
         }

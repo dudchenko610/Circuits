@@ -13,5 +13,8 @@ public class BoundingClientRect
     public double Left { get; set; }
     public double OffsetTop { get; set; }
     public double OffsetLeft { get; set; }
+    
+    public double OffsetWidth { get; set; }
+    public double OffsetHeight { get; set; }
 }
 

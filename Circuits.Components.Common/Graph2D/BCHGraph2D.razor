@@ -1,7 +1,8 @@
 <div id="@_containerId"
      class="graph-container scroll">
 
-    <BCHZoom ShowScrollbars="false"
+    <BCHZoom ZoomContext="_zoomContext"
+             ShowScrollbars="false"
              BoundsByParent="true"
              UseConstraints="true"
              ZoomOnMouseWheel="true">
@@ -10,41 +11,55 @@
              height="@($"{SvgHeight.ToString(_nF)}px")">
 
             @{
-                var verticalLineCount = SvgHeight / CellHeight;
-                var horizontalLineCount = SvgWidth / CellWidth;
+                var svgWidth = SvgWidth;
+                var svgHeight = SvgHeight;
+                
+                var verticalLineCount = svgHeight / CellHeight;
 
-                var height = SvgHeight;
-                var median = height * 0.5f;
+                var horizontalStartIndex = (int) _zoomPos.X / CellWidth;
+                var horizontalEndIndex = horizontalStartIndex + (int) (_zoomBounds.X / CellWidth) + 1;
+                var horizontalLineCount = (int) svgWidth / CellWidth;
+                
+                var graphStartIndex = (int) (((_zoomPos.X - CellWidth)/ svgWidth) * DataArray.Count) - 1;
+                graphStartIndex = Math.Clamp(graphStartIndex, 0, DataArray.Count - 1);
+                
+                var graphEndIndex = graphStartIndex + (int)(((_zoomBounds.X + CellWidth) / svgWidth) * DataArray.Count) + 3;
+                graphEndIndex = Math.Clamp(graphEndIndex, 0, DataArray.Count - 1);
+
+                var median = svgHeight * 0.5f;
                 var xRatio = CellWidth / (float) CellXValuesCount;
-
             }
 
             @for (var i = 0; i <= verticalLineCount; i++)
             {
                 var yOffset = $"{(i / verticalLineCount) * 100}%";
 
-                <line x1="0" y1="@yOffset" x2="100%" y2="@yOffset" class="axis-line"/>
+                <line x1="0" y1="@yOffset.ToString(_nF)" x2="100%" y2="@yOffset.ToString(_nF)" class="grid-line"/>
             }
 
-            @for (var i = 0; i <= horizontalLineCount; i++)
+            @for (var i = horizontalStartIndex; i <= horizontalEndIndex; i++)
             {
-                var xOffset = $"{(i / horizontalLineCount) * 100}%";
+                var xOffset = $"{(i / (float) horizontalLineCount) * 100}%";
+                var xOffsetStr = xOffset.ToString(_nF);
 
-                <line x1="@xOffset" y1="0" x2="@xOffset" y2="100%" class="axis-line"/>
+                <line x1="@xOffsetStr" y1="0" x2="@xOffset.ToString(_nF)" y2="100%" class="grid-line"/>
+                <text><text x="@xOffsetStr" y="@((svgHeight * 0.5f - 1.0f).ToString(_nF))" class="axis-text noselectable-text">@i</text></text>
             }
             
-            @for (var i = 0; i < DataArray.Count - 1; i++)
+            <line x1="0" y1="50%" x2="100%" y2="50%" class="axis-line"/>
+            
+            @for (var i = graphStartIndex; i < graphEndIndex; i++)
             {
                 var curr = DataArray[i + 0];
                 var next = DataArray[i + 1];
-                
-                <line x1="@((i * xRatio).ToString(_nF))" 
-                      y1="@((median - (CellHeight * curr / CellYValues)).ToString(_nF))" 
-                      x2="@(((i + 1) * xRatio).ToString(_nF))" 
-                      y2="@((median - (CellHeight * next / CellYValues)).ToString(_nF))" 
+            
+                <line x1="@((i * xRatio).ToString(_nF))"
+                      y1="@((median - (CellHeight * curr / CellYValues)).ToString(_nF))"
+                      x2="@(((i + 1) * xRatio).ToString(_nF))"
+                      y2="@((median - (CellHeight * next / CellYValues)).ToString(_nF))"
                       class="graph-line"/>
             }
-            
+
         </svg>
     </BCHZoom>
 

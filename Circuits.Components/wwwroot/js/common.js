@@ -22,7 +22,9 @@ function bchGetBoundingClientRectById(id, param) {
         x: rect.x,
         y: rect.y,
         offsetTop: element.offsetTop,
-        offsetLeft: element.offsetLeft
+        offsetLeft: element.offsetLeft,
+        offsetWidth: element.offsetWidth,
+        offsetHeight: element.offsetHeight
     };
 }
 

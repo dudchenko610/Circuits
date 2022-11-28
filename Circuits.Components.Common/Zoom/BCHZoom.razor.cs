@@ -17,12 +17,13 @@ public partial class BCHZoom : IDisposable
     [Parameter] public RenderFragment<ZoomContext> ChildContent { get; set; } = null!;
     [Parameter] public ZoomContext ZoomContext { get; set; } = new();
     [Parameter] public float Factor { get; set; } = 0.009f;
-    [Parameter] public float MinScale { get; set; } = 2.0f;
+    [Parameter] public float MinScale { get; set; } = 2f;
     [Parameter] public float MaxScale { get; set; } = 6.0f;
     [Parameter] public float Width { get; set; } = 1000f;
     [Parameter] public float Height { get; set; } = 1000f;
     [Parameter] public bool BoundsByParent { get; set; } = false;
     [Parameter] public bool UseConstraints { get; set; } = true;
+    [Parameter] public bool ConstraintZoomByContent { get; set; } = true;
     [Parameter] public bool UseTouchRotation { get; set; } = false;
     [Parameter] public bool ZoomOnMouseWheel { get; set; } = false;
     [Parameter] public bool ShowScrollbars { get; set; } = false;
@@ -35,6 +36,7 @@ public partial class BCHZoom : IDisposable
     private Vec2 _size = new();
     private readonly Vec2 _viewPortSize = new();
     private readonly Vec2 _navigationSize = new();
+    private Vec2 _navigationOffsetSize = new();
     private readonly Vec2 _pos = new();
     private float _scale = 4;
     private readonly Vec2 _zoomTarget = new();
@@ -75,13 +77,13 @@ public partial class BCHZoom : IDisposable
 
     protected override void OnParametersSet()
     {
-        MaxScale = Math.Clamp(MaxScale, 0.01f, 50f);
-        MinScale = Math.Clamp(MinScale, 0.01f, 50f);
+        MaxScale = Math.Clamp(MaxScale, 0.1f, 50f);
+        MinScale = Math.Clamp(MinScale, 0.1f, 50f);
 
         if (MinScale >= MaxScale)
         {
-            MinScale = 1.0f;
-            MaxScale = 4.0f;
+            MinScale = 0.1f;
+            MaxScale = 16.0f;
         }
 
         Factor = Math.Clamp(Factor, 0.001f, 1.0f);
@@ -114,6 +116,7 @@ public partial class BCHZoom : IDisposable
 
             var navigationRect = await JsUtilsService.GetBoundingClientRectAsync(_navigationId);
             _navigationSize.Set(navigationRect.Width, navigationRect.Height);
+            _navigationOffsetSize.Set(navigationRect.OffsetWidth, navigationRect.OffsetHeight);
         }
     }
 
@@ -124,6 +127,7 @@ public partial class BCHZoom : IDisposable
 
         _viewPortSize.Set(wrapperRect.Width, wrapperRect.Height);
         _navigationSize.Set(navigationRect.Width, navigationRect.Height);
+        _navigationOffsetSize.Set(navigationRect.OffsetWidth, navigationRect.OffsetHeight);
 
         if (BoundsByParent)
         {
@@ -142,6 +146,7 @@ public partial class BCHZoom : IDisposable
         
         _viewPortSize.Set(wrapperRect.Width, wrapperRect.Height);
         _navigationSize.Set(navigationRect.Width, navigationRect.Height);
+        _navigationOffsetSize.Set(navigationRect.OffsetWidth, navigationRect.OffsetHeight);
 
         if (_navigationSize.X == 0 || _navigationSize.Y == 0) return;
         
@@ -165,7 +170,7 @@ public partial class BCHZoom : IDisposable
         }
 
         _pos.Set(x, y);
-        _scale = (float) Math.Log(scale) + 4;
+        _scale = (float) Math.Log(scale) + 1;
         _outerContentChanged = true;
         
         // Console.WriteLine($"wrapperWidth = {_viewPortSize.X}, navigationWidth = {_navigationSize.X}");
@@ -199,21 +204,25 @@ public partial class BCHZoom : IDisposable
 
     private void Update()
     {
-        UpdateContextData();
-        
+        Update(_navigationSize.X, _navigationSize.Y);
+    }
+    
+    private void Update(float predictedNavWidth, float predictedNavHeight)
+    {
         if (!UseConstraints)
         {
+            UpdateContextData();
             StateHasChanged();
             return;
         }
 
-        if (_navigationSize.X < _viewPortSize.X)
+        if (predictedNavWidth < _viewPortSize.X)
         {
-            if ((_pos.X + _navigationSize.X) > _size.X)
+            if ((_pos.X + predictedNavWidth) > _size.X)
             {
-                _pos.X = _size.X - _navigationSize.X;
+                _pos.X = _size.X - predictedNavWidth;
             }
-        
+            
             if (_pos.X < 0)
             {
                 _pos.X = 0;
@@ -221,9 +230,9 @@ public partial class BCHZoom : IDisposable
         }
         else
         {
-            if ((_pos.X + _navigationSize.X) < _size.X)
+            if ((_pos.X + predictedNavWidth) < _size.X)
             {
-                _pos.X = _size.X - _navigationSize.X;
+                _pos.X = _size.X - predictedNavWidth;
             }
         
             if (_pos.X > 0)
@@ -232,13 +241,13 @@ public partial class BCHZoom : IDisposable
             }
         }
         
-        if (_navigationSize.Y < _viewPortSize.Y)
+        if (predictedNavHeight < _viewPortSize.Y)
         {
-            if ((_pos.Y + _navigationSize.Y) > _size.Y)
+            if ((_pos.Y + predictedNavHeight) > _size.Y)
             {
-                _pos.Y = _size.Y - _navigationSize.Y;
+                _pos.Y = _size.Y - predictedNavHeight;
             }
-        
+            
             if (_pos.Y < 0)
             {
                 _pos.Y = 0;
@@ -246,9 +255,9 @@ public partial class BCHZoom : IDisposable
         }
         else
         {
-            if ((_pos.Y + _navigationSize.Y) < _size.Y)
+            if ((_pos.Y + predictedNavHeight) < _size.Y)
             {
-                _pos.Y = _size.Y - _navigationSize.Y;
+                _pos.Y = _size.Y - predictedNavHeight;
             }
         
             if (_pos.Y > 0)
@@ -257,6 +266,7 @@ public partial class BCHZoom : IDisposable
             }
         }
 
+        UpdateContextData();
         StateHasChanged();
     }
 
@@ -291,7 +301,35 @@ public partial class BCHZoom : IDisposable
         _scale += zoomDelta * Factor;
         _scale = Math.Max(MinScale, Math.Min(MaxScale, _scale));
         
-        // Console.WriteLine($"ZOOM _scale = {_scale}");
+        //Console.WriteLine($"ZOOM _scale = {Scale}");
+
+        var predictedNavWidth = _navigationOffsetSize.X * Scale;
+        var predictedNavHeight = _navigationOffsetSize.Y * Scale;
+        
+       // Console.WriteLine($"predictedNavHeight = {predictedNavHeight}");
+        
+        if (ConstraintZoomByContent)
+        {
+            var xDiff = predictedNavWidth - _viewPortSize.X;
+            var yDiff = predictedNavHeight - _viewPortSize.Y;
+            
+            if (xDiff < 0 || yDiff < 0)
+            {
+                //Console.WriteLine($"ZOOM _scale = {Scale}");
+                
+                var newScale = xDiff < yDiff 
+                    ? _viewPortSize.X / _navigationOffsetSize.X 
+                    : _viewPortSize.Y / _navigationOffsetSize.Y;
+                
+                _scale = (float)Math.Log(newScale) + 4;
+                
+                //Console.WriteLine($"ZOOM newScale = {newScale} {scl} {Math.Exp(scl - 4)}");
+
+                predictedNavWidth = _navigationOffsetSize.X * newScale;
+                predictedNavHeight = _navigationOffsetSize.Y * newScale;
+                //Console.WriteLine($"ZOOM  _content.H = {_navigationSize.Y} _predicted.H = {predictedNavHeight} _container.H = {_size.Y}");
+            }
+        }
 
         // calculate x and y based on zoom
         _pos.Set(
@@ -301,8 +339,8 @@ public partial class BCHZoom : IDisposable
 
         _changePerformed = true;
         
-        UpdateContextData();
-        StateHasChanged();
+        Update(predictedNavWidth, predictedNavHeight);
+        //StateHasChanged();
     }
 
     private void OnMouseDown(MouseEventArgs e)
@@ -341,8 +379,7 @@ public partial class BCHZoom : IDisposable
 
         _lastMousePosition.Set(mousePosition);
         _pos.Add(change);
-
-        ZoomContext.TopLeftPos.Set(_pos);
+        
         _changePerformed = true;
 
         Update();
@@ -453,13 +490,18 @@ public partial class BCHZoom : IDisposable
     {
         var prevScale = ZoomContext.ScaleLinear;
         var prevAngle = ZoomContext.AngleInRadians;
+        var prevX = ZoomContext.TopLeftPos.X;
+        var prevY = ZoomContext.TopLeftPos.Y;
         
         ZoomContext.TopLeftPos.Set(_pos);
         ZoomContext.Scale = Scale;
         ZoomContext.ScaleLinear = _scale;
         ZoomContext.AngleInRadians = _rotationAngle;
         
-        if (prevScale != ZoomContext.ScaleLinear || prevAngle != ZoomContext.AngleInRadians)
+        if (prevScale != ZoomContext.ScaleLinear || 
+            prevAngle != ZoomContext.AngleInRadians ||
+            prevX != ZoomContext.TopLeftPos.X ||
+            prevY != ZoomContext.TopLeftPos.Y)
             ZoomContext.OnUpdate?.Invoke();
     }
 

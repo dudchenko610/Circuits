@@ -1,5 +1,7 @@
 using System.Globalization;
+using Circuits.Components.Common.Models.Zoom;
 using Circuits.Services.Services.Interfaces;
+using Circuits.ViewModels.Markup;
 using Circuits.ViewModels.Math;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -18,29 +20,34 @@ public partial class BCHGraph2D : IDisposable
     [Parameter] public int CellWidth { get; set; } = 20;
     
     [Parameter] public float CellYValues { get; set; } = 0.1f;
-    [Parameter] public int CellXValuesCount { get; set; } = 5;
+    [Parameter] public int CellXValuesCount { get; set; } = 2;
     [Parameter] public IList<float> DataArray { get; set; } = Array.Empty<float>();
 
     private readonly string _containerId = $"_id_{Guid.NewGuid()}";
-    private readonly string _canvasId = $"_id_{Guid.NewGuid()}";
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
+    private BoundingClientRect _containerRect = null!;
+    private ZoomContext _zoomContext = new();
 
     private float _maxValue = 0;
+    private Vec2 _zoomPos = new();
+    private Vec2 _zoomBounds = new();
+    private float _prevScale = 1.0f;
     
     protected override void OnInitialized()
     {
         IJSUtilsService.OnResize += OnResizeAsync;
-        
+        _zoomContext.OnUpdate += OnZoomUpdate;
         // gen data
 
-        const int count = (int) (Math.PI * 4 / 0.05f);
+        const int count = (int) (Math.PI * 18 / 0.1f);
         var arr = new float[count];
         DataArray = arr;
 
         for (var i = 0; i < count; i++)
         {
-            var x = 0.05f * i;
-            arr[i] = (float) Math.Cos(x);
+            var x = 0.1f * i;
+            // arr[i] = (float)Math.Cos(x * 2) * 0.2f * x;
+            arr[i] = (float)Math.Cos(x) * 0.5f;
         }
         
         // analyze data
@@ -52,30 +59,76 @@ public partial class BCHGraph2D : IDisposable
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _containerRect = await JsUtilsService.GetBoundingClientRectAsync(_containerId);
+            _zoomBounds.Set(_containerRect.Width, _containerRect.Height);
+            StateHasChanged();
+        }
+        
+        // Console.WriteLine("OnAfterRenderAsync");
+    }
+    
     public void Dispose()
     {
         IJSUtilsService.OnResize -= OnResizeAsync;
-    }
-    
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        Console.WriteLine("OnAfterRenderAsync");
-        
-        // if (firstRender)
-        // {
-        //     var containerRect = await JsUtilsService.GetBoundingClientRectAsync(_containerId);
-        //     
-        //     await JsRuntime.InvokeVoidAsync("bchInitGraphCanvas", _canvasId, 
-        //         new Vec2(containerRect.Width + 100, containerRect.Height),
-        //         new Vec2(CellWidth, CellHeight));
-        // }
+        _zoomContext.OnUpdate -= OnZoomUpdate;
     }
 
     private async Task OnResizeAsync()
     {
-        
+        _containerRect = await JsUtilsService.GetBoundingClientRectAsync(_containerId);
+        StateHasChanged();
     }
 
-    private float SvgHeight => (int) Math.Floor(((2 * _maxValue) / CellYValues) * CellHeight);
-    private float SvgWidth => (int) (Math.Floor(DataArray.Count / (double) CellXValuesCount) * CellWidth);
+    private void OnZoomUpdate()
+    {
+        if (_containerRect == null!) return;
+
+        var prevX = _zoomPos.X;
+        // var prevY = _zoomPos.Y;
+        
+        var x = Math.Abs(_zoomContext.TopLeftPos.X / _zoomContext.Scale);
+        var y = Math.Abs(_zoomContext.TopLeftPos.Y / _zoomContext.Scale);
+
+        var width = (float) _containerRect.Width / _zoomContext.Scale;
+        var height = (float) _containerRect.Height / _zoomContext.Scale;
+
+        _zoomPos.Set(x, y);
+        _zoomBounds.Set(width, height);
+
+        if (_prevScale != _zoomContext.Scale || prevX != _zoomPos.X) StateHasChanged();
+
+        _prevScale = _zoomContext.Scale;
+    }
+    
+    private float SvgHeight
+    {
+        get
+        {
+            float value = (int) Math.Floor((double)((int) ((2 * _maxValue) / CellYValues) * CellHeight));
+
+            if (_containerRect != null! && value < _containerRect.Height)
+            {
+                value = (CellHeight) * (int) (_containerRect.Height / CellHeight) + CellHeight;
+            }
+
+            if ((value / CellHeight) % 2 != 0) value += CellHeight;
+            
+            return value;
+        }
+    }
+
+    private float SvgWidth
+    {
+        get
+        {
+            float value = (int) (Math.Floor(DataArray.Count / (float) CellXValuesCount) * CellWidth);
+            if (_containerRect != null! && value < _containerRect.Width) value = (float) _containerRect.Width;
+
+            return value;
+        }
+    }
 }
