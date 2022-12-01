@@ -22,6 +22,7 @@ public partial class BCHGraph2D : IDisposable
     [Parameter] public float CellYValues { get; set; } = 0.1f;
     [Parameter] public int CellXValuesCount { get; set; } = 2;
     [Parameter] public IList<float> DataArray { get; set; } = Array.Empty<float>();
+    [Parameter] public Func<int, string> XLabel { get; set; } = (val) => $"{val}";
 
     private readonly string _containerId = $"_id_{Guid.NewGuid()}";
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };

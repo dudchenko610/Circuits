@@ -1,10 +1,10 @@
 .scheme-inspector {
-    position: absolute;
-    top: 0;
+    /*position: absolute;*/
+    /*top: 0;*/
     /*left: -25%;*/
     height: 100%;
     /*width: 25%;*/
-    transition: left 0.5s ease;
+    transition: margin-left 0.5s ease;
     border-right: 1px solid #CED3E0;
     background: white;
     overflow: hidden;
@@ -13,7 +13,7 @@
 }
 
 .scheme-inspector.show {
-    left: 0 !important;
+    margin-left: 0 !important;
 }
 
 .scheme-inspector > .content-container {

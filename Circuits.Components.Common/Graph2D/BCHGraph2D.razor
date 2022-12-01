@@ -43,7 +43,7 @@
                 var xOffsetStr = xOffset.ToString(_nF);
 
                 <line x1="@xOffsetStr" y1="0" x2="@xOffset.ToString(_nF)" y2="100%" class="grid-line"/>
-                <text><text x="@xOffsetStr" y="@((svgHeight * 0.5f - 1.0f).ToString(_nF))" class="axis-text noselectable-text">@i</text></text>
+                <text><text x="@xOffsetStr" y="@((svgHeight * 0.5f - 1.0f).ToString(_nF))" class="axis-text noselectable-text">@XLabel(i)</text></text>
             }
             
             <line x1="0" y1="50%" x2="100%" y2="50%" class="axis-line"/>
