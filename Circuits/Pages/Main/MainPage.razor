@@ -42,89 +42,93 @@
             </div>
         </div>
 
-        @if (_selectedElement != null!)
-        {
-            <div
-                class="element-help-menu"
-                style="@($"top: {_selectedPos.Y.ToString(_nF)}px; left: {_selectedPos.X.ToString(_nF)}px;")">
-
-                <div class="icon" @onclick="() => { RemoveElement(_selectedElement); }">
-                    <div class="noselectable-text">&#x2715;</div>
-                </div>
-
-                <div class="icon rotate"
-                     @onclick="() => { RotateElement(_selectedElement); }">
-                    <div class="noselectable-text">↺</div>
-                </div>
-
-                @if (_selectedElement is Transistor transistor)
-                {
-                    <div
-                        class="icon"
-                        @onclick="() => { transistor.IsFlipped = !transistor.IsFlipped; StateHasChanged(); }">
-                        <div class="noselectable-text">⇄</div>
-                    </div>
-                }
-
-                <div class="icon info" @onclick="OpenElementOptions">
-                    <div class="noselectable-text">i</div>
-                </div>
-            </div>
-        }
-
         <SchemeInspectorComponent @bind-Opened="_showGraphInspector"/>
-
         <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
 
-                <SchemeRendererComponent
-                    SchemeRendererContext="_context"
-                    Scale="_navPlaneContext.Scale"
-                    OnFirstPointSet="OnFirstPointSet"
-                    OnSecondPointSet="OnSecondPointSet"
-                    SelectedElementChanged="OnSelectElement">
+            <SchemeRendererComponent
+                SchemeRendererContext="_context"
+                Scale="_navPlaneContext.Scale"
+                OnFirstPointSet="OnFirstPointSet"
+                OnSecondPointSet="OnSecondPointSet"
+                SelectedPosChanged="OnSelectedPosChanged"
+                SelectedElementChanged="OnSelectElement">
 
-                    <ElementComponent Key="typeof(Wire)">
-                        <Template Context="element">
-                            <WireComponent Wire="(Wire)element"/>
-                        </Template>
-                    </ElementComponent>
+                <ElementComponent Key="typeof(Wire)">
+                    <Template Context="element">
+                        <WireComponent Wire="(Wire)element"/>
+                    </Template>
+                </ElementComponent>
 
-                    <ElementComponent Key="typeof(Resistor)">
-                        <Template Context="element">
-                            <ResistorComponent Resistor="(Resistor)element"/>
-                        </Template>
-                    </ElementComponent>
+                <ElementComponent Key="typeof(Resistor)">
+                    <Template Context="element">
+                        <ResistorComponent Resistor="(Resistor)element"/>
+                    </Template>
+                </ElementComponent>
 
-                    <ElementComponent Key="typeof(Capacitor)">
-                        <Template Context="element">
-                            <CapacitorComponent Capacitor="(Capacitor)element"/>
-                        </Template>
-                    </ElementComponent>
+                <ElementComponent Key="typeof(Capacitor)">
+                    <Template Context="element">
+                        <CapacitorComponent Capacitor="(Capacitor)element"/>
+                    </Template>
+                </ElementComponent>
 
-                    <ElementComponent Key="typeof(Inductor)">
-                        <Template Context="element">
-                            <InductorComponent Inductor="(Inductor)element"/>
-                        </Template>
-                    </ElementComponent>
+                <ElementComponent Key="typeof(Inductor)">
+                    <Template Context="element">
+                        <InductorComponent Inductor="(Inductor)element"/>
+                    </Template>
+                </ElementComponent>
 
-                    <ElementComponent Key="typeof(DCSource)">
-                        <Template Context="element">
-                            <DCSourceComponent DCSource="(DCSource)element"/>
-                        </Template>
-                    </ElementComponent>
+                <ElementComponent Key="typeof(DCSource)">
+                    <Template Context="element">
+                        <DCSourceComponent DCSource="(DCSource)element"/>
+                    </Template>
+                </ElementComponent>
 
-                    <ElementComponent Key="typeof(Transistor)">
-                        <Template Context="element">
-                            <TransistorComponent Transistor="(Transistor)element"/>
-                        </Template>
-                    </ElementComponent>
+                <ElementComponent Key="typeof(Transistor)">
+                    <Template Context="element">
+                        <TransistorComponent Transistor="(Transistor)element"/>
+                    </Template>
+                </ElementComponent>
 
-                </SchemeRendererComponent>
+            </SchemeRendererComponent>
 
         </NavigationPlaneComponent>
     </div>
 </div>
 
+<BCHModal Width="30px"
+          Height="88px"
+          X="@($"{_selectedPos.X.ToString(_nF)}px")"
+          Y="@($"{(_selectedPos.Y - 45).ToString(_nF)}px")"
+          CssClass="element-help-menu-modal"
+          CloseOnOverflowClicked="true"
+          Show="@(_selectedElement != null!)">
+
+    <div class="element-help-menu">
+
+        <div class="icon" @onclick="() => { RemoveElement(_selectedElement!); }">
+            <div class="noselectable-text">&#x2715;</div>
+        </div>
+
+        <div class="icon rotate"
+             @onclick="() => { RotateElement(_selectedElement!); }">
+            <div class="noselectable-text">↺</div>
+        </div>
+
+        @if (_selectedElement is Transistor transistor)
+        {
+            <div
+                class="icon"
+                @onclick="() => { transistor.IsFlipped = !transistor.IsFlipped; StateHasChanged(); }">
+                <div class="noselectable-text">⇄</div>
+            </div>
+        }
+
+        <div class="icon info" @onclick="OpenElementOptions">
+            <div class="noselectable-text">i</div>
+        </div>
+    </div>
+
+</BCHModal>
 
 <BCHModal Width="350px"
           Height="150px"
@@ -137,8 +141,8 @@
         <div class="line">
             <div class="text noselectable-text">Number:</div>
             <div class="input-wrapper">
-                <input 
-                    type="number" 
+                <input
+                    type="number"
                     placeholder="Type Number"
                     @bind-value="_selectedElement!.Number"
                     @bind-value:event="oninput"/>

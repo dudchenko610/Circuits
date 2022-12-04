@@ -186,13 +186,13 @@ public partial class MainPage : IDisposable
         _selectedElement = element;
         _showElementOptions = false;
 
-        if (element != null!)
-        {
-            _selectedPos.Set(
-                element.TopLeft.X * CellSize * _navPlaneContext.Scale + _navPlaneContext.TopLeftPos.X, 
-                element.TopLeft.Y * CellSize * _navPlaneContext.Scale + _navPlaneContext.TopLeftPos.Y);
-        }
+        StateHasChanged();
+    }
 
+    private void OnSelectedPosChanged(Vec2 pos)
+    {
+        _selectedPos.Set(pos);
+        
         StateHasChanged();
     }
 

@@ -22,4 +22,14 @@ public class JSUtilsService : IJSUtilsService
     {
         await _jsRuntime.InvokeVoidAsync("bchScrollElementTo", id, x, y, behavior);
     }
+
+    public async Task<string> CreateObjectURLAsync(string text)
+    {
+        return await _jsRuntime.InvokeAsync<string>("createObjectURL", text);
+    }
+
+    public async Task RevokeObjectAsync(string url)
+    {
+        await _jsRuntime.InvokeVoidAsync("URL.revokeObjectURL", url);
+    }
 }

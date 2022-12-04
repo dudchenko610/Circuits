@@ -5,6 +5,7 @@ using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Circuits.Components.Main.SchemeRenderer.Elements.CapacitorE;
 
@@ -66,9 +67,9 @@ public partial class CapacitorComponent : IDisposable
         SchemeRenderer.OnDragEnd(e);
     }
     
-    private async Task OnElementClickedAsync()
+    private async Task OnElementClickedAsync(MouseEventArgs e)
     {
-        await SchemeRenderer.OnElementClickedAsync(Capacitor);
+        await SchemeRenderer.OnElementClickedAsync(Capacitor, new Vec2(e.PageX, e.PageY));
     }
     
     private Vec2 GetPosition(bool subtractP1 = false)

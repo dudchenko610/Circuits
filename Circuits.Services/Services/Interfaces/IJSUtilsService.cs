@@ -8,6 +8,9 @@ public interface IJSUtilsService
     Task<BoundingClientRect> GetBoundingClientRectAsync(string id);
     Task ScrollToAsync(string id, string x, string y, string behavior = "smooth"); // auto
 
+    Task<string> CreateObjectURLAsync(string text);
+    Task RevokeObjectAsync(string url);
+    
     static event Func<Task> OnResize = null!;
 
     [JSInvokable]

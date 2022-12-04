@@ -28,6 +28,7 @@ services.AddScoped<ISchemeService, SchemeService>();
 services.AddScoped<IEquationSystemService, EquationSystemService>();
 services.AddScoped<IElectricalSystemService, ElectricalSystemService>();
 services.AddScoped<IStorageService, StorageService>();
+services.AddScoped<IJSEquationSystemSolver, JSEquationSystemSolver>();
 
 services.AddIndexedDbDatabase<DataIndexedDb>(options =>
 {

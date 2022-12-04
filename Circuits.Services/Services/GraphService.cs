@@ -210,98 +210,270 @@ public class GraphService : IGraphService
             }
 
             JoinOneCircuitGraphsBranches(graph);
+            JoinBranchesInCircuits(graph);
         }
     }
 
+    // needed for equation system composition because of one current belongs to one branch
     private void JoinOneCircuitGraphsBranches(Graph graph)
     {
-        //var nodes = (Dictionary<int, Node>)_schemeService.Nodes;
         var branches = (List<Branch>)_schemeService.Branches;
+        var graphBranches = graph.Circuits.SelectMany(x => x.Branches).ToList();
+        var singleCircuits = new List<Circuit>();
 
-        if (graph.Circuits.Count != 1) return;
-        
-        var circuit = graph.Circuits[0];
-
-        while (circuit.Branches.Count != 1)
+        foreach (var singleCircuitCandidate in graph.Circuits)
         {
-            var c = 0;
-            Branch currentBranch = null!;
-            Branch nextBranch = null!;
-            var _currentIsCodirected = false;
-            var _nextIsCodirected = false;
+            var firstBranch = singleCircuitCandidate.Branches[0];
+            var circuitBranch = firstBranch;
+            var circuitNode = firstBranch.NodeLeft;
+            var isSingle = true;
 
-            circuit.IterateCircuit((b, coDirected) =>
+            do
             {
-                switch (c)
+                var isCoDirected = circuitBranch!.NodeLeft == circuitNode; // current is coDirected
+                var nodeBranchCount = circuitNode.Branches.Count(graphBranches.Contains);
+
+                if (nodeBranchCount > 2)
                 {
-                    case 0:
-                        currentBranch = b;
-                        _currentIsCodirected = coDirected;
-                        break;
-                    case 1:
-                        nextBranch = b;
-                        _nextIsCodirected = coDirected;
-                        break;
+                    isSingle = false;
+                    break;
                 }
 
-                c++;
-            });
-            
-            // join two branches, next will be added to current and the next will be removed
+                var nextNode = isCoDirected ? circuitBranch.NodeRight : circuitBranch.NodeLeft;
 
-            Node nodeToRemove = null!;
-            Node newNode = null!;
-            
-            if (_currentIsCodirected)
-            {
-                if (_nextIsCodirected)
-                {
-                    nodeToRemove = currentBranch.NodeRight; // should be the same as nextBranch.NodeLeft
-                    newNode = nextBranch.NodeRight;
-                    currentBranch.NodeRight = newNode;
-                }
-                else
-                {
-                    nodeToRemove = currentBranch.NodeRight; // should be the same as nextBranch.NodeRight
-                    newNode = nextBranch.NodeLeft;
-                    currentBranch.NodeRight = newNode;
-                }
-            }
-            else
-            {
-                if (_nextIsCodirected)
-                {
-                    nodeToRemove = currentBranch.NodeLeft; // should be the same as nextBranch.NodeLeft
-                    newNode = nextBranch.NodeRight;
-                    currentBranch.NodeLeft = newNode;
-                }
-                else
-                {
-                    nodeToRemove = currentBranch.NodeLeft; // should be the same as nextBranch.NodeRight
-                    newNode = nextBranch.NodeLeft;
-                    currentBranch.NodeLeft = newNode;  
-                }
-            }
-            
-            // add all elements from next branch to current
-            currentBranch.Elements.AddRange(nextBranch.Elements); // check for copies ???
-            
-            // remove old branch and add new to newNode
-            newNode.Branches.Remove(nextBranch);
-            
-            nodeToRemove.Branches.Remove(nextBranch);
-            nodeToRemove.Branches.Remove(currentBranch);
-            
-            if (!newNode.Branches.Contains(currentBranch)) newNode.Branches.Add(currentBranch);
-                        
-            // remove from scheme redundant node and branch
-          //  var item = nodes.First(kvp => kvp.Value == nodeToRemove);
-          //  nodes.Remove(item.Key);
-            branches.Remove(nextBranch);
-            
-            // remove from circuit
-            circuit.Branches.Remove(nextBranch);
+                circuitBranch = nextNode.Branches
+                    .FirstOrDefault(x => singleCircuitCandidate.Branches.Contains(x) && x != circuitBranch);
+
+                if (circuitBranch is null) return;
+
+                circuitNode = nextNode;
+            } while (circuitBranch != firstBranch);
+
+            if (isSingle) singleCircuits.Add(singleCircuitCandidate);
         }
+
+        foreach (var circuit in singleCircuits)
+        {
+            while (circuit.Branches.Count != 1)
+            {
+                var c = 0;
+                Branch currentBranch = null!;
+                Branch nextBranch = null!;
+                var currentIsCoDirected = false;
+                var nextIsCoDirected = false;
+
+                circuit.IterateCircuit((b, coDirected) =>
+                {
+                    switch (c)
+                    {
+                        case 0:
+                            currentBranch = b;
+                            currentIsCoDirected = coDirected;
+                            break;
+                        case 1:
+                            nextBranch = b;
+                            nextIsCoDirected = coDirected;
+                            break;
+                    }
+
+                    c++;
+                });
+                
+                // join two branches, next will be added to current and the next will be removed
+
+                Node nodeToRemove = null!;
+                Node newNode = null!;
+
+                if (currentIsCoDirected)
+                {
+                    if (nextIsCoDirected)
+                    {
+                        nodeToRemove = currentBranch.NodeRight; // should be the same as nextBranch.NodeLeft
+                        newNode = nextBranch.NodeRight;
+                        currentBranch.NodeRight = newNode;
+                    }
+                    else
+                    {
+                        nodeToRemove = currentBranch.NodeRight; // should be the same as nextBranch.NodeRight
+                        newNode = nextBranch.NodeLeft;
+                        currentBranch.NodeRight = newNode;
+                    }
+                }
+                else
+                {
+                    if (nextIsCoDirected)
+                    {
+                        nodeToRemove = currentBranch.NodeLeft; // should be the same as nextBranch.NodeLeft
+                        newNode = nextBranch.NodeRight;
+                        currentBranch.NodeLeft = newNode;
+                    }
+                    else
+                    {
+                        nodeToRemove = currentBranch.NodeLeft; // should be the same as nextBranch.NodeRight
+                        newNode = nextBranch.NodeLeft;
+                        currentBranch.NodeLeft = newNode;
+                    }
+                }
+
+                // add all elements from next branch to current
+                currentBranch.Elements.AddRange(nextBranch.Elements); // check for copies ???
+
+                // remove old branch and add new to newNode
+                newNode.Branches.Remove(nextBranch);
+
+                nodeToRemove.Branches.Remove(nextBranch);
+                nodeToRemove.Branches.Remove(currentBranch);
+
+                if (!newNode.Branches.Contains(currentBranch)) newNode.Branches.Add(currentBranch);
+
+                // remove from scheme redundant node and branch
+                //  var item = nodes.First(kvp => kvp.Value == nodeToRemove);
+                //  nodes.Remove(item.Key);
+                branches.Remove(nextBranch);
+
+                // remove from circuit
+                circuit.Branches.Remove(nextBranch);
+            }
+        }
+    }
+
+    // needed for equation system composition because of one current belongs to one branch
+    private void JoinBranchesInCircuits(Graph graph)
+    {
+        var branches = (List<Branch>)_schemeService.Branches;
+        var graphBranches = graph.Circuits.SelectMany(x => x.Branches).ToList();
+
+        foreach (var circuit in graph.Circuits)
+        {
+            if (circuit.Branches.Count == 1) continue;
+            var batchedBranches = SplitCircuitBranchesIntoGroups(graphBranches, circuit);
+
+            //Console.WriteLine($"Circuit {graph.Circuits.IndexOf(circuit)}");
+
+            foreach (var batch in batchedBranches)
+            {
+                while (batch.Count != 1)
+                {
+                    var currentBranch = batch[0].Item1;
+                    var nextBranch = batch[1].Item1;
+                    var currentIsCoDirected = batch[0].Item2;
+                    var nextIsCoDirected = batch[1].Item2;
+
+                    // join two branches, next will be added to current and the next will be removed
+
+                    Node nodeToRemove = null!;
+                    Node newNode = null!;
+
+                    if (currentIsCoDirected)
+                    {
+                        if (nextIsCoDirected)
+                        {
+                            // Console.WriteLine($"Should be true 1 -> {currentBranch.NodeRight == nextBranch.NodeLeft}");
+
+                            nodeToRemove = currentBranch.NodeRight; // should be the same as nextBranch.NodeLeft
+                            newNode = nextBranch.NodeRight;
+                            currentBranch.NodeRight = newNode;
+                        }
+                        else
+                        {
+                            // Console.WriteLine($"Should be true 2 -> {currentBranch.NodeRight == nextBranch.NodeRight}");
+
+                            nodeToRemove = currentBranch.NodeRight; // should be the same as nextBranch.NodeRight
+                            newNode = nextBranch.NodeLeft;
+                            currentBranch.NodeRight = newNode;
+                        }
+                    }
+                    else
+                    {
+                        if (nextIsCoDirected)
+                        {
+                            // Console.WriteLine($"Should be true 3 -> {currentBranch.NodeLeft == nextBranch.NodeLeft}");
+
+                            nodeToRemove = currentBranch.NodeLeft; // should be the same as nextBranch.NodeLeft
+                            newNode = nextBranch.NodeRight;
+                            currentBranch.NodeLeft = newNode;
+                        }
+                        else
+                        {
+                            // Console.WriteLine($"Should be true 4 -> {currentBranch.NodeLeft == nextBranch.NodeRight}");
+
+                            nodeToRemove = currentBranch.NodeLeft; // should be the same as nextBranch.NodeRight
+                            newNode = nextBranch.NodeLeft;
+                            currentBranch.NodeLeft = newNode;
+                        }
+                    }
+
+                    // add all elements from next branch to current
+                    currentBranch.Elements.AddRange(nextBranch.Elements); // check for copies ???
+
+                    // remove old branch and add new to newNode
+                    newNode.Branches.Remove(nextBranch);
+
+                    nodeToRemove.Branches.Remove(nextBranch);
+                    nodeToRemove.Branches.Remove(currentBranch);
+
+                    if (!newNode.Branches.Contains(currentBranch)) newNode.Branches.Add(currentBranch);
+
+                    // remove from scheme redundant node and branch
+                    //  var item = nodes.First(kvp => kvp.Value == nodeToRemove);
+                    //  nodes.Remove(item.Key);
+                    branches.Remove(nextBranch);
+                    batch.RemoveAll(x => x.Item1 == nextBranch);
+
+                    // remove from all circuits circuit
+                    var circuits = graph.Circuits.Where(x => x.Branches.Contains(nextBranch));
+
+                    foreach (var containingCircuit in circuits)
+                    {
+                        containingCircuit.Branches.Remove(nextBranch);
+                    }
+                }
+
+                //Console.WriteLine($"Batch Count {batch.Count}");
+            }
+        }
+    }
+
+    private static List<List<(Branch, bool)>> SplitCircuitBranchesIntoGroups(ICollection<Branch> graphBranches,
+        Circuit circuit)
+    {
+        var branches = new List<List<(Branch, bool)>>();
+
+        var firstBranch = circuit.Branches[0];
+        var circuitBranch = firstBranch;
+        var circuitNode = firstBranch.NodeLeft;
+
+        firstBranch = null!;
+        List<(Branch, bool)> batch = null!;
+        do
+        {
+            var isCoDirected = circuitBranch!.NodeLeft == circuitNode; // current is coDirected
+
+            if (firstBranch != null!) batch.Add((circuitBranch, circuitBranch!.NodeLeft == circuitNode));
+            if (circuitBranch == firstBranch) break;
+
+            var nextNode = isCoDirected
+                ? circuitBranch.NodeRight
+                : circuitBranch.NodeLeft;
+
+            var nodeBranchCount = nextNode.Branches.Count(graphBranches.Contains);
+            if (nodeBranchCount > 2)
+            {
+                firstBranch ??= circuitBranch;
+
+                batch = new List<(Branch, bool)>();
+                branches.Add(batch);
+            }
+
+            circuitBranch = nextNode.Branches
+                .FirstOrDefault(x => circuit.Branches.Contains(x) && x != circuitBranch);
+
+            if (circuitBranch is null) break;
+
+            circuitNode = nextNode;
+        } while (true);
+
+        return branches;
     }
 
     public void CollectProperties()
@@ -338,7 +510,7 @@ public class GraphService : IGraphService
         }
     }
 
-    private void TraverseGraph(Circuit circuit, List<Branch> traversed, Branch branch, bool checkLeft)
+    private static void TraverseGraph(Circuit circuit, ICollection<Branch> traversed, Branch branch, bool checkLeft)
     {
         // 1. Check traversed and add if is not
         if (traversed.Contains(branch)) return;

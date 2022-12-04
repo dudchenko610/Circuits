@@ -16,6 +16,11 @@
             </div>
 
             <div class="btn noselectable-text"
+                 @onclick="OnBuildJsFunctions">
+                Build JS functions
+            </div>
+
+            <div class="btn noselectable-text"
                  @onclick="OnClear">
                 Clear Scheme
             </div>
@@ -27,9 +32,9 @@
 
         <div class="circuits">
 
-            @for (var i = 0; i < _schemeService.Graphs.Count; i++)
+            @for (var i = 0; i < SchemeService.Graphs.Count; i++)
             {
-                var graph = _schemeService.Graphs[i];
+                var graph = SchemeService.Graphs[i];
                 var graphBranches = graph.Circuits.SelectMany(circuit => circuit.Branches).ToList();
                 var circuitBranches = graph.Circuits
                     .SelectMany(c => c.Branches
@@ -61,7 +66,7 @@
                                 <div
                                     @onclick="() => { OnShowCircuitDirectionClicked(circuit); }"
                                     @onclick:stopPropagation
-                                    class="@($"icon {(_highlightService.ShouldShowDirection(circuit) ? "selected" : "")}")">
+                                    class="@($"icon {(HighlightService.ShouldShowDirection(circuit) ? "selected" : "")}")">
                                     D
                                 </div>
                             </div>
@@ -75,7 +80,7 @@
                                 <div
                                     @onclick="() => { OnShowBranchDirectionClicked(cb.Branch); }"
                                     @onclick:stopPropagation
-                                    class="@($"icon {(_highlightService.ShouldShowDirection(cb.Branch) ? "selected" : "")}")">
+                                    class="@($"icon {(HighlightService.ShouldShowDirection(cb.Branch) ? "selected" : "")}")">
                                     D
                                 </div>
                             </div>
@@ -87,7 +92,7 @@
         </div>
 
         <div class="equations">
-            @foreach (var equationSystem in _schemeService.EquationSystems)
+            @foreach (var equationSystem in SchemeService.EquationSystems)
             {
                 <div class="separator">
                     <div class="line"></div>

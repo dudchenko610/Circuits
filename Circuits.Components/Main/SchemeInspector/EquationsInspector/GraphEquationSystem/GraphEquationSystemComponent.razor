@@ -14,14 +14,26 @@
         @foreach (var equation in EquationSystem.Matrix)
         {
             <tr>
-                @foreach (var expression in equation)
+                @for (var i = 0; i < equation.Length - 1; i++)
                 {
+                    var expression = equation[i];
+
                     <td
                         class="noselectable-text"
-                        style="@($"width: {(100d / EquationSystem.Matrix.Length).ToString(_nF)}px;")">
-                        @((MarkupString) expression.GetLabel())
+                        style="@($"width: {(50d / EquationSystem.Matrix.Length).ToString(_nF)}%;")">
+                        @((MarkupString)expression.GetLabel())
                     </td>
                 }
+
+                @{
+                    var resExpression = equation[^1];
+                }
+
+                <td
+                    class="noselectable-text"
+                    style="width: 50%">
+                    @((MarkupString)resExpression.GetLabel())
+                </td>
             </tr>
         }
         </tbody>

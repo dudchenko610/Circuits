@@ -35,6 +35,8 @@ public partial class SchemeRendererComponent : IDisposable
         }
     }
 
+    [Parameter] public EventCallback<Vec2> SelectedPosChanged { get; set; }
+    
     private Element _selectedElement = null!;
     
     private static int CellSize => SchemeRendererContext.CellSize;
@@ -265,11 +267,12 @@ public partial class SchemeRendererComponent : IDisposable
         StateHasChanged();
     }
 
-    public async Task OnElementClickedAsync(Element element)
+    public async Task OnElementClickedAsync(Element element, Vec2 pos)
     {
         SelectedElement = element == SelectedElement ? null! : element;
 
         await SelectedElementChanged.InvokeAsync(SelectedElement);
+        await SelectedPosChanged.InvokeAsync(pos);
         StateHasChanged();
     }
 

@@ -15,10 +15,11 @@ public partial class EquationsInspectorComponent
         public Branch Branch { get; set; } = null!;
     }
     
-    [Inject] private IEquationSystemService _equationSystemService { get; set; } = null!;
-    [Inject] private IElectricalSystemService _electricalSystemService { get; set; } = null!;
-    [Inject] private ISchemeService _schemeService { get; set; } = null!;
-    [Inject] private IHighlightService _highlightService { get; set; } = null!;
+    [Inject] private IEquationSystemService EquationSystemService { get; set; } = null!;
+    [Inject] private IElectricalSystemService ElectricalSystemService { get; set; } = null!;
+    [Inject] private ISchemeService SchemeService { get; set; } = null!;
+    [Inject] private IHighlightService HighlightService { get; set; } = null!;
+    [Inject] private IJSEquationSystemSolver JsEquationSystemSolver { get; set; } = null!;
 
     // private string _eliminationStatus = "Success";
 
@@ -27,13 +28,13 @@ public partial class EquationsInspectorComponent
     
     private void OnBuildEquationSystems()
     {
-        _electricalSystemService.BuildEquationSystemsFromGraphs(_schemeService.Graphs);
+        ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
         StateHasChanged();
     }
 
     private void OnBranchSelected(Branch branch, bool added)
     {
-        _highlightService.Highlight(branch.Elements, added);
+        HighlightService.Highlight(branch.Elements, added);
         
         foreach (var element in branch.Elements)
         {
@@ -53,36 +54,41 @@ public partial class EquationsInspectorComponent
     
     private void OnShowCircuitDirectionClicked(Circuit circuit)
     {
-        var action = !_highlightService.ShouldShowDirection(circuit);
-        _highlightService.HighlightCircuitDirection(circuit, action);
+        var action = !HighlightService.ShouldShowDirection(circuit);
+        HighlightService.HighlightCircuitDirection(circuit, action);
         StateHasChanged();
     }
     
     private void OnShowBranchDirectionClicked(Branch branch)
     {
-        var action = !_highlightService.ShouldShowDirection(branch);
-        _highlightService.HighlightBranchDirection(branch, action);
+        var action = !HighlightService.ShouldShowDirection(branch);
+        HighlightService.HighlightBranchDirection(branch, action);
         StateHasChanged();
     }
     
     private void OnPerformGaussianElimination()
     {
-        foreach (var equationSystem in _schemeService.EquationSystems)
+        foreach (var equationSystem in SchemeService.EquationSystems)
         {
-            _equationSystemService.PerformGaussianElimination(equationSystem);
+            EquationSystemService.PerformGaussianElimination(equationSystem);
         }
         
         // _eliminationStatus = _equationSystemService.PerformKirchhoffElimination(_equationSystem);
         StateHasChanged();
     }
 
+    private void OnBuildJsFunctions()
+    {
+        JsEquationSystemSolver.BuildJsFunctions();
+    }
+
     private void OnClear()
     {
         // _eliminationStatus = "Success";
 
-        _highlightService.Clear();
-        _schemeService.Clear();
-        _schemeService.Update();
+        HighlightService.Clear();
+        SchemeService.Clear();
+        SchemeService.Update();
         
         StateHasChanged();
     }

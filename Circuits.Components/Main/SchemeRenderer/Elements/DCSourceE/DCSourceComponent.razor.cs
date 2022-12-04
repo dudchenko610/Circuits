@@ -5,6 +5,7 @@ using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Circuits.Components.Main.SchemeRenderer.Elements.DCSourceE;
 
@@ -65,9 +66,9 @@ public partial class DCSourceComponent : IDisposable
         SchemeRenderer.OnDragEnd(e);
     }
     
-    private async Task OnElementClickedAsync()
+    private async Task OnElementClickedAsync(MouseEventArgs e)
     {
-        await SchemeRenderer.OnElementClickedAsync(DCSource);
+        await SchemeRenderer.OnElementClickedAsync(DCSource, new Vec2(e.PageX, e.PageY));
     }
     
     private Vec2 _pos = new();
