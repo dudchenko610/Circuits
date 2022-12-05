@@ -193,7 +193,6 @@ public class GraphService : IGraphService
         foreach (var graph in _graphs)
         {
             graph.Circuits.Clear();
-
             var traversed = new List<Branch>();
 
             foreach (var branch in graph.LeftoverBranches)
@@ -208,19 +207,41 @@ public class GraphService : IGraphService
 
                 graph.Circuits.Add(circuit);
             }
+        }
 
-            JoinOneCircuitGraphsBranches(graph);
+        for (var i = 0; i < _graphs.Count; i ++)
+        {
+            var graph = _graphs[i];
+            var graphBranches = graph.Circuits.SelectMany(x => x.Branches).ToList();
+
+            var singleCircuits = GetSingleCircuits(graph, graphBranches);
+
+            // split graphs if needed
+            if (singleCircuits.Count > 0 && graph.Circuits.Count > 1)
+            {
+                foreach (var singleCircuit in singleCircuits)
+                {
+                    graph.Circuits.Remove(singleCircuit);
+                    
+                    _graphs.Add(new Graph
+                    {
+                        Circuits = new List<Circuit> { singleCircuit }
+                    });
+                }
+                
+                i = -1;
+                continue;
+            }
+            
+            JoinOneCircuitGraphsBranches(singleCircuits);
             JoinBranchesInCircuits(graph);
         }
     }
 
-    // needed for equation system composition because of one current belongs to one branch
-    private void JoinOneCircuitGraphsBranches(Graph graph)
+    private static List<Circuit> GetSingleCircuits(Graph graph, ICollection<Branch> graphBranches)
     {
-        var branches = (List<Branch>)_schemeService.Branches;
-        var graphBranches = graph.Circuits.SelectMany(x => x.Branches).ToList();
         var singleCircuits = new List<Circuit>();
-
+        
         foreach (var singleCircuitCandidate in graph.Circuits)
         {
             var firstBranch = singleCircuitCandidate.Branches[0];
@@ -244,13 +265,21 @@ public class GraphService : IGraphService
                 circuitBranch = nextNode.Branches
                     .FirstOrDefault(x => singleCircuitCandidate.Branches.Contains(x) && x != circuitBranch);
 
-                if (circuitBranch is null) return;
+                if (circuitBranch is null) break;
 
                 circuitNode = nextNode;
             } while (circuitBranch != firstBranch);
 
             if (isSingle) singleCircuits.Add(singleCircuitCandidate);
         }
+
+        return singleCircuits;
+    }
+    
+    // needed for equation system composition because of one current belongs to one branch
+    private void JoinOneCircuitGraphsBranches(List<Circuit> singleCircuits)
+    {
+        var branches = (List<Branch>)_schemeService.Branches;
 
         foreach (var circuit in singleCircuits)
         {
