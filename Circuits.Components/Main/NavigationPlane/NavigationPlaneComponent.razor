@@ -10,7 +10,7 @@
              @onmouseup="OnMouseLeaveUp"
              @onmouseleave="OnMouseLeaveUp"
              class="scroller navigation-cs-panel"
-             style="@($"width: {_size.X.ToString(_nF)}px; height: {_size.Y.ToString(_nF)}px; " + $"transform: translate({_pos.X.ToString(_nF)}px, {_pos.Y.ToString(_nF)}px) " + $"scale({_scale.ToString(_nF)}, {_scale.ToString(_nF)}); " + $"{(_dragStarted ? "transition: transform 0s; cursor: move;" : "")}")">
+             style="@($"width: {_size.X.ToString(_nF)}px; height: {_size.Y.ToString(_nF)}px; " + $"transform: translate({_pos.X.ToString(_nF)}px, {_pos.Y.ToString(_nF)}px) " + $"scale({_scale.ToString(_nF)}, {_scale.ToString(_nF)}); " + $"{(_dragStarted ? "cursor: move;" : "")} transition: transform 0s;")">
 
             @ChildContent(NavigationPlaneContext)
 

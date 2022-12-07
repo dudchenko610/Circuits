@@ -49,6 +49,8 @@ public class ElectricalSystemService : IElectricalSystemService
             Console.WriteLine($"nodeEquationCount = {equationCount}, circuits = {graph.Circuits.Count}");
 
             // equationCount--;
+
+            var usedVariables = new HashSet<ExpressionVariable>();
             
             foreach (var circuit in graph.Circuits)
             {
@@ -86,16 +88,22 @@ public class ElectricalSystemService : IElectricalSystemService
                         eqSys.Matrix[equationNumber][eqSys.Matrix.Length] -= branch.CapacityVoltage;
                         
                         // 4. Fill next equation as we decompose second order derivative
-                        equationNumber = equationCount++;
-                
-                        for (var j = 0; j < eqSys.Matrix[equationNumber].Length; j++)
+
+                        if (!usedVariables.Contains(branch.CapacityVoltageFirstDerivative))
                         {
-                            eqSys.Matrix[equationNumber][j] = new ExpressionValue(0);
+                            equationNumber = equationCount++;
+                
+                            for (var j = 0; j < eqSys.Matrix[equationNumber].Length; j++)
+                            {
+                                eqSys.Matrix[equationNumber][j] = new ExpressionValue(0);
+                            }
+                            
+                            eqSys.Matrix[equationNumber][capacityFirstDerIndex] = new ExpressionValue(1.0);
+                            // TODO: MAYBE, it should be different object, see line below
+                            eqSys.Matrix[equationNumber][eqSys.Matrix.Length] = branch.CapacityVoltageFirstDerivative;
+
+                            usedVariables.Add(branch.CapacityVoltageFirstDerivative);
                         }
-                        
-                        eqSys.Matrix[equationNumber][capacityFirstDerIndex] = new ExpressionValue(1.0);
-                        // TODO: MAYBE, it should be different object, see line below
-                        eqSys.Matrix[equationNumber][eqSys.Matrix.Length] = branch.CapacityVoltageFirstDerivative; 
                     } 
                     else if (capacityFirstDerIndex != -1) // R-C case
                     {
@@ -104,13 +112,29 @@ public class ElectricalSystemService : IElectricalSystemService
                         
                         // 2. subtract Uc value from last matrix column
                         eqSys.Matrix[equationNumber][eqSys.Matrix.Length] -= branch.CapacityVoltage;
+
+                        // 3. set relation between current and 
+                        if (!usedVariables.Contains(branch.Current))
+                        {
+                            equationNumber = equationCount++;
+                
+                            for (var j = 0; j < eqSys.Matrix[equationNumber].Length; j++)
+                            {
+                                eqSys.Matrix[equationNumber][j] = new ExpressionValue(0);
+                            }
+
+                            eqSys.Matrix[equationNumber][currentIndex] = new ExpressionValue(1.0f);
+                            eqSys.Matrix[equationNumber][capacityFirstDerIndex] = new ExpressionValue(-branch.Capacity.Value); // maybe plus
+
+                            usedVariables.Add(branch.Current);
+                        }
                     }
                     else if (currentDerIndex != -1) // R-L case
                     {
                         // 1. set L value for current derivative
                         eqSys.Matrix[equationNumber][currentDerIndex] = new ExpressionValue(branch.Inductance.Value);
                         
-                        // TODO: Solve branch disjoint problem !
+                        // TODO: Solve branch disjoint problem ! 05.12.2022 - seems to be solved
                         
                         // 2. subtract IR value from last matrix column
                         eqSys.Matrix[equationNumber][eqSys.Matrix.Length] -= branch.Current * branch.Resistance.Value;
@@ -155,16 +179,15 @@ public class ElectricalSystemService : IElectricalSystemService
 
                 if (branch.Capacity == null! && branch.Inductance == null! && branch.Resistance != null!)
                 {
-                    if (!variables.Contains(branch.Current))
-                    {
-                        variables.Add(branch.Current);
-                    }
+                    if (!variables.Contains(branch.Current)) variables.Add(branch.Current);
                 }
 
                 if (branch.Capacity != null! && branch.Inductance == null!)
                 {
                     var capacitorNumbers = string.Join(",", branch.Capacity.Capacitors.Select(x => x.Number));
 
+                    if (!variables.Contains(branch.Current)) variables.Add(branch.Current);
+                    
                     if (branch.CapacityVoltage == null!)
                     {
                         branch.CapacityVoltage = new ExpressionVariable
@@ -231,6 +254,7 @@ public class ElectricalSystemService : IElectricalSystemService
         }
 
         variables = variables.OrderBy(x => x.GetType() == typeof(ExpressionDerivative)).ToList();
+        
         var eqSys = new EquationSystem(variables.ToArray());
 
         return eqSys;

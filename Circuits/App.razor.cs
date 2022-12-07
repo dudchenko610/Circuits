@@ -16,8 +16,8 @@ public partial class App
         
         GraphService.BuildBranches();
         GraphService.BuildSpanningTrees();
-        // GraphService.FindFundamentalCycles();
-        // GraphService.CollectProperties();
+        GraphService.FindFundamentalCycles();
+        GraphService.CollectProperties();
         
     //    ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
     }
