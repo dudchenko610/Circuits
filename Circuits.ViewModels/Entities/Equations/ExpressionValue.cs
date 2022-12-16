@@ -7,7 +7,7 @@ public class ExpressionValue : Expression
         Value = value;
     }
 
-    public override double Value { get; }
+    public override double Value { get; set; }
     
     public static explicit operator ExpressionValue(double value) => new (value);
 }

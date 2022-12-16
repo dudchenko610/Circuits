@@ -21,6 +21,11 @@
             </div>
 
             <div class="btn noselectable-text"
+                 @onclick="TestDotNetSideSolverAsync">
+                Test .NET-side Solver
+            </div>
+
+            <div class="btn noselectable-text"
                  @onclick="OnClear">
                 Clear Scheme
             </div>
@@ -112,3 +117,12 @@
         margin: 5px;
     }
 </style>
+
+<BCHModal Width="600px"
+          Height="50%"
+          ShowOverlay="false"
+          @bind-Show="_showTestGraph">
+    <div class="graph-wrapper">
+        <BCHGraph2D DataArray="_testDataArray"/>
+    </div>
+</BCHModal>

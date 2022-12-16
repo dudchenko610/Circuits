@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Circuits.Components.Main.SchemeInspector.EquationsInspector;
 
-public partial class EquationsInspectorComponent
+public partial class EquationsInspectorComponent : IDisposable
 {
     private class CircuitBranch
     {
@@ -25,6 +25,27 @@ public partial class EquationsInspectorComponent
 
     private readonly List<Element> _selectedElements = new();
     private readonly List<Branch> _selectedBranches = new();
+
+    private List<double> _testDataArray = new();
+    private bool _showTestGraph = false;
+
+    protected override void OnInitialized()
+    {
+        JsEquationSystemSolver.TestReadyCallback += OnRenderTestGraph;
+    }
+    
+    public void Dispose()
+    {
+        JsEquationSystemSolver.TestReadyCallback -= OnRenderTestGraph;
+    }
+
+    private void OnRenderTestGraph(List<double> testArray)
+    {
+        _testDataArray = testArray;
+        _showTestGraph = true;
+        
+        StateHasChanged();
+    }
     
     private void OnBuildEquationSystems()
     {
@@ -80,6 +101,11 @@ public partial class EquationsInspectorComponent
     private void OnBuildJsFunctions()
     {
         JsEquationSystemSolver.BuildJsFunctions();
+    }
+
+    private async Task TestDotNetSideSolverAsync()
+    {
+        await JsEquationSystemSolver.TestSolveAsync();
     }
 
     private void OnClear()

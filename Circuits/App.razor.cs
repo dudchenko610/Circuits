@@ -9,6 +9,7 @@ public partial class App
     [Inject] public IStorageService StorageService { get; set; } = null!;
     [Inject] private IGraphService GraphService { get; set; } = null!;
     [Inject] private IElectricalSystemService ElectricalSystemService { get; set; } = null!;
+    [Inject] private IEquationSystemService EquationSystemService { get; set; } = null!;
     
     protected override async Task OnInitializedAsync()
     {
@@ -18,7 +19,14 @@ public partial class App
         GraphService.BuildSpanningTrees();
         GraphService.FindFundamentalCycles();
         GraphService.CollectProperties();
+
+        ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
         
-    //    ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
+        foreach (var equationSystem in SchemeService.EquationSystems)
+        {
+            EquationSystemService.PerformGaussianElimination(equationSystem);
+        }
+
+        //    ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
     }
 }

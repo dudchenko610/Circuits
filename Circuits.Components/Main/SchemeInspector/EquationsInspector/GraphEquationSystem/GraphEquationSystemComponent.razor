@@ -18,8 +18,7 @@
                 {
                     var expression = equation[i];
 
-                    <td
-                        class="noselectable-text"
+                    <td class="noselectable-text"
                         style="@($"width: {(50d / EquationSystem.Matrix.Length).ToString(_nF)}%;")">
                         @((MarkupString)expression.GetLabel())
                     </td>
@@ -29,8 +28,7 @@
                     var resExpression = equation[^1];
                 }
 
-                <td
-                    class="noselectable-text"
+                <td class="noselectable-text"
                     style="width: 50%">
                     @((MarkupString)resExpression.GetLabel())
                 </td>

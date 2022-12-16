@@ -1,0 +1,10 @@
+@typeparam T
+@inherits Microsoft.AspNetCore.Components.Forms.InputNumber<T>
+
+<input @attributes="AdditionalAttributes"
+       type="number"
+       class="@CssClass"
+       value="@stringValue"
+       placeholder="@Placeholder"
+       @oninput="OnInput"
+       @onblur="OnBlur" />

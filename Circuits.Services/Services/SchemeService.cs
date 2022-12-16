@@ -12,7 +12,9 @@ public class SchemeService : ISchemeService
     public IReadOnlyList<Branch> Branches { get; }
     public IReadOnlyList<Graph> Graphs { get; }
     public IReadOnlyList<EquationSystem> EquationSystems { get; }
-    
+
+    public Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>> SolverResult { get; }
+
     public event Action? OnUpdate;
 
     public SchemeService()
@@ -22,6 +24,7 @@ public class SchemeService : ISchemeService
         Branches = new List<Branch>();
         Graphs = new List<Graph>();
         EquationSystems = new List<EquationSystem>();
+        SolverResult = new Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>>();
     }
     
     public void Clear()
@@ -55,7 +58,7 @@ public class SchemeService : ISchemeService
                 node.NodeElements.Add(new NodeElement
                 {
                     PointIndex = i,
-                    Element = element
+                    Element = element                                                                                                                                           
                 });
             }
         }

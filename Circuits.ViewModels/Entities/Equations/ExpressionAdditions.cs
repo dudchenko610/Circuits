@@ -9,7 +9,19 @@ public class ExpressionAdditions : Expression
     {
         get
         {
-            return Nodes.Select((t, i) => (Signs[i] == MathOperation.Plus ? 1 : -1) * t.Value).Sum();
+            if (Nodes.Count == 0) return 0;
+            var result = Nodes[0].Value;
+
+            for (var i = 1; i < Nodes.Count; i ++)
+            {
+                result += ((Signs[i - 1] == MathOperation.Plus ? 1 : -1) * Nodes[i].Value);
+            }
+
+            return result;
+        }
+        set
+        {
+            
         }
     }
 }

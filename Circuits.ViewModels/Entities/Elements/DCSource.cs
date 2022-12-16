@@ -7,6 +7,8 @@ namespace Circuits.ViewModels.Entities.Elements;
 
 public class DCSource : Element
 {
+    public double Voltage { get; set; } = 5.0f;
+    
     public Vec2 P1
     {
         get => _points[0];

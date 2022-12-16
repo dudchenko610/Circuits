@@ -6,7 +6,7 @@ namespace Circuits.ViewModels.Entities.Elements;
 
 public class Inductor : Element
 {
-    public double Inductance { get; set; } = 1.0;
+    public double Inductance { get; set; } = 0.01f;
 
     public Vec2 P1
     {

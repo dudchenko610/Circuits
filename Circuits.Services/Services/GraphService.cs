@@ -523,8 +523,8 @@ public class GraphService : IGraphService
 
             if (capacitors != null!)
             {
-                var capacity = capacitors!.Sum(capacitor => 1.0 / capacitor.Capacity);
-
+                var capacity = capacitors!.Sum(capacitor => capacitor.Capacity);
+                
                 branch.Capacity =
                     capacitors!.Count > 0 ? new Capacity { Capacitors = capacitors, Value = capacity } : null!;
             }

@@ -260,7 +260,7 @@ public class ElectricalSystemService : IElectricalSystemService
         return eqSys;
     }
 
-    private int FillEquationsFromNodes(Graph graph, EquationSystem equationSystem)
+    private static int FillEquationsFromNodes(Graph graph, EquationSystem equationSystem)
     {
         var nodes = new HashSet<Node>();
         var graphBranches = new List<Branch>();
@@ -321,7 +321,8 @@ public class ElectricalSystemService : IElectricalSystemService
             branch.DCVariables.Add((isCoDirected ? 1 : -1) * new ExpressionVariable
             {
                 Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
-                Payload = dcSource
+                Payload = dcSource,
+                Value = dcSource.Voltage // should be taken from DCSource
             });
         });
     }

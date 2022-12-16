@@ -1,3 +1,4 @@
+using System.Globalization;
 using Circuits.Shared.Extensions;
 using Circuits.ViewModels.Attributes;
 using Circuits.ViewModels.Entities.Equations;
@@ -6,11 +7,17 @@ namespace Circuits.Services.Extensions;
 
 public static class ExpressionExtensions
 {
+    private static readonly NumberFormatInfo Nf = new()
+    {
+        NumberDecimalSeparator = ".",
+        NumberDecimalDigits = 4
+    };
+    
     public static string GetLabel(this Expression expression)
     {
         if (expression is ExpressionValue)
         {
-            return expression.Value < 0 ? $"({expression.Value})" : $"{expression.Value}";
+            return expression.Value < 0 ? string.Format(Nf, "({0:N})", expression.Value) : string.Format(Nf, "{0:N}", expression.Value);
         }
         
         if (expression is ExpressionVariable expVar)

@@ -131,27 +131,13 @@
 </BCHModal>
 
 <BCHModal Width="350px"
-          Height="150px"
+          Height="unset"
           X="@($"{_selectedPos.X.ToString(_nF)}px")"
-          Y="@($"calc({_selectedPos.Y.ToString(_nF)}px - 147px)")"
+          Y="@($"calc({_selectedPos.Y.ToString(_nF)}px + 18px)")"
           CssClass="element-options-modal"
           CloseOnOverflowClicked="true"
           @bind-Show="_showElementOptions">
-    <div class="element-options">
-        <div class="line">
-            <div class="text noselectable-text">Number:</div>
-            <div class="input-wrapper">
-                <input
-                    type="number"
-                    placeholder="Type Number"
-                    @bind-value="_selectedElement!.Number"
-                    @bind-value:event="oninput"/>
-            </div>
-        </div>
-        <div class="line">
-            <div class="text">@_selectedElement.Direction</div>
-        </div>
-    </div>
+    <ElementOptionsComponent SelectedElement="_selectedElement"/>
 </BCHModal>
 
 

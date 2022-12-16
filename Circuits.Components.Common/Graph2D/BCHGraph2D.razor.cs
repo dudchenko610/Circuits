@@ -19,10 +19,11 @@ public partial class BCHGraph2D : IDisposable
     [Parameter] public int CellHeight { get; set; } = 20;
     [Parameter] public int CellWidth { get; set; } = 20;
     
-    [Parameter] public float CellYValues { get; set; } = 0.1f;
+    [Parameter] public float CellYValues { get; set; } = 3f;
     [Parameter] public int CellXValuesCount { get; set; } = 2;
-    [Parameter] public IList<float> DataArray { get; set; } = Array.Empty<float>();
+    [Parameter] public IList<double> DataArray { get; set; } = Array.Empty<double>();
     [Parameter] public Func<int, string> XLabel { get; set; } = (val) => $"{val}";
+    [Parameter] public Func<int, string> YLabel { get; set; } = (val) => $"{val}";
 
     private readonly string _containerId = $"_id_{Guid.NewGuid()}";
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
@@ -40,23 +41,22 @@ public partial class BCHGraph2D : IDisposable
         _zoomContext.OnUpdate += OnZoomUpdate;
         // gen data
 
-        const int count = (int) (Math.PI * 18 / 0.1f);
-        var arr = new float[count];
-        DataArray = arr;
-
-        for (var i = 0; i < count; i++)
-        {
-            var x = 0.1f * i;
-            // arr[i] = (float)Math.Cos(x * 2) * 0.2f * x;
-            arr[i] = (float)Math.Cos(x) * 0.5f;
-        }
+        // const int count = (int) (Math.PI * 18 / 0.1f);
+        // var arr = new double[count];
+        // DataArray = arr;
+        //
+        // for (var i = 0; i < count; i++)
+        // {
+        //     var x = 0.1f * i;
+        //     // arr[i] = (float)Math.Cos(x * 2) * 0.2f * x;
+        //     arr[i] = (float)Math.Cos(x) * 0.5f;
+        // }
         
         // analyze data
-
         foreach (var value in DataArray)
         {
             var abs = Math.Abs(value);
-            if (abs > _maxValue) _maxValue = abs;
+            if (abs > _maxValue) _maxValue = (float) abs;
         }
     }
 
@@ -89,7 +89,7 @@ public partial class BCHGraph2D : IDisposable
         if (_containerRect == null!) return;
 
         var prevX = _zoomPos.X;
-        // var prevY = _zoomPos.Y;
+        var prevY = _zoomPos.Y;
         
         var x = Math.Abs(_zoomContext.TopLeftPos.X / _zoomContext.Scale);
         var y = Math.Abs(_zoomContext.TopLeftPos.Y / _zoomContext.Scale);
@@ -100,7 +100,8 @@ public partial class BCHGraph2D : IDisposable
         _zoomPos.Set(x, y);
         _zoomBounds.Set(width, height);
 
-        if (_prevScale != _zoomContext.Scale || prevX != _zoomPos.X) StateHasChanged();
+        // TODO: check bound in advance
+        if (_prevScale != _zoomContext.Scale || prevX != _zoomPos.X || prevY != _zoomPos.Y) StateHasChanged();
 
         _prevScale = _zoomContext.Scale;
     }
@@ -109,7 +110,7 @@ public partial class BCHGraph2D : IDisposable
     {
         get
         {
-            float value = (int) Math.Floor((double)((int) ((2 * _maxValue) / CellYValues) * CellHeight));
+            float value = (int) Math.Floor((double)((int) ((2 * _maxValue) / CellYValues) * CellHeight)) + 2 * CellHeight;
 
             if (_containerRect != null! && value < _containerRect.Height)
             {

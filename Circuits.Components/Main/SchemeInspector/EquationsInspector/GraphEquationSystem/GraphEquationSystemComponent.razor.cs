@@ -8,5 +8,9 @@ public partial class GraphEquationSystemComponent
 {
     [Parameter] public EquationSystem EquationSystem { get; set; } = null!;
     
-    private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
+    private readonly NumberFormatInfo _nF = new()
+    {
+        NumberDecimalSeparator = ".",
+        NumberDecimalDigits = 5
+    };
 }

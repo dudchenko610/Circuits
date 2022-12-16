@@ -12,7 +12,7 @@ public partial class MainPage : IDisposable
 {
     [Inject] private IElementService _schemeService { get; set; } = null!;
 
-    private NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
+    private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private readonly NavigationPlaneContext _navPlaneContext = new();
     private readonly SchemeRendererContext _context = new();
     private readonly Vec2 _firstPoint = new();

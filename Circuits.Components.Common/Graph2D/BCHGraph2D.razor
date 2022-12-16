@@ -13,24 +13,30 @@
             @{
                 var svgWidth = SvgWidth;
                 var svgHeight = SvgHeight;
-                
+
                 var verticalLineCount = svgHeight / CellHeight;
 
-                var horizontalStartIndex = (int) _zoomPos.X / CellWidth;
-                var horizontalEndIndex = horizontalStartIndex + (int) (_zoomBounds.X / CellWidth) + 1;
-                var horizontalLineCount = (int) svgWidth / CellWidth;
-                
-                var graphStartIndex = (int) (((_zoomPos.X - CellWidth)/ svgWidth) * DataArray.Count) - 1;
+                var horizontalStartIndex = (int)_zoomPos.X / CellWidth;
+                var horizontalEndIndex = horizontalStartIndex + (int)(_zoomBounds.X / CellWidth) + 1;
+                var horizontalLineCount = (int)svgWidth / CellWidth;
+
+                var verticalStartIndex = (int)_zoomPos.Y / CellHeight;
+                var verticalEndIndex = verticalStartIndex + (int)(_zoomBounds.Y / CellHeight) + 1;
+
+                var graphStartIndex = (int)(((_zoomPos.X - CellWidth) / svgWidth) * DataArray.Count) - 1;
                 graphStartIndex = Math.Clamp(graphStartIndex, 0, DataArray.Count - 1);
-                
+
                 var graphEndIndex = graphStartIndex + (int)(((_zoomBounds.X + CellWidth) / svgWidth) * DataArray.Count) + 3;
                 graphEndIndex = Math.Clamp(graphEndIndex, 0, DataArray.Count - 1);
 
                 var median = svgHeight * 0.5f;
-                var xRatio = CellWidth / (float) CellXValuesCount;
+                var xRatio = CellWidth / (float)CellXValuesCount;
+
+                var y0 = _zoomPos.Y;
+                var y1 = _zoomPos.Y + _zoomBounds.Y;
             }
 
-            @for (var i = 0; i <= verticalLineCount; i++)
+            @for (var i = verticalStartIndex; i <= verticalEndIndex; i++)
             {
                 var yOffset = $"{(i / verticalLineCount) * 100}%";
 
@@ -39,28 +45,110 @@
 
             @for (var i = horizontalStartIndex; i <= horizontalEndIndex; i++)
             {
-                var xOffset = $"{(i / (float) horizontalLineCount) * 100}%";
+                var xOffset = $"{(i / (float)horizontalLineCount) * 100}%";
                 var xOffsetStr = xOffset.ToString(_nF);
 
                 <line x1="@xOffsetStr" y1="0" x2="@xOffset.ToString(_nF)" y2="100%" class="grid-line"/>
-                <text><text x="@xOffsetStr" y="@((svgHeight * 0.5f - 1.0f).ToString(_nF))" class="axis-text noselectable-text">@XLabel(i)</text></text>
+                @* <text><text x="@xOffsetStr" y="@((svgHeight * 0.5f - 1.0f).ToString(_nF))" class="axis-text noselectable-text">@XLabel(i)</text></text> *@
             }
-            
+
             <line x1="0" y1="50%" x2="100%" y2="50%" class="axis-line"/>
-            
+
             @for (var i = graphStartIndex; i < graphEndIndex; i++)
             {
                 var curr = DataArray[i + 0];
                 var next = DataArray[i + 1];
-            
+
+                var currVal = median - CellHeight * curr / CellYValues;
+                var nextVal = median - CellHeight * next / CellYValues;
+
+                if ((currVal < y0 && nextVal < y0) || (currVal > y1 && nextVal > y1)) continue;
+
                 <line x1="@((i * xRatio).ToString(_nF))"
-                      y1="@((median - (CellHeight * curr / CellYValues)).ToString(_nF))"
+                      y1="@(currVal.ToString(_nF))"
                       x2="@(((i + 1) * xRatio).ToString(_nF))"
-                      y2="@((median - (CellHeight * next / CellYValues)).ToString(_nF))"
+                      y2="@(nextVal.ToString(_nF))"
                       class="graph-line"/>
             }
 
         </svg>
     </BCHZoom>
 
+    @{
+        var svgHeight = SvgHeight;
+        var median = svgHeight * 0.5f;
+        const int dialHeight = 8;
+
+        var horizontalStartIndex = (int)_zoomPos.X / CellWidth;
+        var horizontalEndIndex = horizontalStartIndex + (int)(_zoomBounds.X / CellWidth) + 1;
+        var verticalStartIndex = (int)_zoomPos.Y / CellHeight;
+        var verticalEndIndex = verticalStartIndex + (int)(_zoomBounds.Y / CellHeight) + 1;
+
+        var topOffset = (median - _zoomPos.Y) * _zoomContext.Scale - dialHeight;
+        var leftOffset = -_zoomPos.X * _zoomContext.Scale;
+        var topVertOffset = -_zoomPos.Y * _zoomContext.Scale;
+        var cellWidth = CellWidth * _zoomContext.Scale;
+        var cellHeight = CellHeight * _zoomContext.Scale;
+    }
+
+    <div class="dial horizontal-numbers"
+         style="@($"top: max(0px, min(calc(100% - {dialHeight.ToString(_nF)}px), {topOffset.ToString(_nF)}px)); left: {leftOffset.ToString(_nF)}px;")">
+        @for (var i = horizontalStartIndex; i <= horizontalEndIndex; i++)
+        {
+            switch (_zoomContext.Scale)
+            {
+                case < 1.0f:
+                {
+                    if (i % 5 == 0)
+                    {
+                        <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text">@XLabel(i)</div>
+                    }
+                    break;
+                }
+                case < 3.1f:
+                {
+                    if (i % 2 == 0)
+                    {
+                        <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text">@XLabel(i)</div>
+                    }
+                    break;
+                }
+                default:
+                    <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text">@XLabel(i)</div>
+                    break;
+            }
+        }
+    </div>
+
+    <div class="dial vertical-numbers" style="@($"top: calc({topVertOffset.ToString(_nF)}px - {dialHeight.ToString(_nF)}px);")">
+        @for (var i = verticalStartIndex; i <= verticalEndIndex; i++)
+        {
+            var index = (int)(median / CellHeight) - i;
+            if (index == 0) continue;
+            
+            switch (_zoomContext.Scale)
+            {
+                case < 1.0f:
+                {
+                    if (i % 5 == 0)
+                    {
+                        <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
+                    }
+                    break;
+                }
+                case < 3.1f:
+                {
+                    if (i % 2 == 0)
+                    {
+                        <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
+                    }
+                    break;
+                }
+                default:
+                    <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
+
+                    break;
+            }
+        }
+    </div>
 </div>
