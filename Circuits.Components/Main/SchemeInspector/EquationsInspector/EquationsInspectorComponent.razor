@@ -123,6 +123,10 @@
           ShowOverlay="false"
           @bind-Show="_showTestGraph">
     <div class="graph-wrapper">
-        <BCHGraph2D DataArray="_testDataArray"/>
+        <BCHGraph2D DataArray="_testDataArray"
+                    CellXValuesCount="2"
+                    XLabel='(i => $"{2 * i} ms")'
+                    CellYValues="0.1f"
+                    YLabel='(i => $"{0.1f * i} A")'/>
     </div>
 </BCHModal>

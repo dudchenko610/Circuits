@@ -78,6 +78,7 @@
         var svgHeight = SvgHeight;
         var median = svgHeight * 0.5f;
         const int dialHeight = 8;
+        const int offset = 4;
 
         var horizontalStartIndex = (int)_zoomPos.X / CellWidth;
         var horizontalEndIndex = horizontalStartIndex + (int)(_zoomBounds.X / CellWidth) + 1;
@@ -92,12 +93,12 @@
     }
 
     <div class="dial horizontal-numbers"
-         style="@($"top: max(0px, min(calc(100% - {dialHeight.ToString(_nF)}px), {topOffset.ToString(_nF)}px)); left: {leftOffset.ToString(_nF)}px;")">
+         style="@($"top: max({offset}px, min(calc(100% - {(dialHeight + offset).ToString(_nF)}px), {(topOffset - offset).ToString(_nF)}px)); left: {(leftOffset + offset).ToString(_nF)}px;")">
         @for (var i = horizontalStartIndex; i <= horizontalEndIndex; i++)
         {
             switch (_zoomContext.Scale)
             {
-                case < 1.0f:
+                case < 1.6f:
                 {
                     if (i % 5 == 0)
                     {
@@ -120,7 +121,7 @@
         }
     </div>
 
-    <div class="dial vertical-numbers" style="@($"top: calc({topVertOffset.ToString(_nF)}px - {dialHeight.ToString(_nF)}px);")">
+    <div class="dial vertical-numbers" style="@($"left: {offset}px; top: calc({(topVertOffset - offset).ToString(_nF)}px - {dialHeight.ToString(_nF)}px);")">
         @for (var i = verticalStartIndex; i <= verticalEndIndex; i++)
         {
             var index = (int)(median / CellHeight) - i;
@@ -128,9 +129,9 @@
             
             switch (_zoomContext.Scale)
             {
-                case < 1.0f:
+                case < 1.6f:
                 {
-                    if (i % 5 == 0)
+                    if (index % 5 == 0)
                     {
                         <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
                     }
@@ -138,7 +139,7 @@
                 }
                 case < 3.1f:
                 {
-                    if (i % 2 == 0)
+                    if (index % 2 == 0)
                     {
                         <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
                     }
