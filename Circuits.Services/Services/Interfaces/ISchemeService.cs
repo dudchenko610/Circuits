@@ -11,7 +11,7 @@ public interface ISchemeService
     IReadOnlyList<Branch> Branches { get; }
     IReadOnlyList<Graph> Graphs { get; }
     IReadOnlyList<EquationSystem> EquationSystems { get; }
-    Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>> SolverResult { get; }
+    // Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>> SolverResult { get; }
 
     event Action OnUpdate; // TODO: remove from here, or maybe not
     void Clear();

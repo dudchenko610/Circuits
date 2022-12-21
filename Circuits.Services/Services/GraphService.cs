@@ -142,8 +142,8 @@ public class GraphService : IGraphService
         }
     }
 
-    private void TraverseSpanningTree(Branch branch, Graph graph, HashSet<Node> spanningTreeNodes,
-        List<Branch> usedBranches)
+    private static void TraverseSpanningTree(Branch branch, Graph graph, ISet<Node> spanningTreeNodes,
+        ICollection<Branch> usedBranches)
     {
         var leftNode = spanningTreeNodes.Contains(branch.NodeLeft);
         var rightNode = spanningTreeNodes.Contains(branch.NodeRight);

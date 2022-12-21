@@ -316,28 +316,17 @@ public class ElementService : IElementService
                (areVerticalInOneLine && !((p12.Y <= p21.Y) || (p22.Y <= p11.Y)));
     }
 
-    private void AddNextNumber(Element element)
+    private static void AddNextNumber(Element element)
     {
-        switch (element)
+        element.Number = element switch
         {
-            case Wire:
-                element.Number = WireCounter++;
-                break; 
-            case Resistor:
-                element.Number = ResistorCounter++;
-                break;
-            case Capacitor:
-                element.Number = CapacitorCounter++;
-                break;
-            case Inductor:
-                element.Number = InductanceCounter++;
-                break;
-            case DCSource:
-                element.Number = DCCounter++;
-                break;
-            case Transistor:
-                element.Number = TransistorCounter++;
-                break;
-        }
+            Wire => WireCounter++,
+            Resistor => ResistorCounter++,
+            Capacitor => CapacitorCounter++,
+            Inductor => InductanceCounter++,
+            DCSource => DCCounter++,
+            Transistor => TransistorCounter++,
+            _ => element.Number
+        };
     }
 }

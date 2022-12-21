@@ -7,22 +7,22 @@ namespace Circuits.Components.Main.SchemeInspector.GraphInspector;
 
 public partial class GraphInspectorComponent : IDisposable
 {
-    [Inject] private IElementService _elementService { get; set; } = null!;
-    [Inject] private ISchemeService _schemeService { get; set; } = null!;
-    [Inject] private IGraphService _graphService { get; set; } = null!;
-    [Inject] private IHighlightService _highlightService { get; set; } = null!;
+    [Inject] private IElementService ElementService { get; set; } = null!;
+    [Inject] private ISchemeService SchemeService { get; set; } = null!;
+    [Inject] private IGraphService GraphService { get; set; } = null!;
+    [Inject] private IHighlightService HighlightService { get; set; } = null!;
 
     private readonly List<Element> _selectedElements = new();
     private readonly List<Branch> _selectedBranches = new();
     
     protected override void OnInitialized()
     {
-        _elementService.OnUpdate += StateHasChanged;
+        ElementService.OnUpdate += StateHasChanged;
     }
 
     public void Dispose()
     {
-        _elementService.OnUpdate -= StateHasChanged;
+        ElementService.OnUpdate -= StateHasChanged;
     }
     
     // protected override void OnAfterRender(bool firstRender)
@@ -32,12 +32,12 @@ public partial class GraphInspectorComponent : IDisposable
 
     private void OnElementSelected(Element element, bool added)
     {
-        _highlightService.Highlight(element, added);
+        HighlightService.Highlight(element, added);
     }
     
     private void OnBranchSelected(Branch branch, bool added)
     {
-        _highlightService.Highlight(branch.Elements, added);
+        HighlightService.Highlight(branch.Elements, added);
         
         foreach (var element in branch.Elements)
         {
@@ -57,13 +57,13 @@ public partial class GraphInspectorComponent : IDisposable
 
     private void OnBuildBranchesClicked()
     {
-        _graphService.BuildBranches();
+        GraphService.BuildBranches();
         StateHasChanged();
     }
 
     private void OnBuildSpanningTrees()
     {
-        _graphService.BuildSpanningTrees();
+        GraphService.BuildSpanningTrees();
     }
     
     private void OnHighlightSpanningTrees()
@@ -71,9 +71,9 @@ public partial class GraphInspectorComponent : IDisposable
         var removeElements = _selectedElements.ToList();
         
         _selectedElements.Clear();
-        _highlightService.Highlight(removeElements, false);
+        HighlightService.Highlight(removeElements, false);
 
-        foreach (var graph in _schemeService.Graphs)
+        foreach (var graph in SchemeService.Graphs)
         {
             foreach (var branch in graph.SpanningTree)
             {
@@ -85,7 +85,7 @@ public partial class GraphInspectorComponent : IDisposable
                     }
                 }
             
-                _highlightService.Highlight(branch.Elements, true);
+                HighlightService.Highlight(branch.Elements, true);
             }
         }
     }
@@ -95,9 +95,9 @@ public partial class GraphInspectorComponent : IDisposable
         var removeElements = _selectedElements.ToList();
         
         _selectedElements.Clear();
-        _highlightService.Highlight(removeElements, false);
+        HighlightService.Highlight(removeElements, false);
 
-        foreach (var graph in _schemeService.Graphs)
+        foreach (var graph in SchemeService.Graphs)
         {
             foreach (var branch in graph.LeftoverBranches)
             {
@@ -109,14 +109,14 @@ public partial class GraphInspectorComponent : IDisposable
                     }
                 }
             
-                _highlightService.Highlight(branch.Elements, true);
+                HighlightService.Highlight(branch.Elements, true);
             }
         }
     }
 
     private void OnFindIndependentCircuits()
     {
-        _graphService.FindFundamentalCycles();
+        GraphService.FindFundamentalCycles();
         StateHasChanged();
     }
 
@@ -124,7 +124,7 @@ public partial class GraphInspectorComponent : IDisposable
     {
         foreach (var branch in circuit.Branches)
         {
-            _highlightService.Highlight(branch.Elements, added);
+            HighlightService.Highlight(branch.Elements, added);
 
             foreach (var element in branch.Elements)
             {
@@ -145,37 +145,37 @@ public partial class GraphInspectorComponent : IDisposable
 
     private void OnShowCircuitDirectionClicked(Circuit circuit)
     {
-        var action = !_highlightService.ShouldShowDirection(circuit);
-        _highlightService.HighlightCircuitDirection(circuit, action);
+        var action = !HighlightService.ShouldShowDirection(circuit);
+        HighlightService.HighlightCircuitDirection(circuit, action);
         StateHasChanged();
     }
     
     private void OnShowBranchDirectionClicked(Branch branch)
     {
-        var action = !_highlightService.ShouldShowDirection(branch);
-        _highlightService.HighlightBranchDirection(branch, action);
+        var action = !HighlightService.ShouldShowDirection(branch);
+        HighlightService.HighlightBranchDirection(branch, action);
         StateHasChanged();
     }
 
     private void OnClearSelection()
     {
-        _highlightService.Clear();
+        HighlightService.Clear();
     }
 
     private void OnClearScheme()
     {
         OnClearSelection();
-        _schemeService.Clear();
-        _schemeService.Update();
+        SchemeService.Clear();
+        SchemeService.Update();
         StateHasChanged();
     }
 
     private void OnPerformAllSteps()
     {
-        _graphService.BuildBranches();
-        _graphService.BuildSpanningTrees();
-        _graphService.FindFundamentalCycles();
-        _graphService.CollectProperties();
+        GraphService.BuildBranches();
+        GraphService.BuildSpanningTrees();
+        GraphService.FindFundamentalCycles();
+        GraphService.CollectProperties();
         StateHasChanged();
     }
 }

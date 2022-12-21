@@ -19,7 +19,7 @@ public partial class EquationsInspectorComponent : IDisposable
     [Inject] private IElectricalSystemService ElectricalSystemService { get; set; } = null!;
     [Inject] private ISchemeService SchemeService { get; set; } = null!;
     [Inject] private IHighlightService HighlightService { get; set; } = null!;
-    [Inject] private IJSEquationSystemSolver JsEquationSystemSolver { get; set; } = null!;
+    [Inject] private ISolverService SolverService { get; set; } = null!;
 
     // private string _eliminationStatus = "Success";
 
@@ -31,12 +31,12 @@ public partial class EquationsInspectorComponent : IDisposable
 
     protected override void OnInitialized()
     {
-        JsEquationSystemSolver.TestReadyCallback += OnRenderTestGraph;
+        // JsEquationSystemSolver.TestReadyCallback += OnRenderTestGraph;
     }
     
     public void Dispose()
     {
-        JsEquationSystemSolver.TestReadyCallback -= OnRenderTestGraph;
+        // JsEquationSystemSolver.TestReadyCallback -= OnRenderTestGraph;
     }
 
     private void OnRenderTestGraph(List<double> testArray)
@@ -97,20 +97,15 @@ public partial class EquationsInspectorComponent : IDisposable
         // _eliminationStatus = _equationSystemService.PerformKirchhoffElimination(_equationSystem);
         StateHasChanged();
     }
-
-    private void OnBuildJsFunctions()
-    {
-        JsEquationSystemSolver.BuildJsFunctionsAsync();
-    }
-
+    
     private async Task TestDotNetSideSolverAsync()
     {
-        await JsEquationSystemSolver.TestSolveAsync();
+        // await JsEquationSystemSolver.TestSolveAsync();
     }
     
     private async Task TestJsSideSolverAsync()
     {
-        await JsEquationSystemSolver.BuildJsFunctionsAsync();
+        await SolverService.RunSolverAsync(SchemeService.EquationSystems[0]);
     }
 
     private void OnClear()

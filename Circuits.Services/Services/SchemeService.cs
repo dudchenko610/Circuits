@@ -13,7 +13,7 @@ public class SchemeService : ISchemeService
     public IReadOnlyList<Graph> Graphs { get; }
     public IReadOnlyList<EquationSystem> EquationSystems { get; }
 
-    public Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>> SolverResult { get; }
+    // public Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>> SolverResult { get; }
 
     public event Action? OnUpdate;
 
@@ -24,7 +24,7 @@ public class SchemeService : ISchemeService
         Branches = new List<Branch>();
         Graphs = new List<Graph>();
         EquationSystems = new List<EquationSystem>();
-        SolverResult = new Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>>();
+        // SolverResult = new Dictionary<EquationSystem, Dictionary<ExpressionVariable, List<double>>>();
     }
     
     public void Clear()

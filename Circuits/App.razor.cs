@@ -26,6 +26,8 @@ public partial class App
         {
             EquationSystemService.PerformGaussianElimination(equationSystem);
         }
+        
+        StateHasChanged();
 
         //    ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
     }

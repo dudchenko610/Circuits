@@ -1,39 +1,12 @@
-@using Circuits.Services.Extensions
 @using Circuits.ViewModels.Entities.Structures
 
-<div class="equation-inspector">
+<div class="solver-inspector">
 
     <div class="scroller">
-        <div class="commands">
-            <div class="btn noselectable-text"
-                 @onclick="OnBuildEquationSystems">
-                Build Equation Systems
-            </div>
 
-            <div class="btn noselectable-text"
-                 @onclick="OnPerformGaussianElimination">
-                Perform Gaussian Elimination
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="TestDotNetSideSolverAsync">
-                Test .NET-side Solver
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="TestJsSideSolverAsync">
-                Test JS-side Solver
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnClear">
-                Clear Scheme
-            </div>
-        </div>
-
-        <div class="separator">
-            <div class="line"></div>
-        </div>
+        @* <div class="separator"> *@
+        @*     <div class="line"></div> *@
+        @* </div> *@
 
         <div class="circuits">
 
@@ -58,9 +31,7 @@
                            MultipleSelect="true"
                            DefaultText="@($"Graph {i}")"
                            GroupPredicate="x => x.Circuit"
-                           FilterByPredicate='x => $"branch {x.Circuit.Branches.IndexOf(x.Branch)}"'
-                           OnSelectItem="(e) => { OnBranchSelected(e.Branch, true); }"
-                           OnDeselectItem="(e) => { OnBranchSelected(e.Branch, false); }">
+                           FilterByPredicate='x => $"branch {x.Circuit.Branches.IndexOf(x.Branch)}"'>
 
                     <GroupTemplate Context="circuitObj">
                         @{ var circuit = (Circuit)circuitObj!; }
@@ -68,10 +39,9 @@
                         <div class="circuit-wrapper">
                             <div class="name noselectable-text">Circuit <i class="noselectable-text">@(graph.Circuits.IndexOf(circuit))</i></div>
                             <div class="controls">
-                                <div
-                                    @onclick="() => { OnShowCircuitDirectionClicked(circuit); }"
-                                    @onclick:stopPropagation
-                                    class="@($"icon {(HighlightService.ShouldShowDirection(circuit) ? "selected" : "")}")">
+                                <div @onclick="() => { }"
+                                     @onclick:stopPropagation
+                                     class="@($"icon {(HighlightService.ShouldShowDirection(circuit) ? "selected" : "")}")">
                                     D
                                 </div>
                             </div>
@@ -82,10 +52,9 @@
                         <div class="branch-wrapper">
                             <div class="name noselectable-text">Branch <i class="noselectable-text">@(graphBranches.IndexOf(cb.Branch))</i></div>
                             <div class="controls">
-                                <div
-                                    @onclick="() => { OnShowBranchDirectionClicked(cb.Branch); }"
-                                    @onclick:stopPropagation
-                                    class="@($"icon {(HighlightService.ShouldShowDirection(cb.Branch) ? "selected" : "")}")">
+                                <div @onclick="() => { }"
+                                     @onclick:stopPropagation
+                                     class="@($"icon {(HighlightService.ShouldShowDirection(cb.Branch) ? "selected" : "")}")">
                                     D
                                 </div>
                             </div>
@@ -117,16 +86,3 @@
         margin: 5px;
     }
 </style>
-
-<BCHModal Width="600px"
-          Height="50%"
-          ShowOverlay="false"
-          @bind-Show="_showTestGraph">
-    <div class="graph-wrapper">
-        <BCHGraph2D DataArray="_testDataArray"
-                    CellXValuesCount="2"
-                    XLabel='(i => $"{2 * i} ms")'
-                    CellYValues="0.1f"
-                    YLabel='(i => $"{0.1f * i} A")'/>
-    </div>
-</BCHModal>

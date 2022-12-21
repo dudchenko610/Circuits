@@ -8,7 +8,7 @@ namespace Circuits.Components.Main.SchemeInspector;
 
 public partial class SchemeInspectorComponent : IDisposable
 {
-    [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
+    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
 
     [Parameter] public EventCallback<bool> OpenedChanged { get; set; }
     [Parameter] public bool Opened
@@ -56,6 +56,16 @@ public partial class SchemeInspectorComponent : IDisposable
                     },
                     new ()
                     {
+                        Type = "solver-inspector",
+                        Name = $"Solver Inspector",
+                        Width = 175,
+                        Height = 35,
+                        Closable = false,
+                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
+                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
+                    },
+                    new ()
+                    {
                         Type = "storage",
                         Name = $"Storage",
                         Width = 150,
@@ -71,7 +81,7 @@ public partial class SchemeInspectorComponent : IDisposable
     
     private DotNetObjectReference<SchemeInspectorComponent> _dotNetRef = null!;
     private readonly string _key = $"_key_{Guid.NewGuid()}";
-    private int _blockWidth = 400;
+    private int _blockWidth = 450;
     
     protected override void OnInitialized()
     {
@@ -92,8 +102,8 @@ public partial class SchemeInspectorComponent : IDisposable
     {
         _isMouseDown = true;
         
-        await _jsRuntime.InvokeVoidAsync("addDocumentListener", _key, "mouseup", _dotNetRef, "OnMouseUpAsync");
-        await _jsRuntime.InvokeVoidAsync("addDocumentListener", _key, "mousemove", _dotNetRef, "OnMouseMoveAsync");
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _key, "mouseup", _dotNetRef, "OnMouseUpAsync");
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _key, "mousemove", _dotNetRef, "OnMouseMoveAsync");
     }
 
     [JSInvokable]
@@ -110,7 +120,7 @@ public partial class SchemeInspectorComponent : IDisposable
     {
         _isMouseDown = false;
         
-        await _jsRuntime.InvokeVoidAsync("removeDocumentListener", _key, "mouseup");
-        await _jsRuntime.InvokeVoidAsync("removeDocumentListener", _key, "mousemove");
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _key, "mouseup");
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _key, "mousemove");
     }
 }
