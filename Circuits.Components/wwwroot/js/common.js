@@ -46,18 +46,29 @@ function getPixelRatio() {
     return window.devicePixelRatio;
 }
 
+//
+// function createObjectURL(value) {
+//     const byteString = atob(value);
+//     const ab = new ArrayBuffer(byteString.length);
+//     const ia = new Uint8Array(ab);
+//
+//     for (let i = 0; i < byteString.length; i++) {
+//         ia[i] = byteString.charCodeAt(i);
+//     }
+//     const blob = new Blob([ab], { type: 'image/jpeg' });
+//
+//     return URL.createObjectURL(blob);
+// }
 
 function createObjectURL(value) {
-    const byteString = atob(value);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
 
-    for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([ab], { type: 'image/jpeg' });
+    const blob = new Blob(
+        [value], // Blob parts.
+        {
+            // type: "text/plain;charset=utf-8",
+            type: "application/x-javascript"
+        }
+    );
 
     return URL.createObjectURL(blob);
 }
-
-

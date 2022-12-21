@@ -5,6 +5,7 @@ using Circuits.ViewModels.Rendering;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
+using Circuits.Components.Common.Models.Zoom;
 
 namespace Circuits.Pages.Main;
 
@@ -14,6 +15,7 @@ public partial class MainPage : IDisposable
 
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private readonly NavigationPlaneContext _navPlaneContext = new();
+    //private ZoomContext _zoomContext = new();
     private readonly SchemeRendererContext _context = new();
     private readonly Vec2 _firstPoint = new();
     private int _mode = 0;

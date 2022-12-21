@@ -315,7 +315,7 @@ public partial class BCHZoom : IDisposable
             
             if (xDiff < 0 || yDiff < 0)
             {
-                //Console.WriteLine($"ZOOM _scale = {Scale}");
+                Console.WriteLine($"ZOOM _scale = {Scale}");
                 
                 var newScale = xDiff < yDiff 
                     ? _viewPortSize.X / _navigationOffsetSize.X 

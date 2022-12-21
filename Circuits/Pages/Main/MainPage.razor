@@ -15,13 +15,13 @@
             <div @onclick="() => { OnPenClicked(0); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 0 ? "activated" : "")">W</div>
 
             <div class="icon min"
-                 @onmousedown="async () => { await _navPlaneContext.ZoomDown!.Invoke(-0.1f); }"
+                 @onmousedown="async () => { await _navPlaneContext.ZoomDown!.Invoke(-0.6f); }"
                  @onmouseup="() => { _navPlaneContext.ZoomUp!.Invoke(); }"
                  @onmouseout="() => { _navPlaneContext.ZoomUp!.Invoke(); }">
                 <div class="noselectable-text">-</div>
             </div>
             <div class="icon mag"
-                 @onmousedown="async () => { await _navPlaneContext.ZoomDown!.Invoke(+0.1f); }"
+                 @onmousedown="async () => { await _navPlaneContext.ZoomDown!.Invoke(+0.6f); }"
                  @onmouseup="() => { _navPlaneContext.ZoomUp!.Invoke(); }"
                  @onmouseout="() => { _navPlaneContext.ZoomUp!.Invoke(); }">
                 <div class="noselectable-text">+</div>
@@ -43,6 +43,7 @@
         </div>
 
         <SchemeInspectorComponent @bind-Opened="_showGraphInspector"/>
+        
         <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
 
             <SchemeRendererComponent

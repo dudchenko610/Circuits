@@ -1,4 +1,4 @@
-function bchInitGraphCanvas(canvasId, size, cellSize) {
+function bchInitGraphCanvas(canvasId, size, cellSize) { // OUTDATED
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext("2d");
 

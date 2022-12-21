@@ -100,12 +100,17 @@ public partial class EquationsInspectorComponent : IDisposable
 
     private void OnBuildJsFunctions()
     {
-        JsEquationSystemSolver.BuildJsFunctions();
+        JsEquationSystemSolver.BuildJsFunctionsAsync();
     }
 
     private async Task TestDotNetSideSolverAsync()
     {
         await JsEquationSystemSolver.TestSolveAsync();
+    }
+    
+    private async Task TestJsSideSolverAsync()
+    {
+        await JsEquationSystemSolver.BuildJsFunctionsAsync();
     }
 
     private void OnClear()

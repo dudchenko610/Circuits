@@ -13,7 +13,7 @@ public static class ExpressionExtensions
         NumberDecimalDigits = 4
     };
     
-    public static string GetLabel(this Expression expression)
+    public static string GetLabel(this Expression expression, Func<ExpressionVariable, string> namePredicate = null!)
     {
         if (expression is ExpressionValue)
         {
@@ -22,7 +22,7 @@ public static class ExpressionExtensions
         
         if (expression is ExpressionVariable expVar)
         {
-            return expVar.Label;
+            return namePredicate != null! ? namePredicate.Invoke(expVar) : expVar.Label;
         }
         
         if (expression is ExpressionAdditions expAdd)
@@ -35,21 +35,21 @@ public static class ExpressionExtensions
                 {
                     if (i == 0)
                     {
-                        res += $"({expAdd.Nodes[i].GetLabel()})";
+                        res += $"({expAdd.Nodes[i].GetLabel(namePredicate)})";
                         continue;
                     }
                 
-                    res += $"{expAdd.Signs[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}({expAdd.Nodes[i].GetLabel()})";
+                    res += $"{expAdd.Signs[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}({expAdd.Nodes[i].GetLabel(namePredicate)})";
                 }
                 else
                 {
                     if (i == 0)
                     {
-                        res += $"{expAdd.Nodes[i].GetLabel()}";
+                        res += $"{expAdd.Nodes[i].GetLabel(namePredicate)}";
                         continue;
                     }
                 
-                    res += $"{expAdd.Signs[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}{expAdd.Nodes[i].GetLabel()}";
+                    res += $"{expAdd.Signs[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}{expAdd.Nodes[i].GetLabel(namePredicate)}";
                 }
             }
 
@@ -66,21 +66,21 @@ public static class ExpressionExtensions
                 {
                     if (i == 0)
                     {
-                        res += $"({expMul.Nodes[i].GetLabel()})";
+                        res += $"({expMul.Nodes[i].GetLabel(namePredicate)})";
                         continue;
                     }
                 
-                    res += $"({expMul.Multipliers[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}{expMul.Nodes[i].GetLabel()})";
+                    res += $"({expMul.Multipliers[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}{expMul.Nodes[i].GetLabel(namePredicate)})";
                 }
                 else
                 {
                     if (i == 0)
                     {
-                        res += $"{expMul.Nodes[i].GetLabel()}";
+                        res += $"{expMul.Nodes[i].GetLabel(namePredicate)}";
                         continue;
                     }
                 
-                    res += $"{expMul.Multipliers[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}{expMul.Nodes[i].GetLabel()}";
+                    res += $"{expMul.Multipliers[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}{expMul.Nodes[i].GetLabel(namePredicate)}";
                 }
             }
             

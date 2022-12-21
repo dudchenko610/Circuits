@@ -1,9 +1,12 @@
 ﻿.scheme-renderer-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    
+    width: 3000px;
+    height: 3000px;
 }
 
     .scheme-renderer-container > .scheme-content {
