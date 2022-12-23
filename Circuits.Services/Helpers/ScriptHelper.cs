@@ -98,7 +98,9 @@ public static class ScriptHelper
         jsScript += $@"
 const dt = {dt};
 
-export function testIntegration() {{
+function sleep(ms) {{ return new Promise(resolve => setTimeout(resolve, ms)); }}
+
+async function testIntegration() {{
 
     for (var i = 0; i < {iterationNumber}; i++)
     {{
@@ -116,9 +118,28 @@ export function testIntegration() {{
                 integralVariable.value += derivative.value * dt;
             }}
         }});
+
+        // send each 10 value
+        if ((i + 1) % 10 === 0) {{
+            const feedbackData = systemVars.map(x => {{ 
+                return x.array.slice(-10);
+            }});
+
+            self.postMessage(feedbackData);
+        }}
+
+        await sleep(50);
     }}
 
     console.log(systemVars);
+
+    self.postMessage('completed');
+}}
+
+self.onmessage = async (e) => {{
+    console.log(e);
+
+    await testIntegration();
 }}
         ";
 

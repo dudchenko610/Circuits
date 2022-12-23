@@ -1,4 +1,4 @@
-﻿var drgimg = document.createElement("img");
+var drgimg = document.createElement("img");
 drgimg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
 // for Safari and Firefox
@@ -6,8 +6,9 @@ if (!("path" in MouseEvent.prototype)) {
     Object.defineProperty(MouseEvent.prototype, "path", {
         get: function () {
 
-            var path = [];
-            var currentElem = this.target;
+            const path = [];
+            let currentElem = this.target;
+            
             while (currentElem) {
                 path.push(currentElem);
                 currentElem = currentElem.parentElement;
@@ -169,7 +170,7 @@ Blazor.registerCustomEventType('extdragend', {
 Blazor.registerCustomEventType('extdragover', {
     browserEventName: 'dragover',
     createEventArgs: event => {
-        
+
         event.dataTransfer.dropEffect = "copy";
         const pathCoordinates = getPathCoordinates(event);
 
@@ -206,10 +207,10 @@ Blazor.registerCustomEventType('extdrop', {
 
 function subscribeOnMouseMove(contextId, dotNetHelper) {
     const contextElement = document.getElementById(contextId);
-    
+
     contextElement.addEventListener('mousemove', (event) => {
         const pathCoordinates = getPathCoordinates(event);
-        
+
         dotNetHelper.invokeMethodAsync('OnMouseMove', {
             offsetX: event.offsetX,
             offsetY: event.offsetY,

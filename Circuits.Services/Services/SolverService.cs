@@ -28,12 +28,16 @@ public class SolverService : ISolverService
         var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
 
         Console.WriteLine($"URL: {url}");
+
+        await _jsRuntime.InvokeVoidAsync("startSolver", url);
         
-        var jsObject = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", url);
-        await jsObject.InvokeVoidAsync("testIntegration");
-        await jsObject.DisposeAsync();
+        // var jsObject = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", url);
+        // await jsObject.InvokeVoidAsync("testIntegration");
+        // await jsObject.DisposeAsync();
         
-        await _jsUtilsService.RevokeObjectAsync(url);
+        
+        
+        //await _jsUtilsService.RevokeObjectAsync(url);
         
         return null!;
     }
