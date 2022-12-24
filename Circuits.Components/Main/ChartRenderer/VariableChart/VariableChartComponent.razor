@@ -1,0 +1,19 @@
+<BCHModal Width="600px"
+          Height="50%"
+          ShowOverlay="false"
+          Show="true">
+    <div class="chart-wrapper">
+        <div class="control-panel">
+            <div class="close-btn" @onclick="CloseGraph"></div>
+        </div>
+        <div class="graph-wrapper">
+            <div class="graph">
+                <BCHGraph2D DataArray="_data"
+                                        CellXValuesCount="2"
+                                        XLabel='(i => $"{2 * i} ms")'
+                                        CellYValues="0.1f"
+                                        YLabel='(i => $"{0.1f * i} A")'/>
+            </div>
+        </div>
+    </div>
+</BCHModal>

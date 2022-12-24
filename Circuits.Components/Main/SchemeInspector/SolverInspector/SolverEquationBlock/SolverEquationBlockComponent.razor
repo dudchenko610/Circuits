@@ -19,7 +19,10 @@
                                         OnClick="StopSolverAsync"/>
             }
 
-            <div class="status noselectable-text btn @($"{(state.Status == "Completed" ? "completed" : "")}")">@state.Status</div>
+            <div class="status noselectable-text btn @($"{(state.Status == "Completed" ? "completed" : "")}")"
+                 @onclick='() => { if (state.Status == "Completed") { TestShowGraph(); } }'>
+                @state.Status
+            </div>
         </div>
     }
     else

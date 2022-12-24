@@ -1,0 +1,36 @@
+.chart-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 38px rgb(0 0 0 / 40%);
+    background: white;
+}
+
+    .chart-wrapper > .control-panel {
+        width: 100%;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+    }
+
+        .chart-wrapper > .control-panel > .close-btn {
+            width: 13px;
+            height: 13px;
+            border-radius: 13px;
+            background: #f5645a;
+            cursor: pointer;
+        }
+
+    .chart-wrapper > .graph-wrapper {
+        width: 100%;
+        flex: 1 1;
+        display: flex;
+        padding: 5px;
+    }
+        
+        .chart-wrapper > .graph-wrapper > .graph {
+            flex: 1 1;
+            border: 1px solid rgba(3, 2, 41, 0.1);
+        }

@@ -128,7 +128,7 @@ async function testIntegration() {{
             self.postMessage(feedbackData);
         }}
 
-        await sleep(50);
+        await sleep(10);
     }}
 
     self.postMessage('completed');

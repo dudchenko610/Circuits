@@ -8,6 +8,7 @@ namespace Circuits.Components.Main.SchemeInspector.SolverInspector.SolverEquatio
 public partial class SolverEquationBlockComponent : IDisposable
 {
     [Inject] private ISolverService SolverService { get; set; } = null!;
+    [Inject] private IChartService ChartService { get; set; } = null!;
     
     [Parameter] public EquationSystem EquationSystem { get; set; } = null!;
 
@@ -31,9 +32,13 @@ public partial class SolverEquationBlockComponent : IDisposable
         await SolverService.RunAsync(EquationSystem);
     }
     
-    
     private async Task StopSolverAsync()
     {
         await SolverService.StopAsync(EquationSystem);
+    }
+
+    private void TestShowGraph()
+    {
+        ChartService.Open(EquationSystem.Variables[0]);
     }
 }

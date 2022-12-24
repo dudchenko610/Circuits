@@ -21,7 +21,7 @@ public partial class BCHGraph2D : IDisposable
     
     [Parameter] public float CellYValues { get; set; } = 3f;
     [Parameter] public int CellXValuesCount { get; set; } = 2;
-    [Parameter] public IList<double> DataArray { get; set; } = Array.Empty<double>();
+    [Parameter] public IList<float> DataArray { get; set; } = Array.Empty<float>();
     [Parameter] public Func<int, string> XLabel { get; set; } = (val) => $"{val}";
     [Parameter] public Func<int, string> YLabel { get; set; } = (val) => $"{val}";
 
