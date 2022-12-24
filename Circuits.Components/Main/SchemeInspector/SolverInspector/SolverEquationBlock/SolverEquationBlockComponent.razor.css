@@ -1,0 +1,33 @@
+.equation-system-container {
+    width: 100%;
+    height: fit-content;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .equation-system-container > .system-controls {
+        flex: 1 1;
+        display: flex;
+        justify-content: space-between;
+    }
+        
+        .equation-system-container > .system-controls > .status {
+            cursor: auto !important;
+            color: #a88146;
+        }
+        
+        .equation-system-container > .system-controls > .status.completed {
+            color: #2E5BFF;
+        }
+
+    .equation-system-container .btn {
+        padding: 5px 6px;
+        display: flex;
+        align-items: center;
+        font-family: Nunito;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 19px;
+    }

@@ -5,30 +5,11 @@
     <div class="scroller">
 
         <div class="commands">
-            <div class="btn noselectable-text"
-                 @onclick="OnBuildBranchesClicked">
-                Build Branches
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnBuildSpanningTrees">
-                Build Spanning Trees
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnFindIndependentCircuits">
-                Find Independent Circuits
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnPerformAllSteps">
-                Perform all steps
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnClearScheme">
-                Clear Scheme
-            </div>
+            <ControlButtonComponent Label="Build Branches" OnClick="OnBuildBranchesClicked"/>
+            <ControlButtonComponent Label="Build Spanning Trees" OnClick="OnBuildSpanningTrees"/>
+            <ControlButtonComponent Label="Find Independent Circuits" OnClick="OnFindIndependentCircuits"/>
+            <ControlButtonComponent Label="Perform all steps" OnClick="OnPerformAllSteps"/>
+            <ControlButtonComponent Label="Clear Scheme" OnClick="OnClearScheme"/>
         </div>
 
         <div class="separator">
@@ -36,21 +17,9 @@
         </div>
 
         <div class="commands">
-
-            <div class="btn noselectable-text"
-                 @onclick="OnHighlightSpanningTrees">
-                Highlight Spanning Trees
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnHighlightLeftoverBranches">
-                Highlight Leftover Branches
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnClearSelection">
-                Clear Selection
-            </div>
+            <ControlButtonComponent Label="Highlight Spanning Trees" OnClick="OnHighlightSpanningTrees"/>
+            <ControlButtonComponent Label="Highlight Leftover Branches" OnClick="OnHighlightLeftoverBranches"/>
+            <ControlButtonComponent Label="Clear Selection" OnClick="OnClearSelection"/>
         </div>
 
         <div class="separator">

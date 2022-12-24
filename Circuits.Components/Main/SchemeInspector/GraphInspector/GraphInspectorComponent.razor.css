@@ -58,19 +58,6 @@
     flex-direction: column;
     padding: 10px;
 }
-        
-.graph-inspector .btn {
-    padding: 5px 6px;
-    display: flex;
-    /*justify-content: center;*/
-    align-items: center;
-
-    font-family: Nunito;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 19px;
-}
 
 .graph-inspector .element-name {
     display: flex;

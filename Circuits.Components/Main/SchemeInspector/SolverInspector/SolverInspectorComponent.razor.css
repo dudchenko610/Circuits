@@ -38,6 +38,9 @@
             width: 100%;
             margin-top: 5px;
             padding: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
 .solver-inspector .btn {
@@ -56,12 +59,6 @@
     flex-direction: column;
     width: 100%;
     height: fit-content;
-}
-
-.solver-inspector .equation-system-container {
-    width: 100%;
-    height: fit-content;
-    padding: 10px;
 }
 
 .solver-inspector .branch-wrapper,

@@ -1,7 +1,7 @@
 
 const solverWorkers = {};
 
-function startSolver(url) {
+function startSolver(url, dotNetRef) {
     const worker = new Worker(url);
     solverWorkers[url] = worker;
 
@@ -12,19 +12,23 @@ function startSolver(url) {
                 if (solverWorkers[url]) {
                     worker.terminate();
                     delete solverWorkers[url];
-                    
-                    // trigger as stopped
 
-                    console.log('solverWorkers', solverWorkers);
+                    // console.log('solverWorkers', solverWorkers);
+                    
+                    dotNetRef.invokeMethodAsync('SolverCompletedCallback', url); // trigger as stopped
                 }
                 
                 break;
             }
             default: {
                 const feedbackData = e.data;
-                console.log('feedback-data', feedbackData);
                 
-                // trigger feedback
+                // console.log('feedback-data', feedbackData);
+                
+                dotNetRef.invokeMethodAsync('SolverUpdateCallback', {
+                    url: url,
+                    dataArrays: feedbackData.reverse()
+                }); // trigger feedback
                 
                 break;
             }

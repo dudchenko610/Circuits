@@ -1,16 +1,8 @@
 <div class="storage scroll">
     <div class="scroller">
         <div class="commands">
-            <div
-                class="btn noselectable-text"
-                @onclick="OnSaveClickedAsync">
-                Save
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnRestoreClickedAsync">
-                Restore
-            </div>
+            <ControlButtonComponent Label="Save" OnClick="OnSaveClickedAsync"/>
+            <ControlButtonComponent Label="Restore" OnClick="OnRestoreClickedAsync"/>
         </div>
 
         <div class="separator">

@@ -5,8 +5,11 @@ namespace Circuits.Services.Services.Interfaces;
 
 public interface ISolverService
 {
-    Dictionary<EquationSystem, EquationSystemSolverState> SolverState { get; }
-    Task<EquationSystemSolverState> RunSolverAsync(EquationSystem equationSystem);
+    Action<EquationSystem, EquationSystemSolverState>? OnUpdate { get; set; }
     Action? OnClear { get; set; }
-    void Clear();
+    
+    Dictionary<EquationSystem, EquationSystemSolverState> SolverState { get; }
+    Task RunAsync(EquationSystem equationSystem);
+    Task StopAsync(EquationSystem equationSystem);
+    Task ClearAsync();
 }

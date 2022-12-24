@@ -16,5 +16,4 @@ public partial class SolverInspectorComponent
     [Inject] private IElectricalSystemService ElectricalSystemService { get; set; } = null!;
     [Inject] private ISchemeService SchemeService { get; set; } = null!;
     [Inject] private IHighlightService HighlightService { get; set; } = null!;
-    [Inject] private ISolverService SolverService { get; set; } = null!;
 }

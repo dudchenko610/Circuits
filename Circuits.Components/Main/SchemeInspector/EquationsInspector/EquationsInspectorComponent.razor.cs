@@ -98,15 +98,6 @@ public partial class EquationsInspectorComponent : IDisposable
         StateHasChanged();
     }
     
-    private async Task TestDotNetSideSolverAsync()
-    {
-        // await JsEquationSystemSolver.TestSolveAsync();
-    }
-    
-    private async Task TestJsSideSolverAsync()
-    {
-        await SolverService.RunSolverAsync(SchemeService.EquationSystems[0]);
-    }
 
     private void OnClear()
     {

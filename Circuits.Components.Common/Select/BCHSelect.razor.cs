@@ -10,7 +10,7 @@ namespace Circuits.Components.Common.Select;
 
 public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem : class
 {
-    [Inject] private IJSUtilsService _jsUtilsService { get; set; } = null!;
+    [Inject] private IJSUtilsService JsUtilsService { get; set; } = null!;
 
     private class Element
     {
@@ -26,7 +26,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         public List<Element> Elements { get; set; } = new();
     }
 
-    [Inject] private IJSRuntime _jsRuntime { get; set; } = null!;
+    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
 
     [Parameter] public EventCallback OnFocusOut { get; set; }
     [Parameter] public bool Grouping { get; set; } = false;
@@ -140,7 +140,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
         if (firstRender)
         {
             _dotNetObjectReference = DotNetObjectReference.Create(this);
-            await _jsRuntime.InvokeVoidAsync("bchSelectAddOnOuterFocusOut", _inputId, _containerId, _dotNetObjectReference, "OnContainerFocusOutAsync");
+            await JsRuntime.InvokeVoidAsync("bchSelectAddOnOuterFocusOut", _inputId, _containerId, _dotNetObjectReference, "OnContainerFocusOutAsync");
         }
 
         if (IsOpened)
@@ -170,7 +170,7 @@ public partial class BCHSelect<TItem> : ComponentBase, IDisposable where TItem :
                 }
                 
                 var offset = index * ItemHeight;
-                await _jsUtilsService.ScrollToAsync(_scrollerId, "0", $"{offset}", "auto");
+                await JsUtilsService.ScrollToAsync(_scrollerId, "0", $"{offset}", "auto");
             }
         }
 

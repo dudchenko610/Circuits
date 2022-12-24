@@ -1,9 +1,7 @@
-using Circuits.Services.Extensions;
 using Circuits.Services.Helpers;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Equations;
 using Circuits.ViewModels.Entities.Solver;
-using Circuits.ViewModels.Helpers;
 using Microsoft.JSInterop;
 
 namespace Circuits.Services.Services;
@@ -11,142 +9,105 @@ namespace Circuits.Services.Services;
 public class SolverService : ISolverService
 {
     public Dictionary<EquationSystem, EquationSystemSolverState> SolverState { get; } = new();
-    public Action? OnClear { get; set; }
+    public Action<EquationSystem, EquationSystemSolverState>? OnUpdate { get; set; }
+    public Action? OnClear { get; set; } 
     
     private readonly IJSUtilsService _jsUtilsService;
     private readonly IJSRuntime _jsRuntime;
+    private readonly DotNetObjectReference<SolverService> _dotNetRef;
     
     public SolverService(IJSUtilsService jsUtilsService, IJSRuntime jsRuntime)
     {
         _jsUtilsService = jsUtilsService;
         _jsRuntime = jsRuntime;
+
+        _dotNetRef = DotNetObjectReference.Create(this);
     }
     
-    public async Task<EquationSystemSolverState> RunSolverAsync(EquationSystem equationSystem)
+    public async Task RunAsync(EquationSystem equationSystem)
     {
+        if (!SolverState.TryGetValue(equationSystem, out var state))
+        {
+            state = new EquationSystemSolverState();
+            SolverState.Add(equationSystem, state);
+        }
+
+        if (!(string.IsNullOrEmpty(state.Status) || state.Status == "Completed")) await StopAsync(equationSystem);
+        
+        
         var scriptJs = ScriptHelper.BuildCalculatingJs(equationSystem, 100, 0.001f);
         var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
 
         Console.WriteLine($"URL: {url}");
 
-        await _jsRuntime.InvokeVoidAsync("startSolver", url);
+        state.ScriptUrl = url;
+        state.Status = "Running";
+        state.DataArrays.Clear();
+        
+        foreach (var variable in equationSystem.Variables)
+        {
+            state.DataArrays.Add(variable, new List<float>());
+        }
+        
+        await _jsRuntime.InvokeVoidAsync("startSolver", url, _dotNetRef);
+        
+        OnUpdate?.Invoke(equationSystem, state);
         
         // var jsObject = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", url);
         // await jsObject.InvokeVoidAsync("testIntegration");
         // await jsObject.DisposeAsync();
-        
-        
-        
-        //await _jsUtilsService.RevokeObjectAsync(url);
-        
-        return null!;
+        // await _jsUtilsService.RevokeObjectAsync(url);
     }
 
-
-    public void Clear()
+    public async Task StopAsync(EquationSystem equationSystem)
     {
+        var state = SolverState[equationSystem];
+        
+        await _jsRuntime.InvokeVoidAsync("stopSolver", state.ScriptUrl);
+        state.Status = "Completed";
+
+        OnUpdate?.Invoke(equationSystem, state);
+    }
+
+    public async Task ClearAsync()
+    {
+        foreach (var keyValue in SolverState)
+        {
+            await StopAsync(keyValue.Key);
+        }
+        
         SolverState.Clear();
         OnClear?.Invoke();
     }
 
-    private static void DotNetSolver(EquationSystem equationSystem)
+    [JSInvokable]
+    public void SolverUpdateCallback(SolverUpdateFeedback feedback)
     {
-        if (equationSystem == null!) return;
+        var (equationSystem, state) = SolverState.FirstOrDefault(x => x.Value.ScriptUrl == feedback.Url);
+        if (state is null) throw new Exception("Solver state is broken");
 
-        var systemVars = equationSystem.Variables;
-
-        // setup arrays
-        var arraysHolder = new Dictionary<ExpressionVariable, List<double>>();
+        Console.WriteLine("SolverUpdateCallback");
         
-        // _schemeService.SolverResult.Clear();
-        // _schemeService.SolverResult.Add(equationSystem, arraysHolder);
-
-        /* 1. set initial values for variables with derivatives */
-        foreach (var variable in systemVars)
+        for (var i = 0; i < equationSystem.Variables.Count; i ++)
         {
-            var array = new List<double>();
-            arraysHolder.Add(variable, array);
-            //
-            // if (variable is ExpressionDerivative) array.Add(0);
+            var variable = equationSystem.Variables[i];
+            state.DataArrays[variable].AddRange(feedback.DataArrays[i]);
         }
 
-        var calculationEquations = new List<Expression>();
+        state.Status = $"{state.DataArrays.FirstOrDefault().Value.Count} / {state.IterationCount}";
         
-        /* 2. build calculation equations */
-        for (var v = systemVars.Count - 1; v > -1; v--)
-        {
-            var vr = systemVars[v];
-            var expression = equationSystem.Matrix[v][systemVars.Count]; // right side
+        OnUpdate?.Invoke(equationSystem, state);
+    }
 
-            for (var j = v + 1; j < systemVars.Count; j ++)
-            {
-                var variable = systemVars[j];
-                expression = ExpressionHelper.Subtract(
-                    expression, 
-                    ExpressionHelper.Multiply(variable, equationSystem.Matrix[v][j])
-                    );
-            }
-
-            expression = ExpressionHelper.Divide(expression, equationSystem.Matrix[v][v]);
-            
-            Console.WriteLine($"VAR: {vr.GetLabel()}: {expression.GetLabel()}");
-            
-            calculationEquations.Insert(0, expression);
-        }
-
-        /* 3. initialize initial values */
-
-        for (var v = systemVars.Count - 1; v > -1; v--)
-        {
-            var variable = systemVars[v];
-            
-            if (variable is ExpressionDerivative derivative)
-            {
-                // some calculation logic based on initial charges / linkages
-                derivative.Variable.Value = 0;
-            }
-        }
+    [JSInvokable]
+    public void SolverCompletedCallback(string url)
+    {
+        var (equationSystem, state) = SolverState.FirstOrDefault(x => x.Value.ScriptUrl == url);
+        if (state is null) throw new Exception("Solver state is broken");
         
-        /* 4. solve equation system */
-        var dt = 0.001; // 1ms
+        Console.WriteLine("SolverCompletedCallback");
         
-        for (var i = 0; i < 100; i++)
-        {
-            /* 4.1. solve equations */
-            for (var v = systemVars.Count - 1; v > -1; v--)
-            {
-                var variable = systemVars[v];
-                var equation = calculationEquations[v];
-                var varArray = arraysHolder[variable];
-                
-                var value = equation.Value; // calculation
-                variable.Value = value;
-                varArray.Add(value);
-            }
-            
-            /* 4.2. find values by integration */
-            foreach (var variable in systemVars)
-            {
-                if (variable is ExpressionDerivative derivative)
-                {
-                    var integralVariable = derivative.Variable;
-                    integralVariable.Value += derivative.Value * dt;
-                }
-            }
-        }
-
-        for (var v = systemVars.Count - 1; v > -1; v--)
-        {
-            var variable = systemVars[v];
-            var varArray = arraysHolder[variable];
-
-            Console.WriteLine("___________________");
-            Console.WriteLine(variable.GetLabel());
-            
-            foreach (var value in varArray)
-            {
-                Console.WriteLine(value);
-            }
-        }
+        state.Status = "Completed";
+        OnUpdate?.Invoke(equationSystem, state);
     }
 }

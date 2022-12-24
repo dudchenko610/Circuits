@@ -1,0 +1,38 @@
+<div class="equation-system-container">
+
+    @if (SolverService.SolverState.TryGetValue(EquationSystem, out var state))
+    {
+        <div class="system-controls">
+
+            @if (state.Status == "Completed")
+            {
+                <ControlButtonComponent Color="#00A86B"
+                                        BorderColor="#00A86B"
+                                        Label="Run"
+                                        OnClick="RunSolverAsync"/>
+            }
+            else
+            {
+                <ControlButtonComponent Color="#D2101B"
+                                        BorderColor="#D2101B"
+                                        Label="Stop"
+                                        OnClick="StopSolverAsync"/>
+            }
+
+            <div class="status noselectable-text btn @($"{(state.Status == "Completed" ? "completed" : "")}")">@state.Status</div>
+        </div>
+    }
+    else
+    {
+        <div class="system-controls">
+            <ControlButtonComponent Color="#00A86B"
+                                    BorderColor="#00A86B"
+                                    Label="Run"
+                                    OnClick="RunSolverAsync"/>
+        </div>
+    }
+
+    <div class="system-equations">
+        <GraphEquationSystemComponent EquationSystem="EquationSystem"/>
+    </div>
+</div>

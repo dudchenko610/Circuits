@@ -5,30 +5,9 @@
 
     <div class="scroller">
         <div class="commands">
-            <div class="btn noselectable-text"
-                 @onclick="OnBuildEquationSystems">
-                Build Equation Systems
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnPerformGaussianElimination">
-                Perform Gaussian Elimination
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="TestDotNetSideSolverAsync">
-                Test .NET-side Solver
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="TestJsSideSolverAsync">
-                Test JS-side Solver
-            </div>
-
-            <div class="btn noselectable-text"
-                 @onclick="OnClear">
-                Clear Scheme
-            </div>
+            <ControlButtonComponent Label="Build Equation Systems" OnClick="OnBuildEquationSystems"/>
+            <ControlButtonComponent Label="Perform Gaussian Elimination" OnClick="OnPerformGaussianElimination"/>
+            <ControlButtonComponent Label="Clear Scheme" OnClick="OnClear"/>
         </div>
 
         <div class="separator">

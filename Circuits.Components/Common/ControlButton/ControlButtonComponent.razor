@@ -1,0 +1,5 @@
+<div class="btn noselectable-text"
+     style="@($"color: {Color}; border-color: {BorderColor};")"
+     @onclick="async () => { await OnClick.InvokeAsync(); }">
+    @Label
+</div>
