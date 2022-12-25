@@ -4,14 +4,7 @@
          class="bch-scroll-cnt bch-navigation-cs-container"
          @onextmousewheel="OnMouseWheel"
          @ontouchstart="OnTouchStartAsync"
-         @ontouchend="OnTouchEnd"
-         @ontouchmove="OnTouchMove"
-         @ontouchleave="OnMouseLeaveUp"
-         @ontouchmove:stopPropagation
-
-         @onmousedown="OnMouseDown"
-         @onmouseup="OnMouseLeaveUp"
-         @onmouseleave="OnMouseLeaveUp">
+         @onmousedown="OnMouseDown">
 
         <div id="@_navigationId"
              class="bch-scroller bch-navigation-cs-panel"

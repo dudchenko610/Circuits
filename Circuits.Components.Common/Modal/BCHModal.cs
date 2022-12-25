@@ -23,6 +23,9 @@ public class BCHModal : ComponentBase, IDisposable
 
     private ModalModel _modalModel = new();
 
+    private string _prevX = string.Empty;
+    private string _prevY = string.Empty;
+    
     private bool _show { get; set; }
     [Parameter] public EventCallback<bool> ShowChanged { get; set; }
     [Parameter] public bool Show
@@ -33,13 +36,7 @@ public class BCHModal : ComponentBase, IDisposable
             if (_show == value) return;
             _show = value;
 
-            _modalModel.Fragment = ChildContent;
-            _modalModel.Height = Height;
-            _modalModel.Width = Width;
-            _modalModel.X = X;
-            _modalModel.Y = Y;
-            _modalModel.CssClass = CssClass;
-            _modalModel.Overlay = ShowOverlay;
+            ResetValuesFromParameters();
 
             if (_show) PopupService.Open(_modalModel);
             else PopupService.Close(_modalModel);
@@ -52,16 +49,15 @@ public class BCHModal : ComponentBase, IDisposable
     {
         PopupService.OnOverlayClicked += OnOverlayClickedFired;
         
-        _modalModel.Fragment = ChildContent;
-        _modalModel.Height = Height;
-        _modalModel.Width = Width;
-        _modalModel.X = X;
-        _modalModel.Y = Y;
-        _modalModel.CssClass = CssClass;
-        _modalModel.Overlay = ShowOverlay;
+        ResetValuesFromParameters();
 
         if (Show) PopupService.Open(_modalModel);
         else PopupService.Close(_modalModel);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (_prevX != X || _prevY != Y) Update();
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -87,6 +83,21 @@ public class BCHModal : ComponentBase, IDisposable
 
     public void Update()
     {
+        ResetValuesFromParameters();
         _modalModel.OnUpdate?.Invoke();
+    }
+    
+    private void ResetValuesFromParameters()
+    {
+        _modalModel.Fragment = ChildContent;
+        _modalModel.Height = Height;
+        _modalModel.Width = Width;
+        _modalModel.X = X;
+        _modalModel.Y = Y;
+        _modalModel.CssClass = CssClass;
+        _modalModel.Overlay = ShowOverlay;
+
+        _prevX = _modalModel.X;
+        _prevY = _modalModel.Y;
     }
 }

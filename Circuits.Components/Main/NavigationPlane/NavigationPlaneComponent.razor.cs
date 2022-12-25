@@ -13,7 +13,7 @@ using Microsoft.JSInterop;
 
 namespace Circuits.Components.Main.NavigationPlane;
 
-public partial class NavigationPlaneComponent : IDisposable
+public partial class NavigationPlaneComponent : IAsyncDisposable
 {
     [Inject] private IJSUtilsService JsUtilsService { get; set; } = null!;
     [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
@@ -25,7 +25,8 @@ public partial class NavigationPlaneComponent : IDisposable
 
     private readonly string _navigationId = $"_id_{Guid.NewGuid()}";
     private readonly string _wrapperId = $"_id_{Guid.NewGuid()}";
-    private NumberFormatInfo _nF = new () { NumberDecimalSeparator = "." };
+    private readonly string _subscriptionKey = $"_id_{Guid.NewGuid()}";
+    private readonly NumberFormatInfo _nF = new () { NumberDecimalSeparator = "." };
 
     private Vec2 _size = new () { X = 3000, Y = 3000 };
     private Vec2 _viewPortSize = new();
@@ -39,21 +40,29 @@ public partial class NavigationPlaneComponent : IDisposable
 
     private bool _zoomKeep = false;
 
-    private DotNetObjectReference<NavigationPlaneComponent> _dotNetObjectReference = null!;
+    private DotNetObjectReference<NavigationPlaneComponent> _dotNetRef = null!;
     
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         IJSUtilsService.OnResize += OnResizeAsync;
         NavigationPlaneContext.ZoomUp += OnZoomUp;
         NavigationPlaneContext.ZoomDown += OnZoomDownAsync;
+        _dotNetRef = DotNetObjectReference.Create(this);
+        
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousemove", _dotNetRef,
+            "OnDocumentMouseMove");
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mouseup", _dotNetRef,
+            "OnMouseLeaveUp");
     }
     
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        _dotNetObjectReference?.Dispose();
         IJSUtilsService.OnResize -= OnResizeAsync;
         NavigationPlaneContext.ZoomUp -= OnZoomUp;
         NavigationPlaneContext.ZoomDown -= OnZoomDownAsync;
+        
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mouseup");
     }
     
     // protected override void OnAfterRender(bool firstRender)
@@ -63,14 +72,8 @@ public partial class NavigationPlaneComponent : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //Console.WriteLine($"OnAfterRender NavigationPlaneComponent {_dragStarted}");
-        
-        if (firstRender)
-        {
-            _dotNetObjectReference = DotNetObjectReference.Create(this);
-            await JsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _navigationId, _dotNetObjectReference);
-            await OnResizeAsync();
-        }
+        // Console.WriteLine($"OnAfterRender NavigationPlaneComponent {_dragStarted}");
+        if (firstRender) await OnResizeAsync();
     }
 
     private async Task OnResizeAsync()
@@ -171,8 +174,10 @@ public partial class NavigationPlaneComponent : IDisposable
         StateHasChanged();
     }
 
-    private void OnMouseLeaveUp()
+    [JSInvokable]
+    public void OnMouseLeaveUp()
     {
+        if (!_dragStarted) return;
         // Console.WriteLine("OnMouseLeaveUp NavPlane");
         
         _dragStarted = false;
@@ -180,27 +185,26 @@ public partial class NavigationPlaneComponent : IDisposable
     }
 
     [JSInvokable]
-    public void OnMouseMove(ExtMouseEventArgs e)
+    public void OnDocumentMouseMove(ExtMouseEventArgs e)
     {
-        if (_dragStarted)
-        {
-            var mousePosition = new Vec2(e.PageX, e.PageY);
-            var change = new Vec2(
-                mousePosition.X - _lastMousePosition.X, 
-                mousePosition.Y - _lastMousePosition.Y
-            );
+        if (!_dragStarted) return;
+        
+        var mousePosition = new Vec2(e.PageX, e.PageY);
+        var change = new Vec2(
+            mousePosition.X - _lastMousePosition.X, 
+            mousePosition.Y - _lastMousePosition.Y
+        );
 
-            _lastMousePosition.Set(mousePosition);
-            _pos.Add(change);
+        _lastMousePosition.Set(mousePosition);
+        _pos.Add(change);
 
-            NavigationPlaneContext.TopLeftPos.Set(_pos);
+        NavigationPlaneContext.TopLeftPos.Set(_pos);
 
-            // Console.WriteLine($"Pos: X: {((_pos.X) / _scale)}, Y: {(_pos.Y) / _scale}");
-            // Console.WriteLine($"Pos: X: {((_pos.X - _viewPortSize.X) / _scale)}, Y: {(_pos.Y - _viewPortSize.Y) / _scale}");
-            // Console.WriteLine($"_viewPortSize: X: {_viewPortSize.X}, Y: {_viewPortSize.Y}");
+        // Console.WriteLine($"Pos: X: {((_pos.X) / _scale)}, Y: {(_pos.Y) / _scale}");
+        // Console.WriteLine($"Pos: X: {((_pos.X - _viewPortSize.X) / _scale)}, Y: {(_pos.Y - _viewPortSize.Y) / _scale}");
+        // Console.WriteLine($"_viewPortSize: X: {_viewPortSize.X}, Y: {_viewPortSize.Y}");
 
-            Update();
-        }
+        Update();
     }
     
     private float Scale => (float)Math.Exp(_scale - 4);

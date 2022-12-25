@@ -9,7 +9,7 @@ using Microsoft.JSInterop;
 
 namespace Circuits.Components.Common.Zoom;
 
-public partial class BCHZoom : IDisposable
+public partial class BCHZoom : IAsyncDisposable
 {
     [Inject] private IJSUtilsService JsUtilsService { get; set; } = null!;
     [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
@@ -31,6 +31,7 @@ public partial class BCHZoom : IDisposable
 
     private readonly string _wrapperId = $"_id_{Guid.NewGuid()}";
     private readonly string _navigationId = $"_id_{Guid.NewGuid()}";
+    private readonly string _subscriptionKey = $"_id_{Guid.NewGuid()}";
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
 
     private Vec2 _size = new();
@@ -57,7 +58,7 @@ public partial class BCHZoom : IDisposable
     private readonly Vec2 _rotatedPoint = new();
     private float _rotationAngle = 0;
 
-    private DotNetObjectReference<BCHZoom> _dotNetObjectReference = null!;
+    private DotNetObjectReference<BCHZoom> _dotNetRef = null!;
 
     private float _dppx = 1.0f;
 
@@ -71,6 +72,17 @@ public partial class BCHZoom : IDisposable
         IJSUtilsService.OnResize += OnResizeAsync;
         ZoomContext.ZoomUp += OnZoomUp;
         ZoomContext.ZoomDown += OnZoomDownAsync;
+        
+        _dotNetRef = DotNetObjectReference.Create(this);
+
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousemove", _dotNetRef,
+            "OnDocumentMouseMove");
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "touchmove", _dotNetRef,
+            "OnDocumentTouchMove");
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mouseup", _dotNetRef,
+            "OnMouseLeaveUp");
+        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "touchend", _dotNetRef,
+            "OnMouseLeaveUp");
         
         _dppx = await JsRuntime.InvokeAsync<float>("getPixelRatio");
     }
@@ -91,20 +103,22 @@ public partial class BCHZoom : IDisposable
         UpdateContextData();
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        _dotNetObjectReference?.Dispose();
         IJSUtilsService.OnResize -= OnResizeAsync;
         ZoomContext.ZoomUp -= OnZoomUp;
         ZoomContext.ZoomDown -= OnZoomDownAsync;
+        
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "touchmove");
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mouseup");
+        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "touchend");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _dotNetObjectReference = DotNetObjectReference.Create(this);
-            await JsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _wrapperId, _dotNetObjectReference);
            // await CenterContentAsync();
             await OnResizeAsync();
         }
@@ -315,7 +329,7 @@ public partial class BCHZoom : IDisposable
             
             if (xDiff < 0 || yDiff < 0)
             {
-                Console.WriteLine($"ZOOM _scale = {Scale}");
+                // Console.WriteLine($"ZOOM _scale = {Scale}");
                 
                 var newScale = xDiff < yDiff 
                     ? _viewPortSize.X / _navigationOffsetSize.X 
@@ -354,7 +368,8 @@ public partial class BCHZoom : IDisposable
         StateHasChanged();
     }
 
-    private void OnMouseLeaveUp()
+    [JSInvokable]
+    public void OnMouseLeaveUp()
     {
         _dragStarted = false;
         _touchMode = 0;
@@ -366,12 +381,26 @@ public partial class BCHZoom : IDisposable
         StateHasChanged();
     }
 
+    
     [JSInvokable]
-    public void OnMouseMove(ExtMouseEventArgs e)
+    public void OnDocumentTouchMove(ExtTouchEventArgs e)
+    {
+        if (e.Touches.Count != 1) return;
+        OnDocumentMove(e.Touches[0].PageX, e.Touches[0].PageY);
+    }
+
+    [JSInvokable]
+    public void OnDocumentMouseMove(ExtMouseEventArgs e)
+    {
+        OnDocumentMove((float)e.PageX, (float)e.PageY);
+    }
+    
+    
+    private void OnDocumentMove(float pageX, float pageY)
     {
         if (!_dragStarted) return;
 
-        var mousePosition = new Vec2(e.PageX, e.PageY);
+        var mousePosition = new Vec2(pageX, pageY);
         var change = new Vec2(
             mousePosition.X - _lastMousePosition.X,
             mousePosition.Y - _lastMousePosition.Y
@@ -428,63 +457,58 @@ public partial class BCHZoom : IDisposable
         }
     }
 
-    private void OnTouchMove(TouchEventArgs e)
-    {
-        if (e.Touches.Length == 1 && _touchMode == 1)
-        {
-            OnMouseMove(new ExtMouseEventArgs
-            {
-                PageX = e.Touches[0].PageX,
-                PageY = e.Touches[0].PageY
-            });
-
-            return;
-        }
-
-        if (e.Touches.Length == 2 && _touchMode == 2)
-        {
-            var dx = e.Touches[0].ScreenX - e.Touches[1].ScreenX;
-            var dy = e.Touches[0].ScreenY - e.Touches[1].ScreenY;
-
-            var touchDist2 = (float) Math.Sqrt((dx * dx) + (dy * dy));
-            var deltaScale = touchDist2 - _touchStartDistance;
-
-            _touchStartDistance = touchDist2;
-            
-            _rotateVec.Set(dx, dy);
-
-            var deltaAngle = 0f;
-
-            if (_prevRotateVec is not { X: 0, Y: 0 })
-            {
-                var dot = Vec2.DotProduct(_rotateVec, _prevRotateVec);
-                var absA = _rotateVec.Length();
-                var absB = _prevRotateVec.Length();
-
-                var cos = dot / (absA * absB);
-                var angleRadians = Math.Acos(cos);
-
-                var cross = Vec2.CrossProduct(_rotateVec, _prevRotateVec);
-                
-                deltaAngle = (float) ((cross < 0 ? 1 : -1) * angleRadians);
-
-                if (double.IsNaN(deltaAngle)) deltaAngle = 0;
-            }
-
-            _prevRotateVec.Set(_rotateVec);
-            Transform(_pinchPos.X, _pinchPos.Y, deltaScale / _dppx, deltaAngle);
-
-            return;
-        }
-
-        _touchMode = 0;
-        _prevRotateVec.Set(0, 0);
-    }
-
-    private void OnTouchEnd(TouchEventArgs e)
-    {
-        OnMouseLeaveUp();
-    }
+    // private void OnTouchMove(TouchEventArgs e)
+    // {
+    //     if (e.Touches.Length == 1 && _touchMode == 1)
+    //     {
+    //         OnMouseMove(new ExtMouseEventArgs
+    //         {
+    //             PageX = e.Touches[0].PageX,
+    //             PageY = e.Touches[0].PageY
+    //         });
+    //
+    //         return;
+    //     }
+    //
+    //     if (e.Touches.Length == 2 && _touchMode == 2)
+    //     {
+    //         var dx = e.Touches[0].ScreenX - e.Touches[1].ScreenX;
+    //         var dy = e.Touches[0].ScreenY - e.Touches[1].ScreenY;
+    //
+    //         var touchDist2 = (float) Math.Sqrt((dx * dx) + (dy * dy));
+    //         var deltaScale = touchDist2 - _touchStartDistance;
+    //
+    //         _touchStartDistance = touchDist2;
+    //         
+    //         _rotateVec.Set(dx, dy);
+    //
+    //         var deltaAngle = 0f;
+    //
+    //         if (_prevRotateVec is not { X: 0, Y: 0 })
+    //         {
+    //             var dot = Vec2.DotProduct(_rotateVec, _prevRotateVec);
+    //             var absA = _rotateVec.Length();
+    //             var absB = _prevRotateVec.Length();
+    //
+    //             var cos = dot / (absA * absB);
+    //             var angleRadians = Math.Acos(cos);
+    //
+    //             var cross = Vec2.CrossProduct(_rotateVec, _prevRotateVec);
+    //             
+    //             deltaAngle = (float) ((cross < 0 ? 1 : -1) * angleRadians);
+    //
+    //             if (double.IsNaN(deltaAngle)) deltaAngle = 0;
+    //         }
+    //
+    //         _prevRotateVec.Set(_rotateVec);
+    //         Transform(_pinchPos.X, _pinchPos.Y, deltaScale / _dppx, deltaAngle);
+    //
+    //         return;
+    //     }
+    //
+    //     _touchMode = 0;
+    //     _prevRotateVec.Set(0, 0);
+    // }
 
     private void UpdateContextData()
     {

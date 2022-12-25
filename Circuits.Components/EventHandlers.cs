@@ -6,6 +6,7 @@ namespace Circuits.Components;
 
 [EventHandler("onextmousemove", typeof(ExtMouseEventArgs), true, true)]
 [EventHandler("onextmouseup", typeof(ExtMouseEventArgs), true, true)]
+[EventHandler("onextmousedown", typeof(ExtMouseEventArgs), true, true)]
 [EventHandler("onextmouseout", typeof(ExtMouseEventArgs), true, true)]
 [EventHandler("onmouseleave", typeof(MouseEventArgs), true, true)]
 

@@ -121,6 +121,26 @@ Blazor.registerCustomEventType('extmousewheel', {
     }
 });
 
+Blazor.registerCustomEventType('extmousedown', {
+    browserEventName: 'mousedown',
+    createEventArgs: event => {
+        
+        const x = event.clientX - event.target.offsetLeft;
+        const y = event.clientY - event.target.offsetTop;
+        const pathCoordinates = getPathCoordinates(event);
+
+        return {
+            x: x,
+            y: y,
+            deltaX: event.deltaX,
+            deltaY: event.deltaY,
+            pageX: event.pageX,
+            pageY: event.pageY,
+            pathCoordinates: pathCoordinates
+        };
+    }
+});
+
 Blazor.registerCustomEventType('extdragstart', {
     browserEventName: 'dragstart',
     createEventArgs: event => {

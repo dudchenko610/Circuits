@@ -76,20 +76,51 @@ function createObjectURL(value) {
 const listeners = {};
 
 function addDocumentListener(key, eventName, dotnetReference, methodName) {
-    listeners[key + eventName] = function(event) {
-        dotnetReference.invokeMethodAsync(methodName, {
-            offsetX: event.offsetX,
-            offsetY: event.offsetY,
-            pageX: event.pageX,
-            pageY: event.pageY,
-            screenX: event.screenX,
-            screenY: event.screenY,
-            clientX: event.clientX,
-            clientY: event.clientY,
-        });
+    listeners[key + eventName] = function (event) {
+        let response = {};
+
+        switch (eventName) {
+            case "touchmove":
+                const touches = Object.entries(event.touches).map((value, key) => {
+                    const touch = value[1];
+
+                    return {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY,
+                        pageX: touch.pageX,
+                        pageY: touch.pageY
+                    }
+                });
+
+                const pathCoordinates = getPathCoordinates({
+                    path: [document.elementFromPoint(touches[0].pageX, touches[0].pageY)]
+                });
+
+                response = {
+                    touches: touches,
+                    pathCoordinates: pathCoordinates
+                };
+                break;
+            default:
+
+                response = {
+                    offsetX: event.offsetX,
+                    offsetY: event.offsetY,
+                    pageX: event.pageX,
+                    pageY: event.pageY,
+                    screenX: event.screenX,
+                    screenY: event.screenY,
+                    clientX: event.clientX,
+                    clientY: event.clientY,
+                    pathCoordinates: getPathCoordinates(event)
+                };
+                break;
+        }
+
+        dotnetReference.invokeMethodAsync(methodName, response);
     };
 
-    document.body.addEventListener(eventName, listeners[key + eventName]);
+    document.addEventListener(eventName, listeners[key + eventName]);
 }
 
 function removeDocumentListener(key, eventName) {

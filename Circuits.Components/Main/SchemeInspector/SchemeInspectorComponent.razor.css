@@ -5,6 +5,7 @@
     height: 100%;
     /*width: 25%;*/
     transition: margin-left 0.5s ease;
+    will-change: margin-left;
     border-right: 1px solid #CED3E0;
     background: white;
     overflow: hidden;
