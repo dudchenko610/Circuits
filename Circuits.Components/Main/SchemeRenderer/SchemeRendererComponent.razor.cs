@@ -194,6 +194,8 @@ public partial class SchemeRendererComponent : IDisposable
     {
         // Console.WriteLine($"on-drop");
 
+        if (DraggingElement is null) return; 
+
         var container = e.PathCoordinates
             .FirstOrDefault(x => x.ClassList.Contains("scheme-renderer-container"));
 
