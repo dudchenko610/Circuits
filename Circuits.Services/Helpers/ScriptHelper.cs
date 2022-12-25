@@ -1,11 +1,14 @@
 using Circuits.Services.Extensions;
 using Circuits.ViewModels.Entities.Equations;
 using Circuits.ViewModels.Helpers;
+using System.Globalization;
 
 namespace Circuits.Services.Helpers;
 
 public static class ScriptHelper
 {
+    private static NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
+
     private static int GetVariableOrder(Expression expression)
     {
         var c = 0;
@@ -96,7 +99,7 @@ public static class ScriptHelper
         jsScript += "]; \n\n";
 
         jsScript += $@"
-const dt = {dt};
+const dt = {dt.ToString(_nF)};
 
 function sleep(ms) {{ return new Promise(resolve => setTimeout(resolve, ms)); }}
 
