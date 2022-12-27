@@ -69,7 +69,7 @@ public partial class BCHGraph2D : IDisposable
             StateHasChanged();
         }
         
-        // Console.WriteLine("OnAfterRenderAsync");
+        // Console.WriteLine($"BCHGraph2D OnAfterRenderAsync Count {DataArray.Count}");
     }
     
     public void Dispose()

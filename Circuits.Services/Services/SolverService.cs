@@ -30,6 +30,11 @@ public class SolverService : ISolverService
         {
             state = new EquationSystemSolverState();
             SolverState.Add(equationSystem, state);
+            
+            foreach (var variable in equationSystem.Variables)
+            {
+                state.DataArrays.Add(variable, new List<float>());
+            }
         }
 
         if (!(string.IsNullOrEmpty(state.Status) || state.Status == "Completed")) await StopAsync(equationSystem);
@@ -42,11 +47,10 @@ public class SolverService : ISolverService
 
         state.ScriptUrl = url;
         state.Status = "Running";
-        state.DataArrays.Clear();
-        
-        foreach (var variable in equationSystem.Variables)
+
+        foreach (var array in state.DataArrays)
         {
-            state.DataArrays.Add(variable, new List<float>());
+            array.Value.Clear();
         }
         
         await _jsRuntime.InvokeVoidAsync("startSolver", url, _dotNetRef);

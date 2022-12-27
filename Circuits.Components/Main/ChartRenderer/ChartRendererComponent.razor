@@ -1,4 +1,4 @@
 @foreach (var chartInfo in ChartService.Charts)
 {
-    <VariableChartComponent ChartInfo="chartInfo"/>
+    <VariableChartComponent @key="chartInfo" ChartInfo="chartInfo"/>
 }

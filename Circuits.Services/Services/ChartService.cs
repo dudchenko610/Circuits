@@ -46,6 +46,9 @@ public class ChartService : IChartService
     public void Close(ExpressionVariable variable)
     {
         var chartInfo = Charts.FirstOrDefault(x => x.Variable == variable);
+        
+        Console.WriteLine($"Close index = {_charts.IndexOf(chartInfo!)}");
+        
         if (chartInfo != null && !_charts.Remove(chartInfo)) return;
         OnUpdate?.Invoke();
     }

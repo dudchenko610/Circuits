@@ -10,6 +10,7 @@ public class ModalModel
     public string Y { get; set; } = string.Empty;
     public string CssClass { get; set; } = string.Empty;
     public bool Overlay { get; set; } = true;
+    public int ZIndex { get; set; } = 999999;
     public RenderFragment Fragment { get; set; } = null!;
     public Action? OnUpdate { get; set; }
 }

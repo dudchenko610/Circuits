@@ -4,11 +4,12 @@
           ShowOverlay="false"
           X="@($"{_pos.X.ToString(_nF)}px")"
           Y="@($"{_pos.Y.ToString(_nF)}px")"
+          ZIndex="_zIndex"
           Show="true">
-    <div class="chart-wrapper">
+    <div id="@_chartContainerId" 
+         class="chart-wrapper">
         <div id="@_controlPanelId"
-             class="control-panel"
-             @onextmousedown="OnMouseDown">
+             class="control-panel">
             <div class="close-btn" @onclick="CloseGraph"></div>
         </div>
         <div class="graph-wrapper">

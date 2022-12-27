@@ -14,6 +14,8 @@
                 var svgWidth = SvgWidth;
                 var svgHeight = SvgHeight;
 
+                var dataCount = DataArray.Count == 0 ? 1 : DataArray.Count;
+
                 var verticalLineCount = svgHeight / CellHeight;
 
                 var horizontalStartIndex = (int)_zoomPos.X / CellWidth;
@@ -23,11 +25,11 @@
                 var verticalStartIndex = (int)_zoomPos.Y / CellHeight;
                 var verticalEndIndex = verticalStartIndex + (int)(_zoomBounds.Y / CellHeight) + 1;
 
-                var graphStartIndex = (int)(((_zoomPos.X - CellWidth) / svgWidth) * DataArray.Count) - 1;
-                graphStartIndex = Math.Clamp(graphStartIndex, 0, DataArray.Count - 1);
+                var graphStartIndex = (int)(((_zoomPos.X - CellWidth) / svgWidth) * dataCount) - 1;
+                graphStartIndex = Math.Clamp(graphStartIndex, 0, dataCount - 1);
 
-                var graphEndIndex = graphStartIndex + (int)(((_zoomBounds.X + CellWidth) / svgWidth) * DataArray.Count) + 3;
-                graphEndIndex = Math.Clamp(graphEndIndex, 0, DataArray.Count - 1);
+                var graphEndIndex = graphStartIndex + (int)(((_zoomBounds.X + CellWidth) / svgWidth) * dataCount) + 3;
+                graphEndIndex = Math.Clamp(graphEndIndex, 0, dataCount - 1);
 
                 var median = svgHeight * 0.5f;
                 var xRatio = CellWidth / (float)CellXValuesCount;
@@ -103,7 +105,7 @@
                 {
                     if (i % 5 == 0)
                     {
-                        <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text">@XLabel(i)</div>
+                        <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text noselectable-text">@XLabel(i)</div>
                     }
                     break;
                 }
@@ -111,12 +113,12 @@
                 {
                     if (i % 2 == 0)
                     {
-                        <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text">@XLabel(i)</div>
+                        <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text noselectable-text">@XLabel(i)</div>
                     }
                     break;
                 }
                 default:
-                    <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text">@XLabel(i)</div>
+                    <div style="@($"left: {(i * cellWidth).ToString(_nF)}px;")" class="text noselectable-text">@XLabel(i)</div>
                     break;
             }
         }
@@ -134,7 +136,7 @@
                 {
                     if (index % 5 == 0)
                     {
-                        <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
+                        <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text noselectable-text">@YLabel(index)</div>
                     }
                     break;
                 }
@@ -142,12 +144,12 @@
                 {
                     if (index % 2 == 0)
                     {
-                        <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
+                        <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text noselectable-text">@YLabel(index)</div>
                     }
                     break;
                 }
                 default:
-                    <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text">@YLabel(index)</div>
+                    <div style="@($"top: {(i * cellHeight).ToString(_nF)}px;")" class="text noselectable-text">@YLabel(index)</div>
 
                     break;
             }

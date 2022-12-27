@@ -16,6 +16,7 @@ public class BCHModal : ComponentBase, IDisposable
     [Parameter] public string Height { get; set; } = "200px;";
     [Parameter] public string X { get; set; } = "";
     [Parameter] public string Y { get; set; } = "";
+    [Parameter] public int ZIndex { get; set; } = 999999;
     [Parameter] public string CssClass { get; set; } = string.Empty;
     [Parameter] public bool CloseOnOverflowClicked { get; set; }
     [Parameter] public bool ShowOverlay { get; set; }
@@ -25,6 +26,7 @@ public class BCHModal : ComponentBase, IDisposable
 
     private string _prevX = string.Empty;
     private string _prevY = string.Empty;
+    private int _prevZIndex = 999999;
     
     private bool _show { get; set; }
     [Parameter] public EventCallback<bool> ShowChanged { get; set; }
@@ -57,7 +59,7 @@ public class BCHModal : ComponentBase, IDisposable
 
     protected override void OnParametersSet()
     {
-        if (_prevX != X || _prevY != Y) Update();
+        if (_prevX != X || _prevY != Y || _prevZIndex != ZIndex) Update();
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -96,6 +98,7 @@ public class BCHModal : ComponentBase, IDisposable
         _modalModel.Y = Y;
         _modalModel.CssClass = CssClass;
         _modalModel.Overlay = ShowOverlay;
+        _modalModel.ZIndex = ZIndex;
 
         _prevX = _modalModel.X;
         _prevY = _modalModel.Y;

@@ -119,13 +119,13 @@ function addDocumentListener(key, eventName, dotnetReference, methodName) {
 
         dotnetReference.invokeMethodAsync(methodName, response);
     };
-
+    
     document.addEventListener(eventName, listeners[key + eventName]);
 }
 
 function removeDocumentListener(key, eventName) {
     if (listeners[key + eventName]) {
-        document.body.removeEventListener(eventName, listeners[key + eventName]);
+        document.removeEventListener(eventName, listeners[key + eventName]);
         delete listeners[key + eventName];
     }
 }
