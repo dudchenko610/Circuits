@@ -1,13 +1,14 @@
 using Circuits.Components.Common.Models.Modal;
 using Circuits.Components.Common.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace Circuits.Components.Common.Modal;
-
 
 public class BCHModal : ComponentBase, IDisposable
 {
     [Inject] private IPopupService PopupService { get; set; } = null!;
+    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
 
     [Parameter] public RenderFragment ChildContent { get; set; } = null!;
     [Parameter] public EventCallback OnOverlayClicked { get; set; }
@@ -102,5 +103,10 @@ public class BCHModal : ComponentBase, IDisposable
 
         _prevX = _modalModel.X;
         _prevY = _modalModel.Y;
+    }
+    
+    public async Task SetPositionEfficientlyAsync(string x, string y)
+    {
+        await JsRuntime.InvokeVoidAsync("setLeftTopToElement", _modalModel.Id, x, y);
     }
 }

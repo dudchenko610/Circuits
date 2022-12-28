@@ -1,5 +1,5 @@
 
 @foreach (var modalModel in PopupService.Modals)
 {
-    <BCHModalContent ModalModel="modalModel"/>
+    <BCHModalContent @key="modalModel" ModalModel="modalModel"/>
 }

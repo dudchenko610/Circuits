@@ -129,3 +129,11 @@ function removeDocumentListener(key, eventName) {
         delete listeners[key + eventName];
     }
 }
+
+function setLeftTopToElement(id, x, y) {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    element.style.left = x;
+    element.style.top = y;
+}

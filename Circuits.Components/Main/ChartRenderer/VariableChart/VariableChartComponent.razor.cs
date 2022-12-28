@@ -16,7 +16,7 @@ namespace Circuits.Components.Main.ChartRenderer.VariableChart;
 public partial class VariableChartComponent : IAsyncDisposable
 {
     private static int _chartZIndex = 999999;
-    
+
     [Inject] public ISolverService SolverService { get; set; } = null!;
     [Inject] public IChartService ChartService { get; set; } = null!;
     [Inject] public IJSRuntime JsRuntime { get; set; } = null!;
@@ -26,7 +26,7 @@ public partial class VariableChartComponent : IAsyncDisposable
     private readonly string _chartContainerId = $"_id_{Guid.NewGuid()}";
     private readonly string _controlPanelId = $"_id_{Guid.NewGuid()}";
     private readonly string _subscriptionKey = $"_id_{Guid.NewGuid()}";
-    
+
     private DotNetObjectReference<VariableChartComponent> _dotNetRef = null!;
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private readonly Vec2 _lastMousePosition = new();
@@ -40,13 +40,13 @@ public partial class VariableChartComponent : IAsyncDisposable
     {
         _data = ChartInfo.SolverState.DataArrays[ChartInfo.Variable];
         SolverService.OnUpdate += Update;
-        
+
         _dotNetRef = DotNetObjectReference.Create(this);
-        
+
         await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousedown", _dotNetRef,
             "OnDocumentMouseDown");
         await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousemove", _dotNetRef,
-            "OnDocumentMouseMove");
+            "OnDocumentMouseMoveAsync");
         await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mouseup", _dotNetRef,
             "OnMouseLeaveUp");
     }
@@ -54,7 +54,7 @@ public partial class VariableChartComponent : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         SolverService.OnUpdate -= Update;
-        
+
         await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousedown");
         await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");
         await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mouseup");
@@ -74,11 +74,11 @@ public partial class VariableChartComponent : IAsyncDisposable
     private void Update(EquationSystem equationSystem, EquationSystemSolverState systemSolverState)
     {
         if (!equationSystem.Variables.Contains(ChartInfo.Variable)) return;
-        
-        Console.WriteLine("Update(EquationSystem equationSystem, EquationSystemSolverState systemSolverState)");
+
+        // Console.WriteLine("Update(EquationSystem equationSystem, EquationSystemSolverState systemSolverState)");
         StateHasChanged();
     }
-    
+
     [JSInvokable]
     public void OnDocumentMouseDown(ExtMouseEventArgs e)
     {
@@ -89,20 +89,20 @@ public partial class VariableChartComponent : IAsyncDisposable
             _zIndex = ++_chartZIndex;
             if (coordsHolder?.Id != _controlPanelId) StateHasChanged();
         }
-        
+
         if (coordsHolder?.Id != _controlPanelId) return;
-        
+
         _lastMousePosition.Set(e.PageX, e.PageY);
         _dragStarted = true;
-        
+
         StateHasChanged();
     }
-    
+
     [JSInvokable]
-    public void OnDocumentMouseMove(ExtMouseEventArgs e)
+    public async Task OnDocumentMouseMoveAsync(ExtMouseEventArgs e)
     {
         if (!_dragStarted) return;
-        
+
         var mousePosition = new Vec2(e.PageX, e.PageY);
         var change = new Vec2(
             mousePosition.X - _lastMousePosition.X,
@@ -111,15 +111,14 @@ public partial class VariableChartComponent : IAsyncDisposable
 
         _lastMousePosition.Set(mousePosition);
         _pos.Add(change);
-        
-        StateHasChanged();
+
+        await _bchModal.SetPositionEfficientlyAsync($"{_pos.X.ToString(_nF)}px", $"{_pos.Y.ToString(_nF)}px");
     }
-    
+
     [JSInvokable]
     public void OnMouseLeaveUp()
     {
         _dragStarted = false;
-
         StateHasChanged();
     }
 }
