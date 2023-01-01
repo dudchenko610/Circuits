@@ -1,5 +1,22 @@
 <div class="equation-system-container">
 
+    <div class="line">
+        <div class="text noselectable-text">DeltaTime:</div>
+        <div class="input-wrapper">
+            <BCHNumberInput TValue="float" @bind-Value="_dt"/>
+        </div>
+    </div>
+
+    <div class="line">
+        <div class="text noselectable-text">Iteration Number:</div>
+        <div class="input-wrapper">
+            <input type="number"
+                   placeholder="Type Number"
+                   @bind-value="_iterationCount"
+                   @bind-value:event="oninput"/>
+        </div>
+    </div>
+
     @if (SolverService.SolverState.TryGetValue(EquationSystem, out var state))
     {
         <div class="system-controls">
@@ -19,8 +36,7 @@
                                         OnClick="StopSolverAsync"/>
             }
 
-            <div class="status noselectable-text btn @($"{(state.Status == "Completed" ? "completed" : "")}")"
-                 @onclick='() => { if (state.Status == "Completed") { TestShowGraph(); } }'>
+            <div class="status noselectable-text btn @($"{(state.Status == "Completed" ? "completed" : "")}")">
                 @state.Status
             </div>
         </div>
@@ -39,3 +55,29 @@
         <GraphEquationSystemComponent EquationSystem="EquationSystem"/>
     </div>
 </div>
+
+<style>
+    .equation-system-container > .line > .input-wrapper > input {
+        font-family: Nunito;
+        font-size: 10px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 14px;
+        letter-spacing: 0.3428572118282318px;
+        color: #030229;
+        caret-color: #030229;
+        outline: none;
+        text-indent: 14px;
+                
+        flex: 1 1;
+        height: 18px;
+        background: transparent;
+        border: none;
+        margin: auto;
+        padding: 0;
+    }
+                
+    .equation-system-container > .line > .input-wrapper > input::placeholder {
+        color: rgba(3, 2, 41, 0.4);
+    }
+</style>

@@ -8,4 +8,6 @@ public class ChartInfo
     public ExpressionVariable Variable { get; set; } = null!;
     public EquationSystem EquationSystem { get; set; } = null!;
     public EquationSystemSolverState SolverState { get; set; } = null!;
+
+    public string VerticalLetter { get; set; } = string.Empty;
 }

@@ -24,7 +24,8 @@ public partial class App
         
         foreach (var equationSystem in SchemeService.EquationSystems)
         {
-            EquationSystemService.PerformGaussianElimination(equationSystem);
+            var result = EquationSystemService.PerformGaussianElimination(equationSystem);
+            Console.WriteLine($"Gaussian Elimination Result: {result}");
         }
         
         StateHasChanged();

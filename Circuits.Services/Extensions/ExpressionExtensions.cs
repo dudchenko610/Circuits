@@ -70,7 +70,7 @@ public static class ExpressionExtensions
                         continue;
                     }
                 
-                    res += $"({expMul.Multipliers[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}{expMul.Nodes[i].GetLabel(namePredicate)})";
+                    res += $"{expMul.Multipliers[i - 1].GetValue<string, DisplayNameAttribute>(x => x.Name)}({expMul.Nodes[i].GetLabel(namePredicate)})";
                 }
                 else
                 {

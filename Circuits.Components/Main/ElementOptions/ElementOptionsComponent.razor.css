@@ -1,59 +1,56 @@
-.element-options {
-    width: 100%;
-    min-height: 120px;
-    box-shadow: 0px 2px 4px rgb(0 0 0 / 12%);
-    border-radius: 20px;
+.element-help-menu {
+    height: 30px;
+    border: 1px solid #CED3E0;
     background: white;
-    overflow: hidden;
-
+    border-radius: 20px;
+    z-index: 10;
+    opacity: 0.2;
     display: flex;
-    flex-direction: column;
-    padding: 16px;
-    gap: 5px;
+    align-items: center;
+    gap: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
 }
     
-    .element-options > .line {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    element-help-menu:hover {
+        opacity: 1.0;
     }
     
-        .element-options > .line > .text {
-            width: 70px;
-            font-family: 'Nunito';
-            font-style: normal;
-            font-weight: 700;
-            font-size: 14px;
-            line-height: 25px;
-            color: #333842;
-            white-space: nowrap;
-        }
-
-        .element-options > .line > .value {
-            flex: 1 1;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            padding-left: 10px;
-            
-            font-family: 'Nunito';
-            font-style: normal;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 25px;
-            color: #333842;
-            white-space: nowrap;
+    .element-help-menu > .icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid rgba(3, 2, 41, 0.4);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        outline: none;
+        margin-left: 0.5px;
+    }
+    
+        .element-help-menu > .icon.rotate {
+            font-size: 16px;
+            margin-bottom: 1px;
+            margin-left: 1px;
         }
         
-        .element-options > .line > .input-wrapper {
-            flex: 1 1;
-            height: 34px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid #CED3E0;
-            box-sizing: border-box;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            margin-left: 10px;
+        .element-help-menu > .icon:hover {
+            transform: scale(1.05);
         }
+        
+        .element-help-menu > .icon > div {
+            font-family: 'Nunito';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            color: rgba(3, 2, 41, 0.4);
+        }
+
+    .element-help-menu > .separator {
+        height: 20px;
+        border-left: 1px solid rgba(3, 2, 41, 0.4);
+        /*margin-left: 4px;*/
+        /*margin-right: 4px;*/
+    }

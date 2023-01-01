@@ -1,86 +1,53 @@
 @using Circuits.ViewModels.Entities.Elements
-<div class="element-options">
-    <div class="line">
-        <div class="text noselectable-text">Number:</div>
-        <div class="input-wrapper">
-            <input type="number"
-                   placeholder="Type Number"
-                   @bind-value="SelectedElement!.Number"
-                   @bind-value:event="oninput"/>
-        </div>
+
+<div class="element-help-menu">
+
+    <div class="icon" @onclick="async () => { await OnRemoveElement.InvokeAsync(SelectedElement!); }">
+        <div class="noselectable-text">&#x2715;</div>
     </div>
 
-    @switch (SelectedElement)
+    <div class="icon rotate"
+         @onclick="async () => { await OnRotateElement.InvokeAsync(SelectedElement!); }">
+        <div class="noselectable-text">↺</div>
+    </div>
+
+    @if (SelectedElement is Transistor transistor)
     {
-        case Resistor resistor:
-            <div class="line">
-                <div class="text noselectable-text">Resistance:</div>
-                <div class="input-wrapper">
-                    <BCHNumberInput TValue="double"
-                                    @bind-Value="resistor.Resistance"/>
-                </div>
-            </div>
-            break;
-            
-        case Capacitor capacitor:
-            <div class="line">
-                <div class="text noselectable-text">Capacity:</div>
-                <div class="input-wrapper">
-                    <BCHNumberInput TValue="double"
-                                    @bind-Value="capacitor.Capacity"/>
-                </div>
-            </div>
-            break;
-            
-        case Inductor inductor:
-            <div class="line">
-                <div class="text noselectable-text">Inductance:</div>
-                <div class="input-wrapper">
-                    <BCHNumberInput TValue="double"
-                                    @bind-Value="inductor.Inductance"/>
-                </div>
-            </div>
-            break;
-            
-        case DCSource dcSource:
-            <div class="line">
-                <div class="text noselectable-text">Voltage:</div>
-                <div class="input-wrapper">
-                    <BCHNumberInput TValue="double"
-                                    @bind-Value="dcSource.Voltage"/>
-                </div>
-            </div>
-            break;
+        <div class="icon"
+             @onclick="async () => { await OnTransistorFlip.InvokeAsync(transistor); }">
+            <div class="noselectable-text">⇄</div>
+        </div>
     }
 
-    <div class="line">
-        <div class="text noselectable-text">Direction:</div>
-        <div class="value noselectable-text">@SelectedElement.Direction</div>
+    <div class="icon info" @onclick="async () => { await OnOpenElementOptions.InvokeAsync(); }">
+        <div class="noselectable-text">E</div>
     </div>
-</div>
 
-<style>
-    .element-options > .line > .input-wrapper > input {
-        font-family: Nunito;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 19px;
-        letter-spacing: 0.3428572118282318px;
-        color: #030229;
-        caret-color: #030229;
-        outline: none;
-        text-indent: 14px;
-                
-        flex: 1 1;
-        height: 18px;
-        background: transparent;
-        border: none;
-        margin: auto;
-        padding: 0;
+    <div class="separator"></div>
+
+    <div class="icon info" @onclick="async () => { OnShowCurrent(); await OnCloseSelected.InvokeAsync(); }">
+        <div class="noselectable-text">I</div>
+    </div>
+
+    @if (SelectedElement is not (Wire or Transistor))
+    {
+        <div class="icon info" @onclick="() => { }">
+            <div class="noselectable-text">V</div>
+        </div>
     }
-                
-    .element-options > .line > .input-wrapper > input::placeholder {
-        color: rgba(3, 2, 41, 0.4);
+
+    @if (SelectedElement is Capacitor)
+    {
+        <div class="icon info" @onclick="() => { }">
+            <div class="noselectable-text">Q</div>
+        </div>
     }
-</style>
+
+    @if (SelectedElement is Inductor)
+    {
+        <div class="icon info" @onclick="() => { }">
+            <div class="noselectable-text">Ψ</div>
+        </div>
+    }
+
+</div>

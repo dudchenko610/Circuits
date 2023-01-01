@@ -24,8 +24,10 @@ public class SolverService : ISolverService
         _dotNetRef = DotNetObjectReference.Create(this);
     }
     
-    public async Task RunAsync(EquationSystem equationSystem)
+    public async Task RunAsync(EquationSystem equationSystem, int iterationCount = 100, float dt = 0.001f)
     {
+        // validate parameters ?
+        
         if (!SolverState.TryGetValue(equationSystem, out var state))
         {
             state = new EquationSystemSolverState();
@@ -34,19 +36,26 @@ public class SolverService : ISolverService
             foreach (var variable in equationSystem.Variables)
             {
                 state.DataArrays.Add(variable, new List<float>());
+
+                if (variable is ExpressionDerivative derivative && 
+                    !state.DataArrays.ContainsKey(derivative.Variable) && 
+                    !equationSystem.Variables.Contains(derivative.Variable))
+                {
+                    state.DataArrays.Add(derivative.Variable, new List<float>());
+                }
             }
         }
 
         if (!(string.IsNullOrEmpty(state.Status) || state.Status == "Completed")) await StopAsync(equationSystem);
         
-        
-        var scriptJs = ScriptHelper.BuildCalculatingJs(equationSystem, 100, 0.001f);
+        var scriptJs = ScriptHelper.BuildCalculatingJs(equationSystem, iterationCount, dt);
         var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
 
         Console.WriteLine($"URL: {url}");
 
         state.ScriptUrl = url;
         state.Status = "Running";
+        state.DeltaTime = dt;
 
         foreach (var array in state.DataArrays)
         {
@@ -90,12 +99,17 @@ public class SolverService : ISolverService
         var (equationSystem, state) = SolverState.FirstOrDefault(x => x.Value.ScriptUrl == feedback.Url);
         if (state is null) throw new Exception("Solver state is broken");
 
-        Console.WriteLine("SolverUpdateCallback");
+        // Console.WriteLine("SolverUpdateCallback");
         
         for (var i = 0; i < equationSystem.Variables.Count; i ++)
         {
             var variable = equationSystem.Variables[i];
-            state.DataArrays[variable].AddRange(feedback.DataArrays[i]);
+            state.DataArrays[variable].AddRange(feedback.VarInfos[i].Array);
+
+            if (variable is ExpressionDerivative derivative && state.DataArrays.TryGetValue(derivative.Variable, out var integralArray))
+            {
+                integralArray.AddRange(feedback.VarInfos[i].IntegralArray);
+            }
         }
 
         state.Status = $"{state.DataArrays.FirstOrDefault().Value.Count} / {state.IterationCount}";

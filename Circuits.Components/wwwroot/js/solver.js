@@ -21,13 +21,13 @@ function startSolver(url, dotNetRef) {
                 break;
             }
             default: {
-                const feedbackData = e.data;
+                const feedbackData = e.data.reverse();
                 
-                // console.log('feedback-data', feedbackData);
+                // console.log('feedbackData', feedbackData);
                 
                 dotNetRef.invokeMethodAsync('SolverUpdateCallback', {
                     url: url,
-                    dataArrays: feedbackData.reverse()
+                    varInfos: feedbackData
                 }); // trigger feedback
                 
                 break;

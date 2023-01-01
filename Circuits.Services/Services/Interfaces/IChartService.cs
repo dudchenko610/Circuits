@@ -8,6 +8,6 @@ public interface IChartService
     Action? OnUpdate { get; set; }
     IReadOnlyList<ChartInfo> Charts { get; }
 
-    void Open(ExpressionVariable variable);
+    void Open(ExpressionVariable variable, string verticalLetter);
     void Close(ExpressionVariable variable);
 }

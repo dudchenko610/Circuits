@@ -73,10 +73,13 @@ public partial class VariableChartComponent : IAsyncDisposable
 
     private void Update(EquationSystem equationSystem, EquationSystemSolverState systemSolverState)
     {
-        if (!equationSystem.Variables.Contains(ChartInfo.Variable)) return;
+        if (equationSystem.Variables.Contains(ChartInfo.Variable) || 
+            equationSystem.Variables.OfType<ExpressionDerivative>().Any(x => x.Variable == ChartInfo.Variable))
+        {
+            StateHasChanged();
+        }
 
         // Console.WriteLine("Update(EquationSystem equationSystem, EquationSystemSolverState systemSolverState)");
-        StateHasChanged();
     }
 
     [JSInvokable]

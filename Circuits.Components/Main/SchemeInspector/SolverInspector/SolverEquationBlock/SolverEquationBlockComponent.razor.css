@@ -1,9 +1,10 @@
 .equation-system-container {
     width: 100%;
     height: fit-content;
-    padding: 10px;
+    padding: 10px 20px;
     display: flex;
     flex-direction: column;
+    gap: 5px;
 }
 
     .equation-system-container > .system-controls {
@@ -31,3 +32,47 @@
         font-weight: 400;
         line-height: 19px;
     }
+    
+    .equation-system-container > .line {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+        .equation-system-container > .line > .text {
+            font-family: 'Nunito';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+            color: #333842;
+            white-space: nowrap;
+        }
+        
+        /*.equation-system-container > .line > .value {*/
+        /*    flex: 1 1;*/
+        /*    height: 34px;*/
+        /*    display: flex;*/
+        /*    align-items: center;*/
+        /*    padding-left: 10px;*/
+        
+        /*    font-family: 'Nunito';*/
+        /*    font-style: normal;*/
+        /*    font-weight: 500;*/
+        /*    font-size: 14px;*/
+        /*    line-height: 25px;*/
+        /*    color: #333842;*/
+        /*    white-space: nowrap;*/
+        /*}*/
+        
+        .equation-system-container > .line > .input-wrapper {
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #CED3E0;
+            box-sizing: border-box;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }

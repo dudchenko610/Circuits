@@ -88,13 +88,13 @@ public static class ScriptHelper
         }
 
         jsScript += "const systemVars = [\n";
-
+        
         for (var v = systemVars.Count - 1; v > -1; v--)
         {
             jsScript +=
-                $"{{\n\tvariable: {jsVarMap[systemVars[v]]},\n\tfunc: getValOf_{jsVarMap[systemVars[v]]},\n\tarray: []\n}},\n";
+                $"{{\n\tvariable: {jsVarMap[systemVars[v]]},\n\tfunc: getValOf_{jsVarMap[systemVars[v]]},\n\tarray: [],\n\tintegralArray: []\n}},\n";
         }
-
+        
         jsScript = jsScript.Remove(jsScript.Length - 2, 2);
         jsScript += "]; \n\n";
 
@@ -103,7 +103,7 @@ const dt = {dt.ToString(_nF)};
 
 function sleep(ms) {{ return new Promise(resolve => setTimeout(resolve, ms)); }}
 
-async function testIntegration() {{
+async function runIntegration() {{
 
     for (var i = 0; i < {iterationNumber}; i++)
     {{
@@ -118,6 +118,7 @@ async function testIntegration() {{
             {{
                 const derivative = varInfo.variable;
                 const integralVariable = derivative.variable;
+                varInfo.integralArray.push(integralVariable.value);
                 integralVariable.value += derivative.value * dt;
             }}
         }});
@@ -125,20 +126,23 @@ async function testIntegration() {{
         // send each 10 value
         if ((i + 1) % 10 === 0) {{
             const feedbackData = systemVars.map(x => {{ 
-                return x.array.slice(-10);
+                return {{
+                    array: x.array.slice(-10),
+                    integralArray: x.integralArray.slice(-10)
+                }};
             }});
 
             self.postMessage(feedbackData);
         }}
 
-        await sleep(10);
+        await sleep(5);
     }}
 
     self.postMessage('completed');
 }}
 
 self.onmessage = async (e) => {{
-    await testIntegration();
+    await runIntegration();
 }}
         ";
 

@@ -16,7 +16,8 @@ public static class ExpressionHelper
 
     public static Expression Multiply(Expression ex1, Expression ex2, bool simplify = true)
     {
-        return Multiply(ex1, ex2, MathOperation.Multiply, simplify);
+        var result = Multiply(ex1, ex2, MathOperation.Multiply, simplify);
+        return TryToSimplifyMultipliers(result);
     }
     
     public static Expression Divide(Expression ex1, Expression ex2, bool simplify = true)
@@ -39,7 +40,7 @@ public static class ExpressionHelper
         
         if (ex1 is ExpressionValue { Value: 0 })
         {
-            return ex2;
+            return operation == MathOperation.Plus ? ex2 : -1 * ex2;
         }
         
         if (ex2 is ExpressionValue { Value: 0 })
@@ -49,7 +50,10 @@ public static class ExpressionHelper
         
         if (ex1 is ExpressionValue && ex2 is ExpressionValue)
         {
-            return new ExpressionValue(ex1.Value + ex2.Value);
+            return new ExpressionValue(
+                operation == MathOperation.Plus ? 
+                    (ex1.Value + ex2.Value) : 
+                    (ex1.Value - ex2.Value));
         }
         
         if (ex1 is ExpressionAdditions exAdd1 && ex2 is ExpressionAdditions exAdd2)
@@ -158,5 +162,29 @@ public static class ExpressionHelper
         multipliers.Nodes.Add(ex2);
 
         return multipliers;
+    }
+
+    private static Expression TryToSimplifyMultipliers(Expression expression)
+    {
+        if (expression is not ExpressionMultipliers expMult) return expression;
+        
+        var dividers = expMult.Multipliers.Where(x => x == MathOperation.Divide);
+        if (dividers.Any()) return expression;
+
+        var valueExpressions = expMult.Nodes.OfType<ExpressionValue>();
+        var res = valueExpressions.Aggregate(1.0, (current, valExp) => current * valExp.Value);
+        
+        expMult.Nodes.RemoveAll(x => x is ExpressionValue);
+        if (expMult.Nodes.Count == 0) return new ExpressionValue(res);
+        
+        expMult.Multipliers.Clear();
+        expMult.Nodes.Insert(0, new ExpressionValue(res));
+        
+        for (var i = 0; i < expMult.Nodes.Count - 1; i ++)
+        {
+            expMult.Multipliers.Add(MathOperation.Multiply);
+        }
+        
+        return expMult;
     }
 }

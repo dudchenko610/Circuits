@@ -11,7 +11,7 @@ namespace Circuits.Pages.Main;
 
 public partial class MainPage : IDisposable
 {
-    [Inject] private IElementService _schemeService { get; set; } = null!;
+    [Inject] private IElementService SchemeService { get; set; } = null!;
 
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
     private readonly NavigationPlaneContext _navPlaneContext = new();
@@ -176,9 +176,9 @@ public partial class MainPage : IDisposable
             }
         }
 
-        if (element != null! && !_schemeService.Intersects(element))
+        if (element != null! && !SchemeService.Intersects(element))
         {
-            _schemeService.Add(element);
+            SchemeService.Add(element);
             //_context.PencilMode = false;
         }
     }
@@ -200,16 +200,16 @@ public partial class MainPage : IDisposable
 
     private void RemoveElement(Element element)
     {
-        _schemeService.Remove(element);
+        SchemeService.Remove(element);
         StateHasChanged();
     }
 
     private void RotateElement(Element element)
     {
-        _schemeService.Remove(element);
+        SchemeService.Remove(element);
         element.Rotate((Direction) (((int) element.Direction + 1) % 4));
         
-        _schemeService.Add(element);
+        SchemeService.Add(element);
 
         StateHasChanged();
     }
@@ -217,6 +217,20 @@ public partial class MainPage : IDisposable
     private void OpenElementOptions()
     {
         _showElementOptions = true;
+        StateHasChanged();
+    }
+
+    private void FlipTransistor(Transistor transistor)
+    {
+        transistor.IsFlipped = !transistor.IsFlipped; 
+        StateHasChanged();
+    }
+
+    private void CloseSelected()
+    {
+        _selectedElement = null!;
+        _showElementOptions = false;
+        
         StateHasChanged();
     }
 }

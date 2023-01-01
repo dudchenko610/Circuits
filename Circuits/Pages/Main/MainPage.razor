@@ -5,7 +5,6 @@
     <div class="navigation">
 
         <div class="control-block right">
-
             @* <div @onclick="() => { OnPenClicked(6); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 6 ? "activated" : "")">Tₙₚₙ</div> *@
             @* <div @onclick="() => { OnPenClicked(5); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 5 ? "activated" : "")">Tₚₙₚ</div> *@
             <div @onclick="() => { OnPenClicked(4); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 4 ? "activated" : "")">DC</div>
@@ -52,6 +51,7 @@
                 OnFirstPointSet="OnFirstPointSet"
                 OnSecondPointSet="OnSecondPointSet"
                 SelectedPosChanged="OnSelectedPosChanged"
+                SelectedElement="_selectedElement"
                 SelectedElementChanged="OnSelectElement">
 
                 <ElementComponent Key="typeof(Wire)">
@@ -103,32 +103,12 @@
           CssClass="element-help-menu-modal"
           CloseOnOverflowClicked="true"
           Show="@(_selectedElement != null!)">
-
-    <div class="element-help-menu">
-
-        <div class="icon" @onclick="() => { RemoveElement(_selectedElement!); }">
-            <div class="noselectable-text">&#x2715;</div>
-        </div>
-
-        <div class="icon rotate"
-             @onclick="() => { RotateElement(_selectedElement!); }">
-            <div class="noselectable-text">↺</div>
-        </div>
-
-        @if (_selectedElement is Transistor transistor)
-        {
-            <div
-                class="icon"
-                @onclick="() => { transistor.IsFlipped = !transistor.IsFlipped; StateHasChanged(); }">
-                <div class="noselectable-text">⇄</div>
-            </div>
-        }
-
-        <div class="icon info" @onclick="OpenElementOptions">
-            <div class="noselectable-text">i</div>
-        </div>
-    </div>
-
+    <ElementOptionsComponent SelectedElement="_selectedElement"
+                             OnRemoveElement="RemoveElement"
+                             OnRotateElement="RotateElement"
+                             OnOpenElementOptions="OpenElementOptions"
+                             OnTransistorFlip="FlipTransistor"
+                             OnCloseSelected="CloseSelected"/>
 </BCHModal>
 
 <BCHModal Width="350px"
@@ -138,7 +118,7 @@
           CssClass="element-options-modal"
           CloseOnOverflowClicked="true"
           @bind-Show="_showElementOptions">
-    <ElementOptionsComponent SelectedElement="_selectedElement"/>
+    <ElementEditComponent SelectedElement="_selectedElement"/>
 </BCHModal>
 
 <ChartRendererComponent/>

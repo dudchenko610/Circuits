@@ -9,14 +9,14 @@ namespace Circuits.Components.Main.SchemeRenderer.ElementDetails;
 
 public partial class ElementDetailsComponent : IDisposable
 {
-    struct CircuitDirection
+    private struct CircuitDirection
     {
         public Circuit Circuit { get; set; }
         public bool Reversed { get; set; }
     };
     
-    [Inject] private IHighlightService _highlightService { get; set; } = null!;
-    [Inject] private ISchemeService _schemeService { get; set; } = null!;
+    [Inject] private IHighlightService HighlightService { get; set; } = null!;
+    [Inject] private ISchemeService SchemeService { get; set; } = null!;
     [Parameter] public Element Element { get; set; } = null!;
 
     private readonly List<CircuitDirection> _circuitDirections = new();
@@ -24,12 +24,12 @@ public partial class ElementDetailsComponent : IDisposable
 
     protected override void OnInitialized()
     {
-        _highlightService.OnElementDetailsUpdate += OnDetailsUpdate;
+        HighlightService.OnElementDetailsUpdate += OnDetailsUpdate;
     }
     
     public void Dispose()
     {
-        _highlightService.OnElementDetailsUpdate -= OnDetailsUpdate;
+        HighlightService.OnElementDetailsUpdate -= OnDetailsUpdate;
     }
 
     private void OnDetailsUpdate(Element element, ElementDetailsModel model)
@@ -45,10 +45,10 @@ public partial class ElementDetailsComponent : IDisposable
 
         if (element != Element) return;
 
-        if (model.Circuit == null!)
+        if (model.Circuit == null!) // show / hide branch direction
         {
             _showBranchDirection = model.ShowDirection 
-                ? GraphHelpers.IsCoDirected(_schemeService.Nodes, model.Branch, element)
+                ? GraphHelpers.IsCoDirected(SchemeService.Nodes, model.Branch, element)
                 : null;
             
             StateHasChanged();
@@ -57,10 +57,10 @@ public partial class ElementDetailsComponent : IDisposable
 
         if (model.ShowDirection)
         {
-            var elementBranchCoDirected = GraphHelpers.IsCoDirected(_schemeService.Nodes, model.Branch, element);
+            var elementBranchCoDirected = GraphHelpers.IsCoDirected(SchemeService.Nodes, model.Branch, element);
             var reversed = !elementBranchCoDirected;
 
-            if (!model.CircuitBranchCoDirected) reversed = !reversed;
+            if (model.CircuitBranchCoDirected) reversed = !reversed;
             
             _circuitDirections.Add(new CircuitDirection
             {

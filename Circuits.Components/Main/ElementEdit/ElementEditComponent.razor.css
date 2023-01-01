@@ -1,0 +1,59 @@
+.element-options {
+    width: 100%;
+    min-height: 120px;
+    box-shadow: 0px 2px 4px rgb(0 0 0 / 12%);
+    border-radius: 20px;
+    background: white;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 5px;
+}
+    
+    .element-options > .line {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+        
+        .element-options > .line > .text {
+            width: 70px;
+            font-family: 'Nunito';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 25px;
+            color: #333842;
+            white-space: nowrap;
+        }
+        
+        .element-options > .line > .value {
+            flex: 1 1;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+        
+            font-family: 'Nunito';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 25px;
+            color: #333842;
+            white-space: nowrap;
+        }
+        
+        .element-options > .line > .input-wrapper {
+            flex: 1 1;
+            height: 34px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #CED3E0;
+            box-sizing: border-box;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }

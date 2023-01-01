@@ -21,22 +21,27 @@ public class ChartService : IChartService
         Charts = _charts;
     }
 
-    public void Open(ExpressionVariable variable)
+    public void Open(ExpressionVariable variable, string verticalLetter)
     {
         var info = Charts.FirstOrDefault(x => x.Variable == variable);
         if (info != null) return;
 
         var equationSystem = _schemeService.EquationSystems
-            .FirstOrDefault(x => x.Variables.Contains(variable));
+            .FirstOrDefault(
+                x => x.Variables.Contains(variable) || 
+                x.Variables.OfType<ExpressionDerivative>().Any(d => d.Variable == variable)); 
+        // it is not recursive, but should be okay with 2nd order max depth
+        
         if (equationSystem == null) return;
 
         if (!_solverService.SolverState.TryGetValue(equationSystem, out var solverState)) return;
 
-        var chartInfo = new ChartInfo()
+        var chartInfo = new ChartInfo
         {
             Variable = variable,
             EquationSystem = equationSystem,
-            SolverState = solverState
+            SolverState = solverState,
+            VerticalLetter = verticalLetter
         };
 
         _charts.Add(chartInfo);
@@ -46,8 +51,6 @@ public class ChartService : IChartService
     public void Close(ExpressionVariable variable)
     {
         var chartInfo = Charts.FirstOrDefault(x => x.Variable == variable);
-        
-        Console.WriteLine($"Close index = {_charts.IndexOf(chartInfo!)}");
         
         if (chartInfo != null && !_charts.Remove(chartInfo)) return;
         OnUpdate?.Invoke();
