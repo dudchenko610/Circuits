@@ -33,15 +33,6 @@
                 margin-right: 15px;
                 border: 1px solid #B3BBC5;
             }
-        
-        .solver-inspector > .scroller .circuits {
-            width: 100%;
-            margin-top: 5px;
-            padding: 10px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
 
 .solver-inspector .btn {
     padding: 5px 6px;

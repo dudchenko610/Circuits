@@ -1,5 +1,6 @@
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
+using Circuits.ViewModels.Entities.Equations;
 using Circuits.ViewModels.Entities.Structures;
 using Microsoft.AspNetCore.Components;
 
@@ -23,6 +24,24 @@ public partial class ElementOptionsComponent
         foreach (var graph in SchemeService.Graphs) branches.AddRange(graph.Circuits.SelectMany(circuits => circuits.Branches));
 
         var branch = branches.FirstOrDefault(x => x.Elements.Contains(SelectedElement));
-        if (branch?.Current is not null) ChartService.Open(branch.Current, "A"); // Amperes
+        if (branch == null!) return;
+
+        var equationSystem = SchemeService.EquationSystems
+            .FirstOrDefault(x => x.Variables.Any(v => v == branch.Current ||
+                                             v == branch.CurrentDerivative ||
+                                             v == branch.CapacityVoltage ||
+                                             v == branch.CapacityVoltageFirstDerivative));
+        if (equationSystem == null!) return;
+        var matVars = (List<ExpressionVariable>) equationSystem.Variables;
+        var capacitySecondDerIndex = matVars.IndexOf(branch.CapacityVoltageSecondDerivative);
+
+        if (capacitySecondDerIndex != -1) // RLC case
+        {
+            var branchCapacity = (float) branch.Capacity.Value;
+            ChartService.Open(branch.CapacityVoltageFirstDerivative, "A", x => branchCapacity * x); // Amperes
+            return;
+        }
+        
+        ChartService.Open(branch.Current, "A"); // Amperes
     }
 }

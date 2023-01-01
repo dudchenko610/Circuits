@@ -59,8 +59,8 @@
 
             @for (var i = graphStartIndex; i < graphEndIndex; i++)
             {
-                var curr = DataArray[i + 0];
-                var next = DataArray[i + 1];
+                var curr = FuncModifier.Invoke(DataArray[i + 0]);
+                var next = FuncModifier.Invoke(DataArray[i + 1]);
 
                 var currVal = median - CellHeight * curr / CellYValues;
                 var nextVal = median - CellHeight * next / CellYValues;

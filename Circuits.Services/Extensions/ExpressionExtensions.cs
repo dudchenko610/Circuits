@@ -17,7 +17,10 @@ public static class ExpressionExtensions
     {
         if (expression is ExpressionValue)
         {
-            return expression.Value < 0 ? string.Format(Nf, "({0:N})", expression.Value) : string.Format(Nf, "{0:N}", expression.Value);
+            var res = string.Format(Nf, "{0:N}", expression.Value).TrimEnd('0');
+            if (res.EndsWith(".")) res += "0";
+            
+            return expression.Value < 0 ? $"({res})" : res;
         }
         
         if (expression is ExpressionVariable expVar)

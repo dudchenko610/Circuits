@@ -1,3 +1,5 @@
+using Circuits.ViewModels.Entities.Structures;
+
 namespace Circuits.ViewModels.Entities.Equations;
 
 public class EquationSystem

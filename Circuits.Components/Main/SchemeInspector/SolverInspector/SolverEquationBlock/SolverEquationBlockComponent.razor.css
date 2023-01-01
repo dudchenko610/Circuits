@@ -33,14 +33,14 @@
         line-height: 19px;
     }
     
-    .equation-system-container > .line {
+    .equation-system-container > .control-block > .left > .line {
         width: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
     
-        .equation-system-container > .line > .text {
+        .equation-system-container > .control-block > .left > .line > .text {
             font-family: 'Nunito';
             font-style: normal;
             font-weight: 400;
@@ -66,7 +66,7 @@
         /*    white-space: nowrap;*/
         /*}*/
         
-        .equation-system-container > .line > .input-wrapper {
+        .equation-system-container > .control-block > .left > .line > .input-wrapper {
             height: 24px;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid #CED3E0;
@@ -76,3 +76,22 @@
             align-items: center;
             margin-left: 10px;
         }
+
+.equation-system-container > .control-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+    .equation-system-container > .control-block > .left {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        min-width: 224px;
+        gap: 2px;
+    }
+
+    .equation-system-container > .control-block > .right {
+        display: flex;
+    }

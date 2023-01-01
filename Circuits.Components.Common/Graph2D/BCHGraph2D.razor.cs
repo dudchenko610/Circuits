@@ -24,6 +24,7 @@ public partial class BCHGraph2D : IDisposable
     [Parameter] public IList<float> DataArray { get; set; } = Array.Empty<float>();
     [Parameter] public Func<int, string> XLabel { get; set; } = (val) => $"{val}";
     [Parameter] public Func<int, string> YLabel { get; set; } = (val) => $"{val}";
+    [Parameter] public Func<float, float> FuncModifier { get; set; } = x => x;
 
     private readonly string _containerId = $"_id_{Guid.NewGuid()}";
     private readonly NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
@@ -55,7 +56,7 @@ public partial class BCHGraph2D : IDisposable
         // analyze data
         foreach (var value in DataArray)
         {
-            var abs = Math.Abs(value);
+            var abs = Math.Abs(FuncModifier.Invoke(value));
             if (abs > _maxValue) _maxValue = (float) abs;
         }
     }

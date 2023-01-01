@@ -38,16 +38,16 @@ public class ElectricalSystemService : IElectricalSystemService
 
         foreach (var graph in graphs)
         {
-            Console.WriteLine("1. Detect variables ");
+            // Console.WriteLine("1. Detect variables ");
             /* 1. Detect variables */
             var eqSys = AddVariablesToSystemFromGraph(graph);
 
-            Console.WriteLine("2. Fill equations by nodes");
+            // Console.WriteLine("2. Fill equations by nodes");
             /* 2. Fill equations by nodes */
             var equationCount = FillEquationsFromNodes(graph, eqSys);
 
             /* 2. Fill equations by circuits */
-            Console.WriteLine($"nodeEquationCount = {equationCount}, circuits = {graph.Circuits.Count}");
+            // Console.WriteLine($"nodeEquationCount = {equationCount}, circuits = {graph.Circuits.Count}");
 
             // equationCount--;
 
@@ -58,7 +58,7 @@ public class ElectricalSystemService : IElectricalSystemService
                 var matVars = (List<ExpressionVariable>)eqSys.Variables;
                 var equationNumber = equationCount++;
                 
-                Console.WriteLine($"equationNumber = {equationNumber}");
+                // Console.WriteLine($"equationNumber = {equationNumber}");
                 
                 for (var j = 0; j < eqSys.Matrix[equationNumber].Length; j++)
                 {
@@ -74,7 +74,7 @@ public class ElectricalSystemService : IElectricalSystemService
                         eqSys.Matrix[equationNumber][eqSys.Matrix.Length] += (isCoDirected ? 1 : -1) * dcVar;
                     }
                     
-                    Console.WriteLine($"branch {branch.Current.GetLabel()}");
+                    // Console.WriteLine($"branch {branch.Current.GetLabel()}");
                     
                     var currentIndex = matVars.IndexOf(branch.Current);
                     var currentDerIndex = matVars.IndexOf(branch.CurrentDerivative);
@@ -83,15 +83,16 @@ public class ElectricalSystemService : IElectricalSystemService
                 
                     if (capacitySecondDerIndex != -1) // R-L-C case
                     {
-                        Console.WriteLine("R-L-C");
+                        // Console.WriteLine("R-L-C");
                         // 1. set LC value for second order derivative
-                        eqSys.Matrix[equationNumber][capacitySecondDerIndex] = new ExpressionValue(branch.Inductance.Value * branch.Capacity.Value);
+                        eqSys.Matrix[equationNumber][capacitySecondDerIndex] = new ExpressionValue((isCoDirected ? 1 : -1) * branch.Inductance.Value * branch.Capacity.Value); // LC
                         
                         // 2. set RC value for first order derivative
-                        eqSys.Matrix[equationNumber][capacityFirstDerIndex] = new ExpressionValue(branch.Resistance.Value * branch.Capacity.Value);
+                        eqSys.Matrix[equationNumber][capacityFirstDerIndex] = new ExpressionValue((isCoDirected ? 1 : -1) * branch.Resistance.Value * branch.Capacity.Value); // RC
                         
                         // 3. subtract Uc value from last matrix column
-                        eqSys.Matrix[equationNumber][eqSys.Matrix.Length] -= branch.CapacityVoltage;
+                        if (isCoDirected) eqSys.Matrix[equationNumber][eqSys.Matrix.Length] -= branch.CapacityVoltage;
+                        else eqSys.Matrix[equationNumber][eqSys.Matrix.Length] += branch.CapacityVoltage;
                         
                         // 4. Fill next equation as we decompose second order derivative
 
@@ -113,7 +114,7 @@ public class ElectricalSystemService : IElectricalSystemService
                     } 
                     else if (capacityFirstDerIndex != -1) // R-C case
                     {
-                        Console.WriteLine("R-C");
+                        // Console.WriteLine("R-C");
                         // if resistance is null, then show notification about scheme is incomplete
                         // Console.WriteLine($"111 {branch.Resistance == null} {branch.Capacity == null}");
                         
@@ -135,14 +136,14 @@ public class ElectricalSystemService : IElectricalSystemService
                             }
 
                             eqSys.Matrix[equationNumber][currentIndex] = new ExpressionValue(1.0f);
-                            eqSys.Matrix[equationNumber][capacityFirstDerIndex] = new ExpressionValue(-branch.Capacity.Value); // maybe plus (minus was wrong but hz) (seems like - should be here)
+                            eqSys.Matrix[equationNumber][capacityFirstDerIndex] = new ExpressionValue(-branch.Capacity.Value); // maybe plus (minus was wrong but hz) (seems like "-" should be here)
 
                             usedVariables.Add(branch.Current);
                         }
                     }
                     else if (currentDerIndex != -1) // R-L case
                     {
-                        Console.WriteLine("R-L");
+                        // Console.WriteLine("R-L");
                         // 1. set L value for current derivative
                         eqSys.Matrix[equationNumber][currentDerIndex] = new ExpressionValue((isCoDirected ? 1 : -1) * branch.Inductance.Value);
                         
@@ -154,7 +155,7 @@ public class ElectricalSystemService : IElectricalSystemService
                     }
                     else if (currentIndex != -1) // R case
                     {
-                        Console.WriteLine($"R, resistance =  {branch.Resistance.Value}");
+                        // Console.WriteLine($"R");
                         eqSys.Matrix[equationNumber][currentIndex] = new ExpressionValue((isCoDirected ? 1 : -1) * branch.Resistance.Value);
                     }
                     
@@ -173,7 +174,6 @@ public class ElectricalSystemService : IElectricalSystemService
     private static EquationSystem AddVariablesToSystemFromGraph(Graph graph)
     {
         var variables = new List<ExpressionVariable>();
-        
         var graphBranches = graph.Circuits.SelectMany(circuit => circuit.Branches).ToList();
 
         foreach (var circuit in graph.Circuits)
@@ -268,7 +268,6 @@ public class ElectricalSystemService : IElectricalSystemService
         }
 
         variables = variables.OrderBy(x => x.GetType() == typeof(ExpressionDerivative)).ToList();
-        
         var eqSys = new EquationSystem(variables.ToArray());
 
         return eqSys;
@@ -293,8 +292,8 @@ public class ElectricalSystemService : IElectricalSystemService
             
         /* 2.1. Currents in nodes */
             
-        Console.WriteLine($"FillEquationsFromNodes graph.Circuits.Count {graph.Circuits.Count}");
-        Console.WriteLine($"FillEquationsFromNodes nodesList.Count {nodesList.Count}");
+        // Console.WriteLine($"FillEquationsFromNodes graph.Circuits.Count {graph.Circuits.Count}");
+        // Console.WriteLine($"FillEquationsFromNodes nodesList.Count {nodesList.Count}");
         
         // MAYBE EXCLUSION LOGIC SHOULD BE ADDED
         for (var i = 0; i < nodesList.Count - 1; i ++)
@@ -302,7 +301,7 @@ public class ElectricalSystemService : IElectricalSystemService
             var node = nodesList[i];
             var equationNumber = equationCount++;
             
-            Console.WriteLine($"FillEquationsFromNodes {equationNumber}");
+            // Console.WriteLine($"FillEquationsFromNodes {equationNumber}");
             
             // fill equation with zeros
             for (var j = 0; j < mat.Length + 1; j++)

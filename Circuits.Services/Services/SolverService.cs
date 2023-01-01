@@ -123,7 +123,7 @@ public class SolverService : ISolverService
         var (equationSystem, state) = SolverState.FirstOrDefault(x => x.Value.ScriptUrl == url);
         if (state is null) throw new Exception("Solver state is broken");
         
-        Console.WriteLine("SolverCompletedCallback");
+        // Console.WriteLine("SolverCompletedCallback");
         
         state.Status = "Completed";
         OnUpdate?.Invoke(equationSystem, state);

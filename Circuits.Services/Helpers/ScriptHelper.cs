@@ -189,7 +189,7 @@ self.onmessage = async (e) => {{
 
             expression = ExpressionHelper.Divide(expression, equationSystem.Matrix[v][v]);
 
-            Console.WriteLine($"VAR: {vr.GetLabel()}: {expression.GetLabel()}");
+            // Console.WriteLine($"VAR: {vr.GetLabel()}: {expression.GetLabel()}");
 
             calculationEquations.Insert(0, expression);
         }

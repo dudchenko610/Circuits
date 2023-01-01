@@ -1,21 +1,33 @@
+@using Circuits.ViewModels.Entities.Equations
+@{
+    var graph = SchemeService.Graphs[((List<EquationSystem>)SchemeService.EquationSystems).IndexOf(EquationSystem)];
+}
+
 <div class="equation-system-container">
+    <div class="control-block">
+        <div class="left">
+            <div class="line">
+                <div class="text noselectable-text">DeltaTime:</div>
+                <div class="input-wrapper">
+                    <BCHNumberInput TValue="float" @bind-Value="_dt"/>
+                </div>
+            </div>
 
-    <div class="line">
-        <div class="text noselectable-text">DeltaTime:</div>
-        <div class="input-wrapper">
-            <BCHNumberInput TValue="float" @bind-Value="_dt"/>
+            <div class="line">
+                <div class="text noselectable-text">Iteration Number:</div>
+                <div class="input-wrapper">
+                    <input type="number"
+                           placeholder="Type Number"
+                           @bind-value="_iterationCount"
+                           @bind-value:event="oninput"/>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            @GraphDetailsTemplate(graph)
         </div>
     </div>
 
-    <div class="line">
-        <div class="text noselectable-text">Iteration Number:</div>
-        <div class="input-wrapper">
-            <input type="number"
-                   placeholder="Type Number"
-                   @bind-value="_iterationCount"
-                   @bind-value:event="oninput"/>
-        </div>
-    </div>
 
     @if (SolverService.SolverState.TryGetValue(EquationSystem, out var state))
     {
@@ -57,7 +69,7 @@
 </div>
 
 <style>
-    .equation-system-container > .line > .input-wrapper > input {
+    .equation-system-container > .control-block > .left > .line > .input-wrapper > input {
         font-family: Nunito;
         font-size: 10px;
         font-style: normal;
@@ -77,7 +89,7 @@
         padding: 0;
     }
                 
-    .equation-system-container > .line > .input-wrapper > input::placeholder {
+    .equation-system-container > .control-block > .left > .line > .input-wrapper > input::placeholder {
         color: rgba(3, 2, 41, 0.4);
     }
 </style>
