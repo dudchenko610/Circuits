@@ -23,7 +23,7 @@ function startSolver(url, dotNetRef) {
             default: {
                 const feedbackData = e.data.reverse();
                 
-                // console.log('feedbackData', feedbackData);
+                console.log('feedbackData', feedbackData);
                 
                 dotNetRef.invokeMethodAsync('SolverUpdateCallback', {
                     url: url,

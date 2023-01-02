@@ -13,12 +13,17 @@ public static class ExpressionExtensions
         NumberDecimalDigits = 4
     };
     
-    public static string GetLabel(this Expression expression, Func<ExpressionVariable, string> namePredicate = null!)
+    private static readonly NumberFormatInfo NfWithoutSimplification = new() { NumberDecimalSeparator = "." };
+    
+    public static string GetLabel(this Expression expression, Func<ExpressionVariable, string> namePredicate = null!, bool simplifyValues = true)
     {
         if (expression is ExpressionValue)
         {
+            if (!simplifyValues) return expression.Value.ToString(NfWithoutSimplification);
+            
             var res = string.Format(Nf, "{0:N}", expression.Value).TrimEnd('0');
             if (res.EndsWith(".")) res += "0";
+            if (string.IsNullOrEmpty(res)) res = "0.0";
             
             return expression.Value < 0 ? $"({res})" : res;
         }

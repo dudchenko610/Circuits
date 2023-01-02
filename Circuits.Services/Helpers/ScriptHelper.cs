@@ -7,7 +7,7 @@ namespace Circuits.Services.Helpers;
 
 public static class ScriptHelper
 {
-    private static NumberFormatInfo _nF = new() { NumberDecimalSeparator = "." };
+    private static readonly NumberFormatInfo Nf = new() { NumberDecimalSeparator = "." };
 
     private static int GetVariableOrder(Expression expression)
     {
@@ -82,8 +82,9 @@ public static class ScriptHelper
 
             expression = ExpressionHelper.Divide(expression, equationSystem.Matrix[v][v]);
 
-            jsScript += $"function getValOf_{vr.GetLabel(x => jsVarMap[x])}() {{\n";
-            jsScript += $"\treturn {expression.GetLabel(x => $"{jsVarMap[x]}.value")};";
+            jsScript += $"// {vr.GetLabel()}\n";
+            jsScript += $"function getValOf_{vr.GetLabel(x => jsVarMap[x], false)}() {{\n";
+            jsScript += $"\treturn {expression.GetLabel(x => $"{jsVarMap[x]}.value", false)};";
             jsScript += "\n}\n\n";
         }
 
@@ -99,7 +100,7 @@ public static class ScriptHelper
         jsScript += "]; \n\n";
 
         jsScript += $@"
-const dt = {dt.ToString(_nF)};
+const dt = {dt.ToString(Nf)};
 
 function sleep(ms) {{ return new Promise(resolve => setTimeout(resolve, ms)); }}
 

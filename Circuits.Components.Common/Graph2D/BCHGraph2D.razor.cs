@@ -42,6 +42,8 @@ public partial class BCHGraph2D : IDisposable
         _zoomContext.OnUpdate += OnZoomUpdate;
         // gen data
 
+        // Console.WriteLine($"OnInitialized, count =  {DataArray.Count}");
+        
         // const int count = (int) (Math.PI * 18 / 0.1f);
         // var arr = new double[count];
         // DataArray = arr;
@@ -56,6 +58,8 @@ public partial class BCHGraph2D : IDisposable
         // analyze data
         foreach (var value in DataArray)
         {
+            // Console.WriteLine($"value = {FuncModifier.Invoke(value)}");
+            
             var abs = Math.Abs(FuncModifier.Invoke(value));
             if (abs > _maxValue) _maxValue = (float) abs;
         }

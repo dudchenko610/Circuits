@@ -31,7 +31,7 @@
 
     @if (SelectedElement is not (Wire or Transistor))
     {
-        <div class="icon info" @onclick="() => { }">
+        <div class="icon info" @onclick="async () => { OnShowVoltage(); await OnCloseSelected.InvokeAsync(); }">
             <div class="noselectable-text">V</div>
         </div>
     }

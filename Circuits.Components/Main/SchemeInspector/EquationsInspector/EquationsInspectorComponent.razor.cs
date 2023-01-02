@@ -72,7 +72,8 @@ public partial class EquationsInspectorComponent
     {
         foreach (var equationSystem in SchemeService.EquationSystems)
         {
-            EquationSystemService.PerformGaussianElimination(equationSystem);
+            var result = EquationSystemService.PerformGaussianElimination(equationSystem);
+            Console.WriteLine($"GaussianElimination, {result}");
         }
         
         // _eliminationStatus = _equationSystemService.PerformKirchhoffElimination(_equationSystem);

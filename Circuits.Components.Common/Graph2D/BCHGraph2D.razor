@@ -57,17 +57,20 @@
 
             <line x1="0" y1="50%" x2="100%" y2="50%" class="axis-line"/>
 
-            @for (var i = graphStartIndex; i < graphEndIndex; i++)
+            @for (var j = graphStartIndex; j < graphEndIndex; j++)
             {
+                var i = j;
                 var curr = FuncModifier.Invoke(DataArray[i + 0]);
                 var next = FuncModifier.Invoke(DataArray[i + 1]);
 
                 var currVal = median - CellHeight * curr / CellYValues;
                 var nextVal = median - CellHeight * next / CellYValues;
+                
+                // Console.WriteLine($"curr = {curr}, currVal = {currVal}");
 
                 if ((currVal < y0 && nextVal < y0) || (currVal > y1 && nextVal > y1)) continue;
 
-                <line x1="@((i * xRatio).ToString(_nF))"
+                <line @key="@($"graph-line-{i}")" x1="@((i * xRatio).ToString(_nF))"
                       y1="@(currVal.ToString(_nF))"
                       x2="@(((i + 1) * xRatio).ToString(_nF))"
                       y2="@(nextVal.ToString(_nF))"

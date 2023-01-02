@@ -17,6 +17,11 @@ public class EquationSystem
         for (var i = 0; i < variables.Length; i ++)
         {
             Matrix[i] = new Expression[variables.Length + 1];
+
+            for (var j = 0; j < variables.Length + 1; j ++)
+            {
+                Matrix[i][j] = new ExpressionValue();
+            }
         }
     }
 }

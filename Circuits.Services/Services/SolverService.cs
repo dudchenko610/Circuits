@@ -106,7 +106,9 @@ public class SolverService : ISolverService
             var variable = equationSystem.Variables[i];
             state.DataArrays[variable].AddRange(feedback.VarInfos[i].Array);
 
-            if (variable is ExpressionDerivative derivative && state.DataArrays.TryGetValue(derivative.Variable, out var integralArray))
+            if (variable is ExpressionDerivative derivative && 
+                !equationSystem.Variables.Contains(derivative.Variable) &&
+                state.DataArrays.TryGetValue(derivative.Variable, out var integralArray))
             {
                 integralArray.AddRange(feedback.VarInfos[i].IntegralArray);
             }

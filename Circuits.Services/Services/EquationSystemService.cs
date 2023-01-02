@@ -28,12 +28,12 @@ public class EquationSystemService : IEquationSystemService
                 /* If a principal diagonal element  is zero,
                 *  it denotes that matrix is singular, and
                 *  will lead to a division-by-zero later. */
-                if (mat[iMax][k] is ExpressionValue { Value: 0 })
-                {
-                    return mat[k][matrixLength] is ExpressionValue { Value: 0 }
-                        ? "May have infinitely many solutions"
-                        : "Inconsistent System";
-                }
+                // if (mat[iMax][k] is ExpressionValue { Value: 0 })
+                // {
+                //     return mat[k][matrixLength] is ExpressionValue { Value: 0 }
+                //         ? "May have infinitely many solutions"
+                //         : "Inconsistent System";
+                // }
             }
 
             /* Swap the greatest value row with
