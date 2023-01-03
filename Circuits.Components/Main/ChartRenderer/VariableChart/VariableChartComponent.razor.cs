@@ -3,8 +3,10 @@ using Circuits.Components.Common.Modal;
 using Circuits.Components.Common.Models.Zoom;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Charts;
+using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Entities.Equations;
 using Circuits.ViewModels.Entities.Solver;
+using Circuits.ViewModels.Entities.Structures;
 using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Microsoft.AspNetCore.Components;
@@ -19,6 +21,7 @@ public partial class VariableChartComponent : IAsyncDisposable
 
     [Inject] public ISolverService SolverService { get; set; } = null!;
     [Inject] public IChartService ChartService { get; set; } = null!;
+    [Inject] public ISchemeService SchemeService { get; set; } = null!;
     [Inject] public IJSRuntime JsRuntime { get; set; } = null!;
     [Parameter] public ChartInfo ChartInfo { get; set; } = null!;
 
@@ -123,5 +126,28 @@ public partial class VariableChartComponent : IAsyncDisposable
     {
         _dragStarted = false;
         StateHasChanged();
+    }
+
+    private string GetInfoLabel()
+    {
+        if (ChartInfo.Key is Branch branch)
+        {
+            var graph = SchemeService.Graphs.FirstOrDefault(g =>
+                g.Circuits.FirstOrDefault(c => c.Branches.Contains(branch)) != null);
+            
+            if (graph == null!) return string.Empty;
+            var branches = graph.Circuits.SelectMany(x => x.Branches).ToList();
+            var index = branches.IndexOf(branch);
+            
+            return $"Current i<i>{index}</i>";
+        }
+
+        return ChartInfo.Key switch
+        {
+            Capacitor capacitor => $"Capacitor C<i>{capacitor.Number}</i>",
+            Inductor inductor => $"Inductor L<i>{inductor.Number}</i>",
+            Resistor resistor => $"Resistor R<i>{resistor.Number}</i>",
+            _ => ""
+        };
     }
 }

@@ -12,6 +12,7 @@
         height: 30px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: 5px;
     }
 
@@ -21,6 +22,14 @@
             border-radius: 13px;
             background: #f5645a;
             cursor: pointer;
+        }
+
+        .chart-wrapper > .control-panel > .info {
+            font-family: Nunito;
+            font-weight: 400;
+            font-size: 12px;
+            text-align: center;
+            white-space: nowrap;
         }
 
     .chart-wrapper > .graph-wrapper {

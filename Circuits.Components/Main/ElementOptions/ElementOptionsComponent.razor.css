@@ -10,9 +10,10 @@
     gap: 6px;
     padding-left: 6px;
     padding-right: 6px;
+    transition: opacity 0.1s ease;
 }
     
-    element-help-menu:hover {
+    .element-help-menu:hover {
         opacity: 1.0;
     }
     

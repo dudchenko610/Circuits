@@ -21,9 +21,9 @@ public class ChartService : IChartService
         Charts = _charts;
     }
 
-    public void Open(ExpressionVariable variable, string verticalLetter, Func<float, float>? funcModifier = null!)
+    public void Open(object key, ExpressionVariable variable, string verticalLetter, Func<float, float>? funcModifier = null!)
     {
-        var info = Charts.FirstOrDefault(x => x.Variable == variable);
+        var info = Charts.FirstOrDefault(x => x.Key == key && x.VerticalLetter == verticalLetter);
         if (info != null) return;
 
         var equationSystem = _schemeService.EquationSystems
@@ -38,6 +38,7 @@ public class ChartService : IChartService
 
         var chartInfo = new ChartInfo
         {
+            Key = key,
             Variable = variable,
             EquationSystem = equationSystem,
             SolverState = solverState,

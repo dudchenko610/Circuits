@@ -64,11 +64,11 @@ public partial class ElementOptionsComponent
         if (branchType == BranchType.RLC)
         {
             var totalCapacity = (float)branch.Capacity.Value;
-            ChartService.Open(branch.CapacityVoltageFirstDerivative, "A", x => totalCapacity * x); // Amperes
+            ChartService.Open(branch, branch.CapacityVoltageFirstDerivative, "A", x => totalCapacity * x); // Amperes
             return;
         }
 
-        ChartService.Open(branch.Current, "A"); // Amperes
+        ChartService.Open(branch, branch.Current, "A"); // Amperes
     }
 
     private void OnShowVoltage()
@@ -85,19 +85,19 @@ public partial class ElementOptionsComponent
                         var resistance = (float) resistor.Resistance;
                         var rc = resistance * totalCapacity; // R(ith) * C
                         
-                        ChartService.Open(branch.CapacityVoltageFirstDerivative, "V", x => rc * x);
+                        ChartService.Open(SelectedElement, branch.CapacityVoltageFirstDerivative, "V", x => rc * x);
                         break;
                     case Capacitor capacitor:
                         // заряд послідовно з'єднаних конденсаторів одинаковий і дорівнює заряду всієї батареї
                         var totalCapacityDivideByIth = (float) (capacitor.Capacity / totalCapacity);
-                        ChartService.Open(branch.CapacityVoltage, "V", x => totalCapacityDivideByIth * x);
+                        ChartService.Open(SelectedElement, branch.CapacityVoltage, "V", x => totalCapacityDivideByIth * x);
                         break;
                     case Inductor inductor:
                         // (d^2Uc/dt^2) * C = dI/dt
                         var inductance = (float) inductor.Inductance;
                         var lc = inductance * totalCapacity; // L(ith) * C
                         
-                        ChartService.Open(branch.CapacityVoltageSecondDerivative, "V", x => lc * x);
+                        ChartService.Open(SelectedElement, branch.CapacityVoltageSecondDerivative, "V", x => lc * x);
                         break;
                     case DCSource dcSource: // ???
                         break;
@@ -108,12 +108,12 @@ public partial class ElementOptionsComponent
                 {
                     case Resistor resistor:
                         var resistance = (float) resistor.Resistance;
-                        ChartService.Open(branch.Current, "V", x => resistance * x);
+                        ChartService.Open(SelectedElement, branch.Current, "V", x => resistance * x);
                         break;
                     case Capacitor capacitor:
                         // заряд послідовно з'єднаних конденсаторів одинаковий і дорівнює заряду всієї батареї
                         var totalCapacityDivideByIth = (float) (capacitor.Capacity / totalCapacity);
-                        ChartService.Open(branch.CapacityVoltage, "V", x => totalCapacityDivideByIth * x);
+                        ChartService.Open(SelectedElement, branch.CapacityVoltage, "V", x => totalCapacityDivideByIth * x);
                         break;
                     case DCSource dcSource: // ???
                         break;
@@ -124,11 +124,11 @@ public partial class ElementOptionsComponent
                 {
                     case Resistor resistor:
                         var resistance = (float) resistor.Resistance;
-                        ChartService.Open(branch.Current, "V", x => resistance * x);
+                        ChartService.Open(SelectedElement, branch.Current, "V", x => resistance * x);
                         break;
                     case Inductor inductor:
                         var inductance = (float) inductor.Inductance;
-                        ChartService.Open(branch.CurrentDerivative, "V", x => inductance * x);
+                        ChartService.Open(SelectedElement, branch.CurrentDerivative, "V", x => inductance * x);
                         break;
                     case DCSource dcSource: // ???
                         break;
@@ -139,7 +139,7 @@ public partial class ElementOptionsComponent
                 {
                     case Resistor resistor:
                         var resistance = (float) resistor.Resistance;
-                        ChartService.Open(branch.Current, "V", x => resistance * x);
+                        ChartService.Open(SelectedElement, branch.Current, "V", x => resistance * x);
                         break;
                     case DCSource dcSource: // ???
                         break;
