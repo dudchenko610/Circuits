@@ -1,22 +1,22 @@
 @using Circuits.ViewModels.Entities.Elements
 @using Circuits.Shared.Extensions
 @using Circuits.Shared.Attributes
-<div @key="@Transistor"
+<div @key="@BipolarTransistor"
      draggable="true"
      @ondragenter="() => { }"
      @ondragenter:preventDefault
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"transistor element {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == Transistor ? "selected" : "")} {(_draggingElement == Transistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(Transistor) ? "highlighted" : "")}")"
-     style="@($"left: {(Transistor.P1.X - Transistor.ShiftFromTopLeft.X) * CellSize}px; top: {(Transistor.P1.Y - Transistor.ShiftFromTopLeft.Y) * CellSize}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
+     class="@($"transistor element {(BipolarTransistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == BipolarTransistor ? "selected" : "")} {(_draggingElement == BipolarTransistor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(BipolarTransistor) ? "highlighted" : "")}")"
+     style="@($"left: {(BipolarTransistor.P1.X - BipolarTransistor.ShiftFromTopLeft.X) * CellSize}px; top: {(BipolarTransistor.P1.Y - BipolarTransistor.ShiftFromTopLeft.Y) * CellSize}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
     <div @onclick="OnElementClickedAsync"
          @onclick:stopPropagation
          onmousedown="event.stopPropagation()"
          onmousemove="event.preventDefault()"
          class="transistor-content"
-         style="@($"transform: rotate({Transistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg) scale(1, {(Transistor.IsFlipped ? -1 : 1)});")">
+         style="@($"transform: rotate({BipolarTransistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg) scale(1, {(BipolarTransistor.IsFlipped ? -1 : 1)});")">
 
         <div class="circle selectable"></div>
         <div class="circle selectable"></div>
@@ -38,15 +38,15 @@
 
 </div>
 
-@if (_draggingElement == Transistor && _firstDragOver)
+@if (_draggingElement == BipolarTransistor && _firstDragOver)
 {
-    var draggingElement = (Transistor)_draggingElement;
+    var draggingElement = (BipolarTransistor)_draggingElement;
 
-    <div class="@($"transistor dragged {(Transistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(Transistor) ? "highlighted" : "")}")"
+    <div class="@($"transistor dragged {(BipolarTransistor.BipolarType == BipolarTransistorType.NPN ? "npn" : "pnp")} {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(BipolarTransistor) ? "highlighted" : "")}")"
          style="@($"left: {_draggingPos.X.ToString(_nF)}px; top: {_draggingPos.Y.ToString(_nF)}px; width: {2 * CellSize}px; height: {2 * CellSize}px;")">
 
         <div class="transistor-content" 
-             style="@($"transform: rotate({Transistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg) scale(1, {(Transistor.IsFlipped ? -1 : 1)});")">
+             style="@($"transform: rotate({BipolarTransistor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg) scale(1, {(BipolarTransistor.IsFlipped ? -1 : 1)});")">
             <div class="circle selectable"></div>
             <div class="circle selectable"></div>
             <div class="circle selectable"></div>

@@ -8,7 +8,7 @@ public enum BipolarTransistorType
     NPN
 }
 
-public class Transistor : Element
+public class BipolarTransistor : Element
 {
     public Vec2 P1 // Base
     {
@@ -21,7 +21,7 @@ public class Transistor : Element
     public bool IsFlipped { get; set; } = false;
     public BipolarTransistorType BipolarType = BipolarTransistorType.NPN;
 
-    public Transistor()
+    public BipolarTransistor()
     {
         _points.Add(new Vec2());
         _points.Add(new Vec2());

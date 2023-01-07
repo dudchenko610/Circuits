@@ -5,15 +5,15 @@
     var pos = GetPosition();
 }
 
-<div @key="@DCSource"
+<div @key="@DcSource"
      draggable="true"
      @ondragenter="() => { }"
      @ondragenter:preventDefault
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"dc-source element {(_selectedElement == DCSource ? "selected" : "")} {(_draggingElement == DCSource && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(DCSource) ? "highlighted" : "")}")"
-     style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({DCSource.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
+     class="@($"dc-source element {(_selectedElement == DcSource ? "selected" : "")} {(_draggingElement == DcSource && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(HighlightService.IsHighlighted(DcSource) ? "highlighted" : "")}")"
+     style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({DcSource.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
     <div @onclick="OnElementClickedAsync"
          @onclick:stopPropagation
@@ -30,17 +30,17 @@
         </div>
     </div>
 
-    <ElementDetailsComponent Element="DCSource"/>
+    <ElementDetailsComponent Element="DcSource"/>
 
 </div>
 
-@if (_draggingElement == DCSource && _firstDragOver)
+@if (_draggingElement == DcSource && _firstDragOver)
 {
     var draggingElement = (DCSource)_draggingElement;
     var dragPos = GetPosition(true);
 
-    <div class="@($"dc-source dragged {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(DCSource) ? "highlighted" : "")}")"
-         style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({DCSource.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
+    <div class="@($"dc-source dragged {(_selectedElement == draggingElement ? "selected" : "")} {(HighlightService.IsHighlighted(DcSource) ? "highlighted" : "")}")"
+         style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({DcSource.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
         <div class="dc-source-content">
             <div class="circle"></div>

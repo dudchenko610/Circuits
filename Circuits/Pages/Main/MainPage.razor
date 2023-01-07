@@ -5,8 +5,9 @@
     <div class="navigation">
 
         <div class="control-block right">
-            @* <div @onclick="() => { OnPenClicked(6); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 6 ? "activated" : "")">Tₙₚₙ</div> *@
-            @* <div @onclick="() => { OnPenClicked(5); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 5 ? "activated" : "")">Tₚₙₚ</div> *@
+            @* <div @onclick="() => { OnPenClicked(6); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 7 ? "activated" : "")">Tₙₚₙ</div> *@
+            @* <div @onclick="() => { OnPenClicked(5); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 6 ? "activated" : "")">Tₚₙₚ</div> *@
+            <div @onclick="() => { OnPenClicked(5); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 5 ? "activated" : "")">D</div>
             <div @onclick="() => { OnPenClicked(4); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 4 ? "activated" : "")">DC</div>
             <div @onclick="() => { OnPenClicked(3); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 3 ? "activated" : "")">I</div>
             <div @onclick="() => { OnPenClicked(2); }" class="control-icon pen noselectable-text @(_context.PencilMode && _mode == 2 ? "activated" : "")">C</div>
@@ -42,7 +43,7 @@
         </div>
 
         <SchemeInspectorComponent @bind-Opened="_showGraphInspector"/>
-        
+
         <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
 
             <SchemeRendererComponent
@@ -80,13 +81,19 @@
 
                 <ElementComponent Key="typeof(DCSource)">
                     <Template Context="element">
-                        <DCSourceComponent DCSource="(DCSource)element"/>
+                        <DCSourceComponent DcSource="(DCSource)element"/>
                     </Template>
                 </ElementComponent>
 
-                <ElementComponent Key="typeof(Transistor)">
+                <ElementComponent Key="typeof(BipolarTransistor)">
                     <Template Context="element">
-                        <TransistorComponent Transistor="(Transistor)element"/>
+                        <TransistorComponent BipolarTransistor="(BipolarTransistor)element"/>
+                    </Template>
+                </ElementComponent>
+
+                <ElementComponent Key="typeof(Diode)">
+                    <Template Context="element">
+                        <DiodeComponent Diode="(Diode)element"/>
                     </Template>
                 </ElementComponent>
 

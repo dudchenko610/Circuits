@@ -16,7 +16,7 @@ public partial class TransistorComponent : IDisposable
     [CascadingParameter(Name = "SchemeRenderReference")]
     public SchemeRendererComponent SchemeRenderer { get; set; } = null!;
 
-    [Parameter] public Transistor Transistor { get; set; } = null!;
+    [Parameter] public BipolarTransistor BipolarTransistor { get; set; } = null!;
 
     private int CellSize => SchemeRendererContext.CellSize;
     private Element _selectedElement => SchemeRenderer?.SelectedElement!;
@@ -48,7 +48,7 @@ public partial class TransistorComponent : IDisposable
 
     private void OnDraggingUpdate()
     {
-        if (_draggingElement == Transistor && _firstDragOver) StateHasChanged();
+        if (_draggingElement == BipolarTransistor && _firstDragOver) StateHasChanged();
     }
 
     protected override void OnParametersSet()
@@ -58,7 +58,7 @@ public partial class TransistorComponent : IDisposable
 
     private void OnDragStart(ExtMouseEventArgs e)
     {
-        SchemeRenderer.OnDragStart(e, Transistor);
+        SchemeRenderer.OnDragStart(e, BipolarTransistor);
     }
 
     private void OnDragEnd(ExtMouseEventArgs e)
@@ -68,6 +68,6 @@ public partial class TransistorComponent : IDisposable
 
     private async Task OnElementClickedAsync(MouseEventArgs e)
     {
-        await SchemeRenderer.OnElementClickedAsync(Transistor, new Vec2(e.PageX, e.PageY));
+        await SchemeRenderer.OnElementClickedAsync(BipolarTransistor, new Vec2(e.PageX, e.PageY));
     }
 }

@@ -12,6 +12,7 @@ public class ElementService : IElementService
     private static int CapacitorCounter = 1;
     private static int InductanceCounter = 1;
     private static int DCCounter = 1;
+    private static int DiodeCounter = 1;
     private static int TransistorCounter = 1;
     public IReadOnlyList<Element> Elements => _elements;
 
@@ -289,8 +290,8 @@ public class ElementService : IElementService
 
     private bool Intersects(Element e1, Element e2)
     {
-        if (e1 is Wire or Resistor or Capacitor or Inductor or DCSource &&
-            e2 is Wire or Resistor or Capacitor or Inductor or DCSource)
+        if (e1 is Wire or Resistor or Capacitor or Inductor or DCSource or Diode &&
+            e2 is Wire or Resistor or Capacitor or Inductor or DCSource or Diode)
         {
             return IntersectsLinear(e1, e2);
         }
@@ -325,7 +326,8 @@ public class ElementService : IElementService
             Capacitor => CapacitorCounter++,
             Inductor => InductanceCounter++,
             DCSource => DCCounter++,
-            Transistor => TransistorCounter++,
+            Diode => DiodeCounter++,
+            BipolarTransistor => TransistorCounter++,
             _ => element.Number
         };
     }

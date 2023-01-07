@@ -147,7 +147,24 @@ public partial class MainPage : IDisposable
                 break;
             }
             case 5:
+            {
+                if ((int)p1.X == (int)p2.X)
+                {
+                    element = p1.Y < p2.Y
+                        ? new Diode(p1, Direction.TOP)
+                        : new Diode(p1.Add(0,-2), Direction.BOTTOM);
+                }
+                else if ((int)p1.Y == (int)p2.Y)
+                {
+                    element = p1.X < p2.X
+                        ? new Diode(p1, Direction.LEFT)
+                        : new Diode(p1.Add(-2,0), Direction.RIGHT);
+                }
+
+                break;
+            }
             case 6:
+            case 7:
             {
                 var type = _mode == 5 ? BipolarTransistorType.PNP : BipolarTransistorType.NPN;
 
@@ -156,8 +173,8 @@ public partial class MainPage : IDisposable
                     var condition = p1.Y < p2.Y;
                     
                     element = condition
-                        ? new Transistor { P1 = p1.Add(+2, 1), BipolarType = type }
-                        : new Transistor { P1 = p1.Add(-2, -1), BipolarType = type };
+                        ? new BipolarTransistor { P1 = p1.Add(+2, 1), BipolarType = type }
+                        : new BipolarTransistor { P1 = p1.Add(-2, -1), BipolarType = type };
                     
                     element.Rotate(condition ? Direction.LEFT : Direction.RIGHT);
                 }
@@ -166,8 +183,8 @@ public partial class MainPage : IDisposable
                     var condition = p1.X < p2.X;
                     
                     element = condition
-                        ? new Transistor { P1 = p1.Add(1, -2), BipolarType = type }
-                        : new Transistor { P1 = p1.Add(-1, +2), BipolarType = type };
+                        ? new BipolarTransistor { P1 = p1.Add(1, -2), BipolarType = type }
+                        : new BipolarTransistor { P1 = p1.Add(-1, +2), BipolarType = type };
                     
                     element.Rotate(condition ? Direction.BOTTOM : Direction.TOP);
                 }
@@ -220,9 +237,9 @@ public partial class MainPage : IDisposable
         StateHasChanged();
     }
 
-    private void FlipTransistor(Transistor transistor)
+    private void FlipTransistor(BipolarTransistor bipolarTransistor)
     {
-        transistor.IsFlipped = !transistor.IsFlipped; 
+        bipolarTransistor.IsFlipped = !bipolarTransistor.IsFlipped; 
         StateHasChanged();
     }
 

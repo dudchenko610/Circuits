@@ -1,0 +1,55 @@
+@using Circuits.ViewModels.Entities.Elements
+@using Circuits.Shared.Extensions
+
+@{
+    var pos = GetPosition();
+}
+
+<div @key="@Diode"
+     draggable="true"
+     @ondragenter="() => { }"
+     @ondragenter:preventDefault
+     @onextdragstart="OnDragStart"
+     @onextdragstart:preventDefault="@_dragAllowed"
+     @onextdragend="OnDragEnd"
+     class="@($"diode element {(_selectedElement == Diode ? "selected" : "")} {(_draggingElement == Diode && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(HighlightService.IsHighlighted(Diode) ? "highlighted" : "")}")"
+     style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({Diode.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
+
+    <div @onclick="OnElementClickedAsync"
+         @onclick:stopPropagation
+         onmousedown="event.stopPropagation()"
+         onmousemove="event.preventDefault()"
+         class="diode-content">
+
+        <div class="circle"></div>
+        <div class="circle"></div>
+
+        <div class="block">
+            <div class="delimiter"></div>
+        </div>
+    </div>
+
+    <ElementDetailsComponent Element="Diode"/>
+
+</div>
+
+@if (_draggingElement == Diode && _firstDragOver)
+{
+    var draggingElement = (Diode)_draggingElement;
+    var dragPos = GetPosition(true);
+
+    <div class="@($"diode dragged {(_selectedElement == draggingElement ? "selected" : "")} {(HighlightService.IsHighlighted(Diode) ? "highlighted" : "")}")"
+         style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({Diode.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
+
+        <div class="diode-content">
+            <div class="circle"></div>
+            <div class="circle"></div>
+
+            <div class="block">
+                <div class="delimiter"></div>
+                <div class="delimiter short"></div>
+            </div>
+        </div>
+
+    </div>
+}

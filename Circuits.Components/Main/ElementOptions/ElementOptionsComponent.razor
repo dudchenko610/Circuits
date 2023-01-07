@@ -11,7 +11,7 @@
         <div class="noselectable-text">↺</div>
     </div>
 
-    @if (SelectedElement is Transistor transistor)
+    @if (SelectedElement is BipolarTransistor transistor)
     {
         <div class="icon"
              @onclick="async () => { await OnTransistorFlip.InvokeAsync(transistor); }">
@@ -29,7 +29,7 @@
         <div class="noselectable-text">I</div>
     </div>
 
-    @if (SelectedElement is not (Wire or Transistor))
+    @if (SelectedElement is not (Wire or BipolarTransistor))
     {
         <div class="icon info" @onclick="async () => { OnShowVoltage(); await OnCloseSelected.InvokeAsync(); }">
             <div class="noselectable-text">V</div>

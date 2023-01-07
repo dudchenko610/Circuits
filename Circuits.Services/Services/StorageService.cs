@@ -21,18 +21,20 @@ public class StorageService : IStorageService
     {
         await _dataIndexedDb.OpenIndexedDb();
         await _dataIndexedDb.DeleteAll<Wire>();
-        await _dataIndexedDb.DeleteAll<Transistor>();
+        await _dataIndexedDb.DeleteAll<BipolarTransistor>();
         await _dataIndexedDb.DeleteAll<Resistor>();
         await _dataIndexedDb.DeleteAll<Inductor>();
         await _dataIndexedDb.DeleteAll<DCSource>();
         await _dataIndexedDb.DeleteAll<Capacitor>();
+        await _dataIndexedDb.DeleteAll<Diode>();
 
         var wires = _schemeService.Elements.OfType<Wire>().ToList();
-        var transistors = _schemeService.Elements.OfType<Transistor>().ToList();;
+        var transistors = _schemeService.Elements.OfType<BipolarTransistor>().ToList();;
         var resistors = _schemeService.Elements.OfType<Resistor>().ToList();;
         var inductors = _schemeService.Elements.OfType<Inductor>().ToList();;
         var dcSources = _schemeService.Elements.OfType<DCSource>().ToList();;
         var capacitors = _schemeService.Elements.OfType<Capacitor>().ToList();;
+        var diodes = _schemeService.Elements.OfType<Diode>().ToList();;
 
         await _dataIndexedDb.AddItems(wires);
         await _dataIndexedDb.AddItems(transistors);
@@ -40,6 +42,7 @@ public class StorageService : IStorageService
         await _dataIndexedDb.AddItems(inductors);
         await _dataIndexedDb.AddItems(dcSources);
         await _dataIndexedDb.AddItems(capacitors);
+        await _dataIndexedDb.AddItems(diodes);
     }
 
     public async Task RestoreAsync()
@@ -47,11 +50,12 @@ public class StorageService : IStorageService
         await _dataIndexedDb.OpenIndexedDb();
         
         var wires = await _dataIndexedDb.GetAll<Wire>();
-        var transistors = await _dataIndexedDb.GetAll<Transistor>();
+        var transistors = await _dataIndexedDb.GetAll<BipolarTransistor>();
         var resistors = await _dataIndexedDb.GetAll<Resistor>();
         var inductors = await _dataIndexedDb.GetAll<Inductor>();
         var dcSources = await _dataIndexedDb.GetAll<DCSource>();
         var capacitors = await _dataIndexedDb.GetAll<Capacitor>();
+        var diodes = await _dataIndexedDb.GetAll<Diode>();
 
         _schemeService.Clear();
         
@@ -63,6 +67,7 @@ public class StorageService : IStorageService
         elements.AddRange(inductors);
         elements.AddRange(dcSources);
         elements.AddRange(capacitors);
+        elements.AddRange(diodes);
         
         _schemeService.Reindex();
         _schemeService.Update();

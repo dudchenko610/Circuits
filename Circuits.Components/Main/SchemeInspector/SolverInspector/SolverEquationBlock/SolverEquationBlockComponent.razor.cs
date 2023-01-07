@@ -13,7 +13,7 @@ public partial class SolverEquationBlockComponent : IDisposable
     [Parameter] public EquationSystem EquationSystem { get; set; } = null!;
     [Parameter] public RenderFragment<Graph> GraphDetailsTemplate { get; set; } = null!;
 
-    private float _dt = 0.001f;
+    private float _dt = 0.0005f;
     private int _iterationCount = 100;
     
     protected override void OnInitialized()

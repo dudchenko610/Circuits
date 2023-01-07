@@ -35,13 +35,13 @@ services.AddIndexedDbDatabase<DataIndexedDb>(options =>
 {
     var dbModel = new IndexedDbDatabaseModel()
         .WithName("SchemeElements")
-        .WithVersion(1)
+        .WithVersion(2)
         .WithModelId(0);
 
     dbModel.AddStore("Wire")
         .WithAutoIncrementingKey("Id")
         .AddUniqueIndex("Id");
-    dbModel.AddStore("Transistor")   
+    dbModel.AddStore("BipolarTransistor")   
         .WithAutoIncrementingKey("Id")
         .AddUniqueIndex("Id");
     dbModel.AddStore("Resistor")   
@@ -54,6 +54,9 @@ services.AddIndexedDbDatabase<DataIndexedDb>(options =>
         .WithAutoIncrementingKey("Id")
         .AddUniqueIndex("Id");
     dbModel.AddStore("Capacitor")   
+        .WithAutoIncrementingKey("Id")
+        .AddUniqueIndex("Id");
+    dbModel.AddStore("Diode")   
         .WithAutoIncrementingKey("Id")
         .AddUniqueIndex("Id");
 

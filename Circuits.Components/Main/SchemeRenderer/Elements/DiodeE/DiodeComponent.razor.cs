@@ -7,14 +7,14 @@ using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace Circuits.Components.Main.SchemeRenderer.Elements.DCSourceE;
+namespace Circuits.Components.Main.SchemeRenderer.Elements.DiodeE;
 
-public partial class DCSourceComponent : IDisposable
+public partial class DiodeComponent : IDisposable
 {
     [Inject] private IHighlightService HighlightService { get; set; } = null!;
     
     [CascadingParameter(Name="SchemeRenderReference")] public SchemeRendererComponent SchemeRenderer { get; set; } = null!;
-    [Parameter] public DCSource DcSource { get; set; } = null!;
+    [Parameter] public Diode Diode { get; set; } = null!;
 
     private int CellSize => SchemeRendererContext.CellSize;
     private Element _selectedElement => SchemeRenderer?.SelectedElement!;
@@ -46,7 +46,7 @@ public partial class DCSourceComponent : IDisposable
 
     private void OnDraggingUpdate()
     {
-        if (_draggingElement == DcSource && _firstDragOver)
+        if (_draggingElement == Diode && _firstDragOver)
         {
             if (_draggingPos.X != _prevDragPos.X || _draggingPos.Y != _prevDragPos.Y)
             {
@@ -58,7 +58,7 @@ public partial class DCSourceComponent : IDisposable
 
     private void OnDragStart(ExtMouseEventArgs e)
     {
-        SchemeRenderer.OnDragStart(e, DcSource);
+        SchemeRenderer.OnDragStart(e, Diode);
     }
     
     private void OnDragEnd(ExtMouseEventArgs e)
@@ -68,7 +68,7 @@ public partial class DCSourceComponent : IDisposable
     
     private async Task OnElementClickedAsync(MouseEventArgs e)
     {
-        await SchemeRenderer.OnElementClickedAsync(DcSource, new Vec2(e.PageX, e.PageY));
+        await SchemeRenderer.OnElementClickedAsync(Diode, new Vec2(e.PageX, e.PageY));
     }
     
     private Vec2 _pos = new();
@@ -77,12 +77,12 @@ public partial class DCSourceComponent : IDisposable
     {
         if (subtractP1)
         {
-            _pos.Set(DcSource.P2).Subtract(DcSource.P1);
+            _pos.Set(Diode.P2).Subtract(Diode.P1);
         }
         else
         {
-            _pos.Set(DcSource.P2);
-            _pos.Add(DcSource.P1);
+            _pos.Set(Diode.P2);
+            _pos.Add(Diode.P1);
         }
 
         _pos.Multiply(0.5f * CellSize);
@@ -96,8 +96,8 @@ public partial class DCSourceComponent : IDisposable
 
     private int GetWidth()
     {
-        var width = (int) Math.Abs(DcSource.P2.X * CellSize - DcSource.P1.X * CellSize);
-        var height = (int) Math.Abs(DcSource.P2.Y * CellSize - DcSource.P1.Y * CellSize);
+        var width = (int) Math.Abs(Diode.P2.X * CellSize - Diode.P1.X * CellSize);
+        var height = (int) Math.Abs(Diode.P2.Y * CellSize - Diode.P1.Y * CellSize);
         
         return width > height ? width : height;
     }

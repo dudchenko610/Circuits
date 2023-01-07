@@ -23,7 +23,7 @@ public partial class ElementOptionsComponent
     [Parameter] public Element SelectedElement { get; set; } = null!;
     [Parameter] public EventCallback<Element> OnRemoveElement { get; set; }
     [Parameter] public EventCallback<Element> OnRotateElement { get; set; }
-    [Parameter] public EventCallback<Transistor> OnTransistorFlip { get; set; }
+    [Parameter] public EventCallback<BipolarTransistor> OnTransistorFlip { get; set; }
     [Parameter] public EventCallback OnOpenElementOptions { get; set; }
     [Parameter] public EventCallback OnCloseSelected { get; set; }
 
