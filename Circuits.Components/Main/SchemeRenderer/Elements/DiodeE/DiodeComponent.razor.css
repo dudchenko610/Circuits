@@ -38,7 +38,8 @@
     width: 24px;
     height: 24px;
     position: absolute;
-    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    transform: translate(-50%, -50%) scaleY(0.923);
     left: 50%;
     top: 50%;
     box-shadow: 0px 0px 7px 1px #CED3E000;
@@ -47,22 +48,47 @@
     align-items: center;
 
 
-    border-right: 22px solid #abadbb;
-    border-top: 12px solid transparent;
-    border-bottom: 12px solid transparent;
+    border-right: 3px solid #abadbb;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
 }
+
+    .diode > .diode-content > .block::before {
+        content: "";
+        position: absolute;
+        box-sizing: border-box;
+        width: 24px;
+        height: 24px;
+        border-left: 3px solid #abadbb;
+        border-top: 3px solid #abadbb;
+        border-bottom: 3px solid transparent;
+        border-right: 3px solid transparent;
+        transform: rotate(-45deg) skew(10deg,10deg);
+        right: -15px;
+        bottom: -3px;
+    }
 
     .diode.selected  > .diode-content > .block {
         border-right-color: #e5a4aa;
     }
 
+        .diode.selected  > .diode-content > .block::before {
+            border-left: 3px solid #e5a4aa;
+            border-top: 3px solid #e5a4aa;
+        }
+
     .diode.highlighted  > .diode-content > .block {
         border-right-color: #a4e5aa;
     }
+        
+        .diode.highlighted  > .diode-content > .block::before {
+            border-left: 3px solid #a4e5aa;
+            border-top: 3px solid #a4e5aa;
+        }
 
     .diode > .diode-content > .block > .delimiter {
         position: absolute;
-        left: 0;
+        left: 1px;
         height: 24px;
         width: 3px;
         background: #abadbb;
