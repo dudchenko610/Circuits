@@ -95,6 +95,11 @@ public static class ExpressionExtensions
             return res;
         }
 
+        if (expression is NonlinearExpression nonlinearExpression)
+        {
+            return nonlinearExpression.Label;
+        }
+
         return string.Empty;
     }
 }

@@ -32,8 +32,8 @@ public class ElectricalSystemService : IElectricalSystemService
             branch.CapacityVoltageFirstDerivative = null!;
             branch.CapacityVoltageSecondDerivative = null!;
             
-            branch.DCVariables.Clear();
-            FillDcSourceVariables(branch);
+            branch.DcVariables.Clear();
+            FillDcSourceAndDiodesVariables(branch);
         }
 
         foreach (var graph in graphs)
@@ -65,7 +65,7 @@ public class ElectricalSystemService : IElectricalSystemService
                 
                 circuit.IterateCircuit((branch, isCoDirected) =>
                 {
-                    foreach (var dcVar in branch.DCVariables)
+                    foreach (var dcVar in branch.DcVariables)
                     {
                         // Console.WriteLine($"is branch co-directed {isCoDirected}");
                         
@@ -321,18 +321,34 @@ public class ElectricalSystemService : IElectricalSystemService
         return equationCount;
     }
 
-    private void FillDcSourceVariables(Branch branch)
+    private void FillDcSourceAndDiodesVariables(Branch branch)
     {
         branch.IterateBranch(_schemeService.Nodes, (element, isCoDirected) =>
         {
-            if (element is not DCSource dcSource) return;
-            
-            branch.DCVariables.Add((isCoDirected ? 1 : -1) * new ExpressionVariable
+            switch (element)
             {
-                Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
-                Payload = dcSource,
-                Value = dcSource.Voltage // should be taken from DCSource
-            });
+                case DCSource dcSource:
+                {
+                    branch.DcVariables.Add((isCoDirected ? 1 : -1) * new ExpressionVariable
+                    {
+                        Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
+                        Payload = dcSource,
+                        Value = dcSource.Voltage // should be taken from DCSource
+                    });
+                    
+                    break;
+                }
+
+                case Diode diode:
+                {
+                    branch.NonlinearElements.Add((isCoDirected ? 1 : -1) * new NonlinearExpression()
+                    {
+                        Label = $"U<i>D</i><sub-i>{diode.Number}</sub-i>",
+                    });
+                    
+                    break;
+                }
+            }
         });
     }
 }
