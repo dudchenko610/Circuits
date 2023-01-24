@@ -63,7 +63,7 @@ public static class ExpressionHelper
             additions.Signs.AddRange(exAdd2.Signs);
             
             additions.Nodes.AddRange(exAdd1.Nodes);
-            additions.Nodes.AddRange(exAdd1.Nodes);
+            additions.Nodes.AddRange(exAdd2.Nodes);
 
             return additions;
         }

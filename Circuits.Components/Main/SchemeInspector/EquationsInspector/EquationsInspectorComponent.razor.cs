@@ -79,7 +79,16 @@ public partial class EquationsInspectorComponent
         // _eliminationStatus = _equationSystemService.PerformKirchhoffElimination(_equationSystem);
         StateHasChanged();
     }
-    
+
+    private async Task TestBroydensMethodAsync()
+    {
+        foreach (var equationSystem in SchemeService.EquationSystems)
+        {
+            await SolverService.TestBroydensMethodAsync(equationSystem);
+        }
+        
+        StateHasChanged();
+    }
 
     private void OnClear()
     {

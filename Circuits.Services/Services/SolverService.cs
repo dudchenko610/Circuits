@@ -48,7 +48,7 @@ public class SolverService : ISolverService
 
         if (!(string.IsNullOrEmpty(state.Status) || state.Status == "Completed")) await StopAsync(equationSystem);
         
-        var scriptJs = ScriptHelper.BuildCalculatingJs(equationSystem, iterationCount, dt);
+        var scriptJs = ScriptHelper.BuildLinearSolverJs(equationSystem, iterationCount, dt);
         var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
 
         Console.WriteLine($"URL: {url}");
@@ -80,6 +80,16 @@ public class SolverService : ISolverService
         state.Status = "Completed";
 
         OnUpdate?.Invoke(equationSystem, state);
+    }
+
+    public async Task TestBroydensMethodAsync(EquationSystem equationSystem, int iterationCount = 100, float dt = 0.001f)
+    {
+        Console.WriteLine("Broyden's method");
+        
+        var scriptJs = ScriptHelper.BuildBroydensSolverJs(equationSystem, iterationCount, dt);
+        var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
+
+        Console.WriteLine($"URL: {url}");
     }
 
     public async Task ClearAsync()

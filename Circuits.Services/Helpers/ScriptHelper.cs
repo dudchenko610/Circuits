@@ -23,7 +23,92 @@ public static class ScriptHelper
         return c;
     }
 
-    public static string BuildCalculatingJs(EquationSystem equationSystem, int iterationNumber, float dt)
+    public static string BuildBroydensSolverJs(EquationSystem equationSystem, int iterationNumber, float dt)
+    {
+        var allVariables = equationSystem
+            .GetAllVariables()
+            .OrderBy(GetVariableOrder)
+            .ToList();
+        var systemVars = equationSystem.Variables;
+
+        var jsScript = "";
+        var varCounter = 0;
+        var jsVarMap = new Dictionary<ExpressionVariable, string>();
+
+        foreach (var variable in allVariables)
+        {
+            var jsVar = $"v_{varCounter++}";
+            jsVarMap.Add(variable, jsVar);
+        }
+
+        /* 1. set initial values for variables with derivatives */
+        foreach (var variable in allVariables)
+        {
+            var jsVar = jsVarMap[variable];
+
+            jsScript += $"// {variable.GetLabel()}\n";
+            jsScript += $"const {jsVar} = ";
+
+            if (variable is ExpressionDerivative)
+            {
+                // initialize based on start values
+            }
+
+            jsScript += $"{{ value: {variable.Value}, type: '{variable.GetType().Name}'";
+
+            if (variable is ExpressionDerivative derivative)
+            {
+                jsScript += $", variable: {jsVarMap[derivative.Variable]}";
+            }
+
+            jsScript += " }; \n\n";
+        }
+
+        jsScript += "\n";
+
+        /* 2. build calculation equations */
+        for(var i = 0; i < equationSystem.Matrix.Length; i++)
+        {
+            // var vr = systemVars[v];
+            Expression expression = new ExpressionValue(0.0f); // first element in row
+
+            for (var j = 0; j < systemVars.Count; j++)
+            {
+                var cellValue = equationSystem.Matrix[i][j];
+                if (cellValue is ExpressionValue { Value: 0.0f}) continue;
+                
+                var variable = systemVars[j];
+                
+                expression = ExpressionHelper.Add(
+                    expression,
+                    ExpressionHelper.Multiply(variable, cellValue)
+                );
+            }
+            
+            Console.WriteLine($"Right: {equationSystem.Matrix[i][systemVars.Count].GetLabel()}");
+
+            expression = ExpressionHelper.Subtract(expression, equationSystem.Matrix[i][systemVars.Count]); // right side
+            
+            jsScript += $"function func_{i}() {{\n";
+            jsScript += $"\treturn {expression.GetLabel(x => $"{jsVarMap[x]}.value", false)};";
+            jsScript += "\n}\n\n";
+        }
+
+        jsScript += "const systemVars = [\n";
+        
+        for (var v = systemVars.Count - 1; v > -1; v--)
+        {
+            jsScript +=
+                $"{{\n\tvariable: {jsVarMap[systemVars[v]]},\n\tarray: [],\n\tintegralArray: []\n}},\n";
+        }
+        
+        jsScript = jsScript.Remove(jsScript.Length - 2, 2);
+        jsScript += "]; \n\n";
+        
+        return jsScript;
+    }
+    
+    public static string BuildLinearSolverJs(EquationSystem equationSystem, int iterationNumber, float dt)
     {
         var allVariables = equationSystem
             .GetAllVariables()

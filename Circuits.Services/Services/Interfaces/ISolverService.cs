@@ -11,5 +11,6 @@ public interface ISolverService
     Dictionary<EquationSystem, EquationSystemSolverState> SolverState { get; }
     Task RunAsync(EquationSystem equationSystem, int iterationCount = 100, float dt = 0.001f);
     Task StopAsync(EquationSystem equationSystem);
+    Task TestBroydensMethodAsync(EquationSystem equationSystem, int iterationCount = 100, float dt = 0.001f);
     Task ClearAsync();
 }
