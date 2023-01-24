@@ -85,8 +85,6 @@ public static class ScriptHelper
                 );
             }
             
-            Console.WriteLine($"Right: {equationSystem.Matrix[i][systemVars.Count].GetLabel()}");
-
             expression = ExpressionHelper.Subtract(expression, equationSystem.Matrix[i][systemVars.Count]); // right side
             
             jsScript += $"function func_{i}() {{\n";
@@ -104,6 +102,54 @@ public static class ScriptHelper
         
         jsScript = jsScript.Remove(jsScript.Length - 2, 2);
         jsScript += "]; \n\n";
+        
+        jsScript += "const systemFunctions = [\n";
+        
+        for (var i = 0; i < equationSystem.Matrix.Length; i++)
+        {
+            jsScript += $"\tfunc_{i},\n";
+        }
+        
+        jsScript = jsScript.Remove(jsScript.Length - 2, 2);
+        jsScript += "\n]; \n\n";
+        
+        jsScript += "const x = [\n";
+        
+        for (var i = 0; i < equationSystem.Matrix.Length; i++)
+        {
+            jsScript += $"\t0,\n";
+        }
+        
+        jsScript = jsScript.Remove(jsScript.Length - 2, 2);
+        jsScript += "\n]; \n\n";
+
+        jsScript += @"
+function calculateJacobian(x, dx) {
+    const jacobian = [];
+
+    for (let i = 0; i < systemFunctions.length; i++) { // iterate over rows
+        const row = [];
+
+        for (let j = 0; j < systemFunctions.length; j++) {
+            // reset variables
+            for (let v = 0; v < systemVars.length; v++) {
+                const element = systemVars[v];
+                element.variable.value = x[v];
+
+                if (j === v) element.variable.value += dx;
+            }
+
+            let partialDerivative = systemFunctions[i] / dx;
+
+            row.push(partialDerivative);
+        }
+
+        jacobian.push(row);
+    }
+
+    return jacobian;
+}
+";
         
         return jsScript;
     }
