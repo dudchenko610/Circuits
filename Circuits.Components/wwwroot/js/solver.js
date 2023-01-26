@@ -1,5 +1,10 @@
 const solverWorkers = {};
 
+function testBroydensMethod(url) {
+    const worker = new Worker(url, { type: "module" });
+    worker.postMessage('start');
+}
+
 function startSolver(url, dotNetRef) {
     const worker = new Worker(url);
     solverWorkers[url] = worker;
@@ -34,7 +39,6 @@ function startSolver(url, dotNetRef) {
         }
 
     }, false);
-
     worker.postMessage('start');
 }
 

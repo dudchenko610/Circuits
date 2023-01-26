@@ -31,7 +31,9 @@ public static class ScriptHelper
             .ToList();
         var systemVars = equationSystem.Variables;
 
-        var jsScript = "";
+        // var jsScript = "import math from 'math';";
+        var jsScript = "import { sqrt } from 'mathjs';";
+        // var jsScript = "";
         var varCounter = 0;
         var jsVarMap = new Dictionary<ExpressionVariable, string>();
 
@@ -113,18 +115,18 @@ public static class ScriptHelper
         jsScript = jsScript.Remove(jsScript.Length - 2, 2);
         jsScript += "\n]; \n\n";
         
-        jsScript += "const x = [\n";
-        
-        for (var i = 0; i < equationSystem.Matrix.Length; i++)
-        {
-            jsScript += $"\t0,\n";
-        }
-        
-        jsScript = jsScript.Remove(jsScript.Length - 2, 2);
-        jsScript += "\n]; \n\n";
+        jsScript += "const x = [];\n";
 
         jsScript += @"
-function calculateJacobian(x, dx) {
+
+function setVariableValuesFromXVector() {
+    for (let i = 0; i < systemVars.length; i++) {
+        const element = systemVars[i];
+        element.variable.value = x[i];
+    }
+}
+
+function calculateJacobian(dx) {
     const jacobian = [];
 
     for (let i = 0; i < systemFunctions.length; i++) { // iterate over rows
@@ -132,15 +134,10 @@ function calculateJacobian(x, dx) {
 
         for (let j = 0; j < systemFunctions.length; j++) {
             // reset variables
-            for (let v = 0; v < systemVars.length; v++) {
-                const element = systemVars[v];
-                element.variable.value = x[v];
+            setVariableValuesFromXVector();
+            systemVars[j].variable.value += dx;
 
-                if (j === v) element.variable.value += dx;
-            }
-
-            let partialDerivative = systemFunctions[i] / dx;
-
+            let partialDerivative = systemFunctions[i]() / dx;
             row.push(partialDerivative);
         }
 
@@ -149,7 +146,74 @@ function calculateJacobian(x, dx) {
 
     return jacobian;
 }
+
+function calculateSystemUsingBroydensMethod() {
+    x.length = 0;
+
+    for (let i = 0; i < systemVars.length; i++) { // guess value of system
+        x.push(0);
+    }
+
+    console.log('calculateSystemUsingBroydensMethod');
+
+    const jacobian = calculateJacobian(0.001);
+    console.log(jacobian);
+
+    const inverseJacobian = math.inv(jacobian);
+    console.log(inverseJacobian);
+}
+
 ";
+        
+        jsScript += $@"
+const dt = {dt.ToString(Nf)};
+
+function sleep(ms) {{ return new Promise(resolve => setTimeout(resolve, ms)); }}
+
+async function runIntegration() {{
+
+    for (var i = 0; i < {iterationNumber}; i++)
+    {{
+        systemVars.forEach(varInfo => {{
+            const value = varInfo.func(); // calculation
+            varInfo.variable.value = value;
+            varInfo.array.push(value);
+        }});
+
+        systemVars.forEach(varInfo => {{
+            if (varInfo.variable.type === 'ExpressionDerivative')
+            {{
+                const derivative = varInfo.variable;
+                const integralVariable = derivative.variable;
+                varInfo.integralArray.push(integralVariable.value);
+                integralVariable.value += derivative.value * dt;
+            }}
+        }});
+
+        // send each 10 value
+        if ((i + 1) % 10 === 0) {{
+            const feedbackData = systemVars.map(x => {{ 
+                return {{
+                    array: x.array.slice(-10),
+                    integralArray: x.integralArray.slice(-10)
+                }};
+            }});
+
+            self.postMessage(feedbackData);
+        }}
+
+        await sleep(5);
+    }}
+
+    self.postMessage('completed');
+}}
+
+self.onmessage = async (e) => {{
+    //await runIntegration();
+    console.log(e);
+    calculateSystemUsingBroydensMethod();
+}}
+        ";
         
         return jsScript;
     }

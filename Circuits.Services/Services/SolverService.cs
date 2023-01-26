@@ -90,6 +90,8 @@ public class SolverService : ISolverService
         var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
 
         Console.WriteLine($"URL: {url}");
+        
+        await _jsRuntime.InvokeVoidAsync("testBroydensMethod", url);
     }
 
     public async Task ClearAsync()
