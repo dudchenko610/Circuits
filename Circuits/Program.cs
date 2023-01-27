@@ -1,3 +1,4 @@
+using BlazorWorker.Core;
 using Circuits;
 using Circuits.Components.Common.Modal.Root;
 using Circuits.Components.Common.Services;
@@ -28,8 +29,11 @@ services.AddScoped<ISchemeService, SchemeService>();
 services.AddScoped<IEquationSystemService, EquationSystemService>();
 services.AddScoped<IElectricalSystemService, ElectricalSystemService>();
 services.AddScoped<IStorageService, StorageService>();
-services.AddScoped<ISolverService, SolverService>();
 services.AddScoped<IChartService, ChartService>();
+services.AddScoped<IWorkerService, WorkerService>();
+// services.AddScoped<ISolverService, SolverService>();
+
+services.AddWorkerFactory();
 
 services.AddIndexedDbDatabase<DataIndexedDb>(options =>
 {

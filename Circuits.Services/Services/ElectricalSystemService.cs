@@ -183,7 +183,7 @@ public class ElectricalSystemService : IElectricalSystemService
                     branch.Current = new ExpressionVariable
                     {
                         Label = $"i<sub-i>{graphBranches.IndexOf(branch)}</sub-i>",
-                        Payload = branch
+                        // Payload = branch
                     };
                 }
 
@@ -203,13 +203,13 @@ public class ElectricalSystemService : IElectricalSystemService
                         branch.CapacityVoltage = new ExpressionVariable
                         {
                             Label = $"U<i>C<sub-i>{capacitorNumbers}<sub-i/></i>",
-                            Payload = branch
+                            // Payload = branch
                         };
 
                         branch.CapacityVoltageFirstDerivative = new ExpressionDerivative
                         {
                             Variable = branch.CapacityVoltage,
-                            Payload = branch
+                            // Payload = branch
                         };
 
                         variables.Add(branch.CapacityVoltageFirstDerivative);
@@ -223,7 +223,7 @@ public class ElectricalSystemService : IElectricalSystemService
                         branch.CurrentDerivative = new ExpressionDerivative
                         {
                             Variable = branch.Current,
-                            Payload = branch
+                            // Payload = branch
                         };
 
                         variables.Add(branch.CurrentDerivative);
@@ -241,19 +241,19 @@ public class ElectricalSystemService : IElectricalSystemService
                         branch.CapacityVoltage = new ExpressionVariable
                         {
                             Label = $"U<i>C<sub-i>{capacitorNumbers}<sub-i/></i>",
-                            Payload = branch
+                            // Payload = branch
                         };
 
                         branch.CapacityVoltageFirstDerivative = new ExpressionDerivative
                         {
                             Variable = branch.CapacityVoltage,
-                            Payload = branch
+                            // Payload = branch
                         };
 
                         branch.CapacityVoltageSecondDerivative = new ExpressionDerivative
                         {
                             Variable = branch.CapacityVoltageFirstDerivative,
-                            Payload = branch
+                            // Payload = branch
                         };
 
                         variables.Add(branch.CapacityVoltageFirstDerivative);
@@ -332,7 +332,7 @@ public class ElectricalSystemService : IElectricalSystemService
                     branch.DcVariables.Add((isCoDirected ? 1 : -1) * new ExpressionVariable
                     {
                         Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
-                        Payload = dcSource,
+                        // Payload = dcSource,
                         Value = dcSource.Voltage // should be taken from DCSource
                     });
                     

@@ -4,7 +4,7 @@ namespace Circuits.ViewModels.Entities.Equations;
 
 public abstract class Expression
 {
-    public object Payload { get; set; } = null!;
+    // public object Payload { get; set; } = null!;
     public abstract double Value { get; set; }
     
     public static Expression operator +(Expression e1, Expression e2) => ExpressionHelper.Add(e1, e2);

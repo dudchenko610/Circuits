@@ -19,7 +19,6 @@ public partial class EquationsInspectorComponent
     [Inject] private IElectricalSystemService ElectricalSystemService { get; set; } = null!;
     [Inject] private ISchemeService SchemeService { get; set; } = null!;
     [Inject] private IHighlightService HighlightService { get; set; } = null!;
-    [Inject] private ISolverService SolverService { get; set; } = null!;
 
     // private string _eliminationStatus = "Success";
 
@@ -82,10 +81,10 @@ public partial class EquationsInspectorComponent
 
     private async Task TestBroydensMethodAsync()
     {
-        foreach (var equationSystem in SchemeService.EquationSystems)
-        {
-            await SolverService.TestBroydensMethodAsync(equationSystem);
-        }
+        // foreach (var equationSystem in SchemeService.EquationSystems)
+        // {
+        //     await SolverService.TestBroydensMethodAsync(equationSystem);
+        // }
         
         StateHasChanged();
     }

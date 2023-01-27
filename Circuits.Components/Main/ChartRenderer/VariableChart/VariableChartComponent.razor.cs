@@ -19,7 +19,7 @@ public partial class VariableChartComponent : IAsyncDisposable
 {
     private static int _chartZIndex = 999999;
 
-    [Inject] public ISolverService SolverService { get; set; } = null!;
+    [Inject] public IWorkerService WorkerService { get; set; } = null!;
     [Inject] public IChartService ChartService { get; set; } = null!;
     [Inject] public ISchemeService SchemeService { get; set; } = null!;
     [Inject] public IJSRuntime JsRuntime { get; set; } = null!;
@@ -42,7 +42,7 @@ public partial class VariableChartComponent : IAsyncDisposable
     protected override async Task OnInitializedAsync()
     {
         _data = ChartInfo.SolverState.DataArrays[ChartInfo.Variable];
-        SolverService.OnUpdate += Update;
+        WorkerService.OnUpdate += Update;
 
         _dotNetRef = DotNetObjectReference.Create(this);
 
@@ -56,7 +56,7 @@ public partial class VariableChartComponent : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        SolverService.OnUpdate -= Update;
+        WorkerService.OnUpdate -= Update;
 
         await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousedown");
         await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");

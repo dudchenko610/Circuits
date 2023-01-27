@@ -10,12 +10,12 @@ public class ChartService : IChartService
     public IReadOnlyList<ChartInfo> Charts { get; }
 
     private readonly List<ChartInfo> _charts = new();
-    private readonly ISolverService _solverService;
+    private readonly IWorkerService _workerService;
     private readonly ISchemeService _schemeService;
 
-    public ChartService(ISolverService solverService, ISchemeService schemeService)
+    public ChartService(IWorkerService workerService, ISchemeService schemeService)
     {
-        _solverService = solverService;
+        _workerService = workerService;
         _schemeService = schemeService;
 
         Charts = _charts;
@@ -34,7 +34,7 @@ public class ChartService : IChartService
         
         if (equationSystem == null) return;
 
-        if (!_solverService.SolverState.TryGetValue(equationSystem, out var solverState)) return;
+        if (!_workerService.SolverState.TryGetValue(equationSystem, out var solverState)) return;
 
         var chartInfo = new ChartInfo
         {

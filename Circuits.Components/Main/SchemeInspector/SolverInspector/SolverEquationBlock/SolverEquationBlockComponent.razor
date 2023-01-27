@@ -29,7 +29,7 @@
     </div>
 
 
-    @if (SolverService.SolverState.TryGetValue(EquationSystem, out var state))
+    @if (WorkerService.SolverState.TryGetValue(EquationSystem, out var state))
     {
         <div class="system-controls">
 

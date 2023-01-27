@@ -18,7 +18,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\Equations\Solver" />
     <Folder Include="Markup\" />
   </ItemGroup>
 </Project>

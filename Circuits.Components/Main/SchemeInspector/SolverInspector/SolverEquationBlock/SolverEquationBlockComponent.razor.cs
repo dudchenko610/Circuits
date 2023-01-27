@@ -8,7 +8,7 @@ namespace Circuits.Components.Main.SchemeInspector.SolverInspector.SolverEquatio
 
 public partial class SolverEquationBlockComponent : IDisposable
 {
-    [Inject] private ISolverService SolverService { get; set; } = null!;
+    [Inject] private IWorkerService WorkerService { get; set; } = null!;
     [Inject] private ISchemeService SchemeService { get; set; } = null!;
     [Parameter] public EquationSystem EquationSystem { get; set; } = null!;
     [Parameter] public RenderFragment<Graph> GraphDetailsTemplate { get; set; } = null!;
@@ -18,12 +18,12 @@ public partial class SolverEquationBlockComponent : IDisposable
     
     protected override void OnInitialized()
     {
-        SolverService.OnUpdate += OnUpdate;
+        WorkerService.OnUpdate += OnUpdate;
     }
 
     public void Dispose()
     {
-        SolverService.OnUpdate -= OnUpdate;
+        WorkerService.OnUpdate -= OnUpdate;
     }
 
     private void OnUpdate(EquationSystem equationSystem, EquationSystemSolverState _)
@@ -33,11 +33,11 @@ public partial class SolverEquationBlockComponent : IDisposable
 
     private async Task RunSolverAsync()
     {
-        await SolverService.RunAsync(EquationSystem, _iterationCount, _dt);
+        await WorkerService.RunAsync(EquationSystem, _iterationCount, _dt);
     }
     
     private async Task StopSolverAsync()
     {
-        await SolverService.StopAsync(EquationSystem);
+        await WorkerService.StopAsync(EquationSystem);
     }
 }

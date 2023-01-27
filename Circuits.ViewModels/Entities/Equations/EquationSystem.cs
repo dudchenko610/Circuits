@@ -1,17 +1,13 @@
-using Circuits.ViewModels.Entities.Structures;
-
 namespace Circuits.ViewModels.Entities.Equations;
 
 public class EquationSystem
 {
-    public IReadOnlyList<ExpressionVariable> Variables => _variables;
+    public IReadOnlyList<ExpressionVariable> Variables { get; } = new List<ExpressionVariable>();
     public Expression[][] Matrix { get; init; }
-
-    private readonly List<ExpressionVariable> _variables = new();
 
     public EquationSystem(params ExpressionVariable[] variables)
     {
-        _variables.AddRange(variables);
+        ((List<ExpressionVariable>) Variables).AddRange(variables);
         Matrix = new Expression[variables.Length][];
         
         for (var i = 0; i < variables.Length; i ++)
