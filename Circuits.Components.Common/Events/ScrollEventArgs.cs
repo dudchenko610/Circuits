@@ -1,4 +1,4 @@
-﻿namespace Circuits.ViewModels.Events;
+namespace Circuits.Components.Common.Events;
 
 public class ScrollEventArgs : EventArgs
 {

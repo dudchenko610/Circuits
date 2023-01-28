@@ -1,5 +1,8 @@
+using Accord;
+using Accord.Math;
 using BlazorWorker.BackgroundServiceFactory;
 using BlazorWorker.Core;
+using Circuits.Services.Helpers;
 using Circuits.Services.Services.Interfaces;
 using Circuits.Shared.Converters;
 using Circuits.ViewModels.Entities.Equations;
@@ -32,6 +35,12 @@ public class WorkerService : IWorkerService
 
     public async Task RunAsync(EquationSystem equationSystem, int iterationCount = 100, float dt = 0.001f)
     {
+        var scriptJs = ScriptHelper.BuildBroydensSolverJs(equationSystem, iterationCount, dt);
+        var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
+        
+        Console.WriteLine($"URL: {url}");
+        
+        
         // validate parameters ?
 
         if (!SolverState.TryGetValue(equationSystem, out var state))
@@ -66,30 +75,34 @@ public class WorkerService : IWorkerService
 
         OnUpdate?.Invoke(equationSystem, state);
 
-        // var worker = await _workerFactory.CreateAsync();
-        // var backgroundService = await worker.CreateBackgroundServiceAsync<SolverService>(
-        //     options => options
-        //         .AddAssemblyOf<SolverService>()
-        //         .AddAssemblyOf<EquationSystem>()
-        // );
-        //
-        // state.Worker = worker;
-        // state.BackgroundService = backgroundService;
+        var worker = await _workerFactory.CreateAsync();
+        var backgroundService = await worker.CreateBackgroundServiceAsync<SolverService>(
+            options => options
+                .AddAssemblyOf<SolverService>()
+                .AddAssemblyOf<EquationSystem>()
+                .AddAssemblyOf<TypeConverter<Expression>>()
+                .AddAssemblyOf<ConvergenceException>() // Accord
+                .AddAssemblyOf<MatrixType>() // Accord.Math
+        );
 
-        // await backgroundService.RegisterEventListenerAsync(nameof(SolverService.EventCallback),
-        //     (object _, string eventInfo) => { Console.WriteLine($"EVENT: {eventInfo}"); });
+        state.Worker = worker;
+        state.BackgroundService = backgroundService;
+
+        await backgroundService.RegisterEventListenerAsync(nameof(SolverService.CompletionEventCallback),
+            (object _, string eventInfo) =>
+            {
+                SolverCompletedCallback(state, equationSystem);
+            });
+        
+        await backgroundService.RegisterEventListenerAsync(nameof(SolverService.FeedbackEventCallback),
+            (object _, string eventInfo) =>
+            {
+                var solverVariableInfos = JsonConvert.DeserializeObject<List<SolverVariableInfo>>(eventInfo);
+                SolverUpdateCallback(state, equationSystem, solverVariableInfos);
+            });
 
         var equationSystemSerialized = JsonConvert.SerializeObject(equationSystem, new TypeConverter<Expression>());
-
-        Console.WriteLine(equationSystemSerialized);
-        
-        var obj = JsonConvert.DeserializeObject<EquationSystem>(equationSystemSerialized, new TypeConverter<Expression>());
-        
-        
-        // var equationSystemSerialize2 = JsonConvert.SerializeObject(equationSystem);
-        // Console.WriteLine(equationSystemSerialize2);
-
-        // await backgroundService.RunAsync(s => s.RunAsync(equationSystemSerialized, 100, 0.001f));
+        await backgroundService.RunAsync(s => s.RunAsync(equationSystemSerialized, 100, 0.001f, 0.001f));
 
         Console.WriteLine("After Run");
 
@@ -103,6 +116,8 @@ public class WorkerService : IWorkerService
         // if (state.Worker != null) await state.Worker.DisposeAsync();
         // if (state.BackgroundService != null) await state.BackgroundService.DisposeAsync();
 
+        // STOP SOMEHOW
+        
         state.Worker = null!;
         state.BackgroundService = null!;
 
@@ -123,24 +138,20 @@ public class WorkerService : IWorkerService
         OnClear?.Invoke();
     }
 
-    [JSInvokable]
-    public void SolverUpdateCallback(SolverUpdateFeedback feedback)
+    private void SolverUpdateCallback(EquationSystemSolverState state, EquationSystem equationSystem, IList<SolverVariableInfo> solverVariableInfos)
     {
-        var (equationSystem, state) = SolverState.FirstOrDefault(x => x.Value.ScriptUrl == feedback.Url);
-        if (state is null) throw new Exception("Solver state is broken");
-
         // Console.WriteLine("SolverUpdateCallback");
 
         for (var i = 0; i < equationSystem.Variables.Count; i++)
         {
             var variable = equationSystem.Variables[i];
-            state.DataArrays[variable].AddRange(feedback.VarInfos[i].Array);
+            state.DataArrays[variable].AddRange(solverVariableInfos[i].Array);
 
             if (variable is ExpressionDerivative derivative &&
                 !equationSystem.Variables.Contains(derivative.Variable) &&
                 state.DataArrays.TryGetValue(derivative.Variable, out var integralArray))
             {
-                integralArray.AddRange(feedback.VarInfos[i].IntegralArray);
+                integralArray.AddRange(solverVariableInfos[i].IntegralArray);
             }
         }
 
@@ -149,14 +160,8 @@ public class WorkerService : IWorkerService
         OnUpdate?.Invoke(equationSystem, state);
     }
 
-    [JSInvokable]
-    public void SolverCompletedCallback(string url)
+    private void SolverCompletedCallback(EquationSystemSolverState state, EquationSystem equationSystem)
     {
-        var (equationSystem, state) = SolverState.FirstOrDefault(x => x.Value.ScriptUrl == url);
-        if (state is null) throw new Exception("Solver state is broken");
-
-        // Console.WriteLine("SolverCompletedCallback");
-
         state.Status = "Completed";
         OnUpdate?.Invoke(equationSystem, state);
     }

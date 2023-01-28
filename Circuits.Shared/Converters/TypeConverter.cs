@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Globalization;
-using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Circuits.Shared.Converters;
+
+// https://stackoverflow.com/questions/29267030/custom-jsonconverter-writejson-does-not-alter-serialization-of-sub-properties - Writer
+// https://stackoverflow.com/questions/19307752/deserializing-polymorphic-json-classes-without-type-information-using-json-net/19308474#19308474 - Reader
 
 public class TypeConverter<TBaseItem> : JsonConverter<TBaseItem> where TBaseItem : class
 {

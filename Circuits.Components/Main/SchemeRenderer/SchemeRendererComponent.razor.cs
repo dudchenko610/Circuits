@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
+using Circuits.Components.Common.Events;
 using Circuits.Components.Main.SchemeRenderer.Elements;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
-using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;

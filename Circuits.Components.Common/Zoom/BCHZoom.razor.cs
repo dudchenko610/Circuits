@@ -1,7 +1,7 @@
 using System.Globalization;
+using Circuits.Components.Common.Events;
 using Circuits.Components.Common.Models.Zoom;
 using Circuits.Services.Services.Interfaces;
-using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

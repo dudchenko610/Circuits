@@ -1,5 +1,5 @@
+using Circuits.Components.Common.Events;
 using Circuits.Components.Common.Models.Tabs;
-using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;

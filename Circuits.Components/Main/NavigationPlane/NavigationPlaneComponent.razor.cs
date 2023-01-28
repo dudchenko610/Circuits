@@ -1,5 +1,4 @@
 ﻿using Circuits.Services.Services.Interfaces;
-using Circuits.ViewModels.Events;
 using Circuits.ViewModels.Math;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -8,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Numerics;
 using System.Xml.Linq;
+using Circuits.Components.Common.Events;
 using Circuits.ViewModels.Rendering;
 using Microsoft.JSInterop;
 

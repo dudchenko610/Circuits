@@ -1,7 +1,7 @@
-﻿using Circuits.ViewModels.Markup;
+using Circuits.ViewModels.Markup;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace Circuits.ViewModels.Events;
+namespace Circuits.Components.Common.Events;
 
 public class ExtMouseEventArgs : MouseEventArgs
 {

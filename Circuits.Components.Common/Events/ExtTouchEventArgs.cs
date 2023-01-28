@@ -1,7 +1,7 @@
 using Circuits.ViewModels.Markup;
 using Circuits.ViewModels.Rendering;
 
-namespace Circuits.ViewModels.Events;
+namespace Circuits.Components.Common.Events;
 
 public class ExtTouchEventArgs : EventArgs
 {

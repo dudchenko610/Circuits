@@ -1,4 +1,4 @@
-﻿using Circuits.ViewModels.Events;
+﻿using Circuits.Components.Common.Events;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 

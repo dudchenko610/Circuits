@@ -1,7 +1,7 @@
 using System.Globalization;
+using Circuits.Components.Common.Events;
 using Circuits.Components.Common.Models.Tabs;
 using Circuits.Services.Services.Interfaces;
-using Circuits.ViewModels.Events;
 using Microsoft.AspNetCore.Components;
 
 namespace Circuits.Components.Common.Tabs.Tab;
