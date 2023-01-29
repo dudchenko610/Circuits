@@ -13,82 +13,129 @@ public class SolverService
     public event EventHandler<string>? FeedbackEventCallback;
     public event EventHandler<string>? CompletionEventCallback;
 
-    public async Task RunAsync(string equationSystemSerialized, int iterationCount = 100, float dx = 0.001f, float dt = 0.001f)
+    public async Task RunAsync(string equationSystemSerialized, int iterationCount = 100, float dx = 0.01f,
+        float dt = 0.001f, float epsilon = 0.000001f)
     {
         /* 1. deserialize equation system */
         var equationSystem =
             JsonConvert.DeserializeObject<EquationSystem>(equationSystemSerialized, new TypeConverter<Expression>());
         if (equationSystem is null) return;
-        SubstituteVariables(equationSystem); // After serialization variable references are loosen, we need to recover them
+        SubstituteVariables(
+            equationSystem); // After serialization variable references are loosen, we need to recover them
 
         var variables = equationSystem.Variables.ToList();
         var matrix = equationSystem.Matrix;
-        
-        // /* 2. build calculation equations */
-        // var functions = GetFunctions(equationSystem);
-        // var x = Enumerable.Repeat(0.0f, variables.Count).ToList();
-        //
-        // foreach (var function in functions)
+
+        /* 2. build calculation equations */
+        var functions = GetFunctions(equationSystem);
+        foreach (var function in functions) Console.WriteLine(function.GetLabel());
+
+        /////////////////////////////////////
+
+        // var functions = new List<Expression>();
+        // for (var v = 0; v < variables.Count; v++)
         // {
-        //     Console.WriteLine(function.GetLabel());
-        // }
+        //     var expression = equationSystem.Matrix[v][variables.Count]; // right side
         //
-        // var jacobian = new float[matrix.Length, matrix.Length];
-        // CalculateJacobian(jacobian, variables, functions, x, dx);
+        //     for (var j = v + 1; j < variables.Count; j++)
+        //     {
+        //         var variable = variables[j];
+        //         expression = ExpressionHelper.Subtract(
+        //             expression,
+        //             ExpressionHelper.Multiply(variable, equationSystem.Matrix[v][j])
+        //         );
+        //     }
         //
-        // Console.WriteLine("Jacobian");
-        // Console.WriteLine(jacobian.ToCSharp());
-        //
-        // var jacobianInverse = jacobian.Inverse();
-        // Console.WriteLine("Jacobian Inverse");
-        // Console.WriteLine(jacobianInverse.ToCSharp());
-        //
-        // var multiplication = jacobian.Dot(jacobianInverse);
-        //
-        // Console.WriteLine("Multiplication");
-        // Console.WriteLine(multiplication.ToCSharp());
-        
-        // try
-        // {
-        // }
-        // catch (Exception e)
-        // {
-        //     Console.WriteLine(e.Message);
-        //     Console.WriteLine(e.StackTrace);
+        //     expression = ExpressionHelper.Divide(expression, equationSystem.Matrix[v][v]);
+        //     functions.Add(expression);
         // }
 
-        var functions = new List<Expression>();
         var solverVariableInfos = variables
             .Select(x => new SolverVariableInfo())
             .ToList();
 
-        for (var v = 0; v < variables.Count; v++)
-        {
-            var expression = equationSystem.Matrix[v][variables.Count]; // right side
-
-            for (var j = v + 1; j < variables.Count; j++)
-            {
-                var variable = variables[j];
-                expression = ExpressionHelper.Subtract(
-                    expression,
-                    ExpressionHelper.Multiply(variable, equationSystem.Matrix[v][j])
-                );
-            }
-
-            expression = ExpressionHelper.Divide(expression, equationSystem.Matrix[v][v]);
-            functions.Add(expression);
-        }
-
         // calculation
         for (var i = 0; i < iterationCount; i++)
         {
+            /*
             for (var j = variables.Count - 1; j >= 0 ; j--)
             {
                 var func = functions[j];
                 var variable = variables[j];
-
+            
                 variable.Value = func.Value; // calculation
                 solverVariableInfos[j].Array.Add((float) variable.Value);
+            }*/
+
+            // Broyden's method below
+            {
+                var xK0 = new double[variables.Count].Transpose(); // set zeroes
+                var jK0 = new double[matrix.Length, matrix.Length];
+                CalculateJacobian(jK0, variables, functions, xK0, dx); // just recompute
+
+                var jK0Inv = jK0.Inverse();
+                var fK0 = new double[functions.Count].Transpose();
+                CalculateFunction(fK0, functions, variables, xK0);
+
+                var n = 0;
+
+                for (var j = 0; j < 20; j++)
+                {
+                    var xK1 = xK0.Subtract(jK0Inv.Dot(fK0));
+                    var b = xK1.Subtract(xK0);
+
+                    var fK1 = new double[functions.Count].Transpose();
+                    CalculateFunction(fK1, functions, variables, xK1);
+
+                    var u = fK1;
+
+                    var bTransposed = b.Transpose();
+                    var bTb = bTransposed.Dot(b);
+
+                    var v = b.Multiply(1.0f / bTb[0, 0]);
+                    var vT = v.Transpose();
+
+                    var numerator = jK0Inv.Dot(u).Dot(vT).Dot(jK0Inv);
+                    var denominator = 1 + vT.Dot(jK0Inv).Dot(u)[0, 0];
+
+                    var addition = numerator.Multiply(1.0f / denominator);
+
+                    var jK1Inv = jK0Inv.Subtract(addition);
+
+                    // Console.WriteLine("jK0Inv");
+                    // Console.WriteLine(jK0Inv.ToCSharp());
+                    //
+                    // Console.WriteLine("jK1Inv");
+                    // Console.WriteLine(jK1Inv.ToCSharp());
+                    //
+                    // Console.WriteLine("b");
+                    // Console.WriteLine(b.ToCSharp());
+                    //
+                    // Console.WriteLine("x");
+                    // Console.WriteLine(xK1.ToCSharp());
+                    //
+                    // Console.WriteLine($"____________________{j}____________________");
+                    // Console.WriteLine($"_____________________{j}_____________________");
+                    // Console.WriteLine($"____________________{j}____________________");
+
+                    jK0Inv = jK1Inv;
+                    fK0 = fK1;
+                    xK0 = xK1;
+
+                    n = j;
+
+                    if (b.Max() <= epsilon) break; // epsilon constraint
+                } // max iterations constraint
+
+                Console.WriteLine($"BROYDEN'S ITERATION COUNT: {n}");
+                
+                for (var j = 0; j < variables.Count; j++)
+                {
+                    var variable = variables[j];
+                    variable.Value = xK0[j, 0];
+                    
+                    solverVariableInfos[j].Array.Add((float) variable.Value);
+                }
             }
 
             for (var j = 0; j < variables.Count; j++)
@@ -112,13 +159,6 @@ public class SolverService
                         IntegralArray = x.IntegralArray.Skip(Math.Max(0, x.IntegralArray.Count - 10)).ToList(),
                     })
                     .ToList();
-                //
-                // foreach (var item in feedbackData)
-                // {
-                //     Console.WriteLine(item.Array.ToArray().ToCSharp());
-                //     Console.WriteLine(item.IntegralArray.ToArray().ToCSharp());
-                //     Console.WriteLine("________________________________________");
-                // }
 
                 var serializedData = JsonConvert.SerializeObject(feedbackData);
 
@@ -127,12 +167,28 @@ public class SolverService
 
             await Task.Delay(5);
         }
-        
+
         CompletionEventCallback?.Invoke(this, "completed");
     }
 
-    private static void CalculateJacobian(float[,] jacobian, IList<ExpressionVariable> variables,
-        IList<Expression> functions, IList<float> x, float dx)
+    private static void CalculateFunction(double[,] f, IList<Expression> functions,
+        IList<ExpressionVariable> variables, double[,] x)
+    {
+        // 1. Map x to variables
+        for (var i = 0; i < variables.Count; i++)
+        {
+            variables[i].Value = x[i, 0];
+        }
+
+        // 2. Calculate function values
+        for (var i = 0; i < functions.Count; i++)
+        {
+            f[i, 0] = functions[i].Value;
+        }
+    }
+
+    private static void CalculateJacobian(double[,] jacobian, IList<ExpressionVariable> variables,
+        IList<Expression> functions, double[,] x, double dx)
     {
         for (var i = 0; i < functions.Count; i++)
         {
@@ -144,11 +200,11 @@ public class SolverService
                 for (var k = 0; k < variables.Count; k++)
                 {
                     var variable = variables[k];
-                    variable.Value = x[k];
+                    variable.Value = x[k, 0];
                 }
 
                 variables[j].Value += dx;
-                jacobian[i, j] = (float)functions[i].Value / dx; // partial derivative
+                jacobian[i, j] = functions[i].Value / dx; // partial derivative
             }
         }
     }

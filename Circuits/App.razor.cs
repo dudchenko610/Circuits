@@ -22,11 +22,11 @@ public partial class App
 
         ElectricalSystemService.BuildEquationSystemsFromGraphs(SchemeService.Graphs);
         
-        foreach (var equationSystem in SchemeService.EquationSystems)
-        {
-            var result = EquationSystemService.PerformGaussianElimination(equationSystem);
-            Console.WriteLine($"GaussianElimination, {result}");
-        }
+        // foreach (var equationSystem in SchemeService.EquationSystems)
+        // {
+        //     var result = EquationSystemService.PerformGaussianElimination(equationSystem);
+        //     Console.WriteLine($"GaussianElimination, {result}");
+        // }
         
         StateHasChanged();
 

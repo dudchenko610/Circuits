@@ -81,8 +81,9 @@ public class WorkerService : IWorkerService
                 .AddAssemblyOf<SolverService>()
                 .AddAssemblyOf<EquationSystem>()
                 .AddAssemblyOf<TypeConverter<Expression>>()
-                .AddAssemblyOf<ConvergenceException>() // Accord
-                .AddAssemblyOf<MatrixType>() // Accord.Math
+                .AddAssemblies("Accord.dll")
+                .AddAssemblies("Accord.Math.dll")
+                .AddAssemblies("Accord.Math.Core.dll")
         );
 
         state.Worker = worker;
@@ -102,7 +103,8 @@ public class WorkerService : IWorkerService
             });
 
         var equationSystemSerialized = JsonConvert.SerializeObject(equationSystem, new TypeConverter<Expression>());
-        await backgroundService.RunAsync(s => s.RunAsync(equationSystemSerialized, 100, 0.001f, 0.001f));
+        await backgroundService.RunAsync(s => 
+            s.RunAsync(equationSystemSerialized, 100, 0.001f, 0.001f, 0.000001f));
 
         Console.WriteLine("After Run");
 
