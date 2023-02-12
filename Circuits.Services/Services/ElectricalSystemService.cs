@@ -33,11 +33,15 @@ public class ElectricalSystemService : IElectricalSystemService
             branch.CapacityVoltageSecondDerivative = null!;
             
             branch.DcVariables.Clear();
-            FillDcSourceAndDiodesVariables(branch);
+            branch.NonlinearElements.Clear();
+            
+            FillDcSourcesVariables(branch);
         }
 
         foreach (var graph in graphs)
         {
+            var graphBranches = graph.Circuits.SelectMany(circuit => circuit.Branches).ToList();
+            
             // Console.WriteLine("1. Detect variables ");
             /* 1. Detect variables */
             var eqSys = AddVariablesToSystemFromGraph(graph);
@@ -55,6 +59,7 @@ public class ElectricalSystemService : IElectricalSystemService
             
             var rcCurrentToDerivative = new HashSet<Branch>();
             var rlcSecondOrderDecomposition = new HashSet<Branch>();
+            var diodeDependencyToCurrent = new Dictionary<ExpressionVariable, Branch>();
             int equationNumber;
             
             foreach (var circuit in graph.Circuits)
@@ -67,11 +72,9 @@ public class ElectricalSystemService : IElectricalSystemService
                 {
                     foreach (var dcVar in branch.DcVariables)
                     {
-                        // Console.WriteLine($"is branch co-directed {isCoDirected}");
-                        
                         eqSys.Matrix[equationNumber][eqSys.Matrix.Length] += (isCoDirected ? 1 : -1) * dcVar;
                     }
-                    
+
                     // Console.WriteLine($"branch {branch.Current.GetLabel()}");
                     
                     var currentIndex = matVars.IndexOf(branch.Current);
@@ -130,6 +133,16 @@ public class ElectricalSystemService : IElectricalSystemService
                         eqSys.Matrix[equationNumber][currentIndex] = new ExpressionValue((isCoDirected ? 1 : -1) * branch.Resistance.Value);
                     }
                     
+                    foreach (var (diodeVoltage, isCoDirectedInBranch) in branch.NonlinearElements)
+                    {
+                        var varIndex = matVars.IndexOf(diodeVoltage);
+                        if (varIndex == -1) throw new Exception("Nonlinear variable not found!");
+                        
+                        var multiplier = (isCoDirectedInBranch ? 1 : -1) * (isCoDirected ? 1 : -1);
+                        eqSys.Matrix[equationNumber][varIndex] = new ExpressionValue(multiplier);
+                        diodeDependencyToCurrent.Add(diodeVoltage, branch);
+                    }
+                    
                     // place other variables
                 });
             }
@@ -159,6 +172,20 @@ public class ElectricalSystemService : IElectricalSystemService
                 eqSys.Matrix[equationNumber][eqSys.Matrix.Length] = branch.CapacityVoltageFirstDerivative;
             }
 
+            // set relation between current and diode
+            foreach (var (diodeVoltage, branch) in diodeDependencyToCurrent)
+            {
+                equationNumber = equationCount++;
+                var currentIndex = matVars.IndexOf(branch.Current);
+                
+                eqSys.Matrix[equationNumber][currentIndex] = new ExpressionValue(1.0f);
+                eqSys.Matrix[equationNumber][eqSys.Matrix.Length] = new ShockleyDiodeEquation()
+                {
+                    Variable = matVars[currentIndex],
+                    Label = $"i<sub-i>{graphBranches.IndexOf(branch)}</sub-i>(U<sub-i>Dn</sub-i>)" // TODO: replace n with diode number
+                };
+            }
+            
             equationSystems.Add(eqSys);
         }
 
@@ -167,7 +194,7 @@ public class ElectricalSystemService : IElectricalSystemService
         return equationSystems;
     }
 
-    private static EquationSystem AddVariablesToSystemFromGraph(Graph graph)
+    private EquationSystem AddVariablesToSystemFromGraph(Graph graph)
     {
         var variables = new List<ExpressionVariable>();
         var graphBranches = graph.Circuits.SelectMany(circuit => circuit.Branches).ToList();
@@ -260,6 +287,19 @@ public class ElectricalSystemService : IElectricalSystemService
                         variables.Add(branch.CapacityVoltageSecondDerivative);
                     }
                 }
+                
+                branch.IterateBranch(_schemeService.Nodes, (element, isCoDirected) =>
+                {
+                    if (element is not Diode diode) return;
+                    
+                    var diodeVoltageVariable = new ExpressionVariable
+                    {
+                        Label = $"U<i>D<sub-i>{diode.Number}<sub-i/></i>({branch.Current.Label})"
+                    };
+                        
+                    branch.NonlinearElements.Add(diodeVoltageVariable, isCoDirected);
+                    variables.Add(diodeVoltageVariable);
+                });
             }
         }
 
@@ -321,7 +361,7 @@ public class ElectricalSystemService : IElectricalSystemService
         return equationCount;
     }
 
-    private void FillDcSourceAndDiodesVariables(Branch branch)
+    private void FillDcSourcesVariables(Branch branch)
     {
         branch.IterateBranch(_schemeService.Nodes, (element, isCoDirected) =>
         {
@@ -334,16 +374,6 @@ public class ElectricalSystemService : IElectricalSystemService
                         Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
                         // Payload = dcSource,
                         Value = dcSource.Voltage // should be taken from DCSource
-                    });
-                    
-                    break;
-                }
-
-                case Diode diode:
-                {
-                    branch.NonlinearElements.Add((isCoDirected ? 1 : -1) * new NonlinearExpression()
-                    {
-                        Label = $"U<i>D</i><sub-i>{diode.Number}</sub-i>",
                     });
                     
                     break;

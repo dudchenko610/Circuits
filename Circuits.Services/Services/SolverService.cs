@@ -123,8 +123,16 @@ public class SolverService
                     xK0 = xK1;
 
                     n = j;
-
-                    if (b.Max() <= epsilon) break; // epsilon constraint
+                    
+                    var bMax = 0.0;
+                    
+                    foreach(var e in b)
+                    {
+                        var absE = Math.Abs(e);
+                        if (absE > bMax) bMax = absE;
+                    }
+                    
+                    if (bMax <= epsilon) break; // epsilon constraint
                 } // max iterations constraint
 
                 Console.WriteLine($"BROYDEN'S ITERATION COUNT: {n}");
@@ -223,6 +231,8 @@ public class SolverService
             if (firstDerivative.Variable is ExpressionDerivative secondDerivative)
                 variables.Add(secondDerivative.Variable);
         }
+        
+        // seems like variables are not substituted completely, or maybe not because we start with derivatives
 
         foreach (var row in equationSystem.Matrix)
         {

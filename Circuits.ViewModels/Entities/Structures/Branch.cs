@@ -20,5 +20,5 @@ public class Branch
     public ExpressionDerivative CapacityVoltageFirstDerivative { get; set; } = null!;
     public ExpressionDerivative CapacityVoltageSecondDerivative { get; set; } = null!;
     public List<Expression> DcVariables { get; set; } = new();
-    public List<Expression> NonlinearElements { get; set; } = new();
+    public Dictionary<ExpressionVariable, bool> NonlinearElements { get; set; } = new();
 }
