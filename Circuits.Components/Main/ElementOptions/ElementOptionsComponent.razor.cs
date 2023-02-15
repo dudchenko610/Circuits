@@ -148,5 +148,16 @@ public partial class ElementOptionsComponent
             default:
                 break;
         }
+
+        if (SelectedElement is Diode diode)
+        {
+            var variable = branch.NonlinearElements
+                .FirstOrDefault(x => x.Key.Label == $"U<i>D<sub-i>{diode.Number}<sub-i/></i>")
+                .Key;
+            
+            if (variable == null!) return;
+            
+            ChartService.Open(SelectedElement, variable, "V");
+        } 
     }
 }

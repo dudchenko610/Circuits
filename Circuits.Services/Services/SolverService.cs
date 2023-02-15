@@ -17,11 +17,11 @@ public class SolverService
         float dt = 0.001f, float epsilon = 0.000001f)
     {
         /* 1. deserialize equation system */
-        var equationSystem =
-            JsonConvert.DeserializeObject<EquationSystem>(equationSystemSerialized, new TypeConverter<Expression>());
+        var equationSystem = JsonConvert.DeserializeObject<EquationSystem>(equationSystemSerialized, 
+                new TypeConverter<Expression>());
         if (equationSystem is null) return;
-        SubstituteVariables(
-            equationSystem); // After serialization variable references are loosen, we need to recover them
+        // After serialization variable references are loosen, we need to recover them
+        SubstituteVariables(equationSystem); 
 
         var variables = equationSystem.Variables.ToList();
         var matrix = equationSystem.Matrix;
@@ -239,8 +239,8 @@ public class SolverService
             for (var j = 0; j < row.Length; j++)
             {
                 var expression = row[j];
-                if (expression is not ExpressionVariable or ExpressionDerivative)
-                    SubstituteVariables(expression, variables);
+                SubstituteVariables(expression, variables);
+                if (expression is not ExpressionVariable or ExpressionDerivative) continue;
 
                 var variable = variables.FirstOrDefault(x => x.GetLabel() == expression.GetLabel());
                 if (variable == null) continue;
@@ -286,6 +286,16 @@ public class SolverService
                     multipliers.Nodes.Insert(i, variable);
                 }
 
+                break;
+            }
+            case ShockleyDiodeEquation shockleyDiode:
+            {
+                var variable = variables.FirstOrDefault(x => x.GetLabel() == shockleyDiode.Variable.GetLabel());
+
+                if (variable == null) throw new Exception("Variable for ShockleyDiodeEquation is not found!");
+
+                shockleyDiode.Variable = variable;
+                
                 break;
             }
         }

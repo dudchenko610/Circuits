@@ -181,8 +181,8 @@ public class ElectricalSystemService : IElectricalSystemService
                 eqSys.Matrix[equationNumber][currentIndex] = new ExpressionValue(1.0f);
                 eqSys.Matrix[equationNumber][eqSys.Matrix.Length] = new ShockleyDiodeEquation()
                 {
-                    Variable = matVars[currentIndex],
-                    Label = $"i<sub-i>{graphBranches.IndexOf(branch)}</sub-i>(U<sub-i>Dn</sub-i>)" // TODO: replace n with diode number
+                    Variable = diodeVoltage,
+                    Label = $"i<sub-i>{graphBranches.IndexOf(branch)}</sub-i>({diodeVoltage.Label})" // TODO: replace n with diode number
                 };
             }
             
@@ -294,7 +294,7 @@ public class ElectricalSystemService : IElectricalSystemService
                     
                     var diodeVoltageVariable = new ExpressionVariable
                     {
-                        Label = $"U<i>D<sub-i>{diode.Number}<sub-i/></i>({branch.Current.Label})"
+                        Label = $"U<i>D<sub-i>{diode.Number}<sub-i/></i>"
                     };
                         
                     branch.NonlinearElements.Add(diodeVoltageVariable, isCoDirected);
@@ -373,7 +373,7 @@ public class ElectricalSystemService : IElectricalSystemService
                     {
                         Label = $"ε<sub-i>{dcSource.Number}</sub-i>",
                         // Payload = dcSource,
-                        Value = dcSource.Voltage // should be taken from DCSource
+                        Value = dcSource.Voltage
                     });
                     
                     break;
