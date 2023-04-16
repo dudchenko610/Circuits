@@ -13,7 +13,4 @@
   <ItemGroup>
     <None Remove="Markup\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Markup\" />
-  </ItemGroup>
 </Project>

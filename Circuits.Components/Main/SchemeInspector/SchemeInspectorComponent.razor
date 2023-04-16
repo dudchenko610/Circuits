@@ -1,44 +1,38 @@
 <div
     class="scheme-inspector noselectable-text @(Opened ? "show" : "")"
     style="@($"width: {_blockWidth}px; margin-left: {-_blockWidth}px;")">
+    
     <div class="content-container">
-        <BCHTabContext TabContext="_context">
-            <div class="content-holder">
-                <div class="tabs">
-                    <BCHTabPanel TabContext="_context"
-                                 PanelId="0"
-                                 MinimalTabsCount="1"
-                                 ScrollTabWidth="150"
-                                 SelectOnDragAndDrop="true"
-                                 ScrollToCenterOnClick="true"/>
-                </div>
-                <div class="content">
-                    <BCHTabContent TabContext="_context"
-                                   PanelId="0">
-                        <Template Context="selectedTab">
-                            @switch (selectedTab.Type)
-                            {
-                                case "graph-inspector":
-                                    <GraphInspectorComponent/>
-                                    break;
 
-                                case "solver-inspector":
-                                    <SolverInspectorComponent/>
-                                    break;
-                                
-                                case "equations-inspector":
-                                    <EquationsInspectorComponent/>
-                                    break;
-                                    
-                                case "storage":
-                                    <StorageComponent/>
-                                    break;
-                            }
-                        </Template>
-                    </BCHTabContent>
-                </div>
-            </div>
-        </BCHTabContext>
+        <BCHTabs TItem="TabModel"
+                 Items="_tabModels"
+                 ShowCloseOnDefaultTab="false"
+                 DefaultTabText="x => x.Name"
+                 TabWidthPredicate="x => x.Width">
+
+            <ContentTemplate Context="item">
+                @switch (item.Name)
+                {
+                    case "Graph Inspector":
+                        <GraphInspectorComponent/>
+                        break;
+
+                    case "Equations Inspector":
+                        <EquationsInspectorComponent/>
+                        break;
+
+                    case "Solver Inspector":
+                        <SolverInspectorComponent/>
+                        break;
+
+                    case "Storage":
+                        <StorageComponent/>
+                        break;
+                }
+            </ContentTemplate>
+
+        </BCHTabs>
+
     </div>
 
     <div class="resize-block" @onmousedown="OnMouseDownAsync"></div>

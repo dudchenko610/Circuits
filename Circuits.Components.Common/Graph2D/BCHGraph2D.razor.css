@@ -12,6 +12,9 @@
         /*width: 200px;*/
         /*height: 200px;*/
         pointer-events: none;
+
+        background-image: repeating-linear-gradient(rgba(3, 2, 41, 0.1) 0 0.5px, transparent 0.5px 100%), 
+        repeating-linear-gradient(90deg, rgba(3, 2, 41, 0.1) 0 0.5px, transparent 0.5px 100%);
     }
         
         .graph-container .graph > .graph-line {
@@ -19,10 +22,10 @@
             stroke-width: 1;
         }
 
-        .graph-container .graph > .grid-line {
-            stroke: rgb(50, 50, 50);
-            stroke-width: 0.1;
-        }
+        /*.graph-container .graph > .grid-line {*/
+        /*    stroke: rgb(50, 50, 50);*/
+        /*    stroke-width: 0.1;*/
+        /*}*/
 
         .graph-container .graph > .axis-line {
             stroke: rgb(20, 20, 20);

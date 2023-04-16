@@ -7,7 +7,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Numerics;
 using System.Xml.Linq;
-using Circuits.Components.Common.Events;
+using BlazorComponentHeap.Core.Services.Interfaces;
+using BlazorComponentHeap.Shared.Models.Events;
 using Circuits.ViewModels.Rendering;
 using Microsoft.JSInterop;
 
@@ -49,10 +50,10 @@ public partial class NavigationPlaneComponent : IAsyncDisposable
         NavigationPlaneContext.ZoomDown += OnZoomDownAsync;
         _dotNetRef = DotNetObjectReference.Create(this);
         
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousemove", _dotNetRef,
-            "OnDocumentMouseMove");
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mouseup", _dotNetRef,
-            "OnMouseLeaveUp");
+        // await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousemove", _dotNetRef,
+        //     "OnDocumentMouseMove");
+        // await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mouseup", _dotNetRef,
+        //     "OnMouseLeaveUp");
     }
     
     public async ValueTask DisposeAsync()
@@ -61,8 +62,8 @@ public partial class NavigationPlaneComponent : IAsyncDisposable
         NavigationPlaneContext.ZoomUp -= OnZoomUp;
         NavigationPlaneContext.ZoomDown -= OnZoomDownAsync;
         
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mouseup");
+        // await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");
+        // await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mouseup");
     }
     
     // protected override void OnAfterRender(bool firstRender)

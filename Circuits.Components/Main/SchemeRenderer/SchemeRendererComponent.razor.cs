@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using Circuits.Components.Common.Events;
+using BlazorComponentHeap.Shared.Models.Events;
 using Circuits.Components.Main.SchemeRenderer.Elements;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
@@ -80,8 +80,8 @@ public partial class SchemeRendererComponent : IDisposable
         if (firstRender)
         {
             _dotNetObjectReference = DotNetObjectReference.Create(this);
-            await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _id, _dotNetObjectReference);
-            await _jsRuntime.InvokeVoidAsync("subscribeOnDragOver", _contentId, _dotNetObjectReference);
+            // await _jsRuntime.InvokeVoidAsync("subscribeOnMouseMove", _id, _dotNetObjectReference);
+            // await _jsRuntime.InvokeVoidAsync("subscribeOnDragOver", _contentId, _dotNetObjectReference);
         }
 
         if (SelectedElement != null! && !_schemeService.Elements.Contains(SelectedElement))

@@ -12,7 +12,7 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"wire element {(_selectedElement == Wire ? "selected" : "")} {(_draggingElement == Wire && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(Wire) ? "highlighted" : "")}")"
+     class="@($"wire element {(_selectedElement == Wire ? "selected" : "")} {(_draggingElement == Wire && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(HighlightService.IsHighlighted(Wire) ? "highlighted" : "")}")"
      style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({Wire.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
     <div @onclick="OnElementClickedAsync"
@@ -35,7 +35,7 @@
     var draggingElement = (Wire)_draggingElement;
     var dragPos = GetPosition(true);
 
-    <div class="@($"wire dragged {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(Wire) ? "highlighted" : "")}")"
+    <div class="@($"wire dragged {(_selectedElement == draggingElement ? "selected" : "")} {(HighlightService.IsHighlighted(Wire) ? "highlighted" : "")}")"
          style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({Wire.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
         <div class="wire-content">

@@ -12,7 +12,7 @@
      @onextdragstart="OnDragStart"
      @onextdragstart:preventDefault="@_dragAllowed"
      @onextdragend="OnDragEnd"
-     class="@($"capacitor element {(_selectedElement == Capacitor ? "selected" : "")} {(_draggingElement == Capacitor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(_highlightService.IsHighlighted(Capacitor) ? "highlighted" : "")}")"
+     class="@($"capacitor element {(_selectedElement == Capacitor ? "selected" : "")} {(_draggingElement == Capacitor && _firstDragOver ? "dragging" : "")} {(_eventsDisabled ? "disabled" : "")} {(HighlightService.IsHighlighted(Capacitor) ? "highlighted" : "")}")"
      style="@($"left: {pos.X}px; top: {pos.Y}px; width: {GetWidth()}px; transform: translateX(2px) rotate({Capacitor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
     <div @onclick="OnElementClickedAsync"
@@ -39,7 +39,7 @@
     var draggingElement = (Capacitor)_draggingElement;
     var dragPos = GetPosition(true);
 
-    <div class="@($"capacitor dragged {(_selectedElement == draggingElement ? "selected" : "")} {(_highlightService.IsHighlighted(Capacitor) ? "highlighted" : "")}")"
+    <div class="@($"capacitor dragged {(_selectedElement == draggingElement ? "selected" : "")} {(HighlightService.IsHighlighted(Capacitor) ? "highlighted" : "")}")"
          style="@($"left: {dragPos.X}px; top: {dragPos.Y}px; width: {GetWidth()}px; transform: translate({_draggingPos.X.ToString(_nF)}px, {_draggingPos.Y.ToString(_nF)}px) rotate({Capacitor.Direction.GetValue<int, DirectionValueAttribute>(x => x.Angle)}deg);")">
 
         <div class="capacitor-content">

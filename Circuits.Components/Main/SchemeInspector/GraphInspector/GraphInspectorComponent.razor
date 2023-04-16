@@ -30,40 +30,34 @@
             <div class="selections">
                 <BCHSelect TItem="Element"
                            Options="@SchemeService.Elements"
-                           Height="300"
                            Filtering="false"
-                           Grouping="true"
-                           MultipleSelect="true"
+                           MultipleValues="true"
                            DefaultText="Elements"
-                           ElementNamePredicate="x => x.GetType().Name.ToLower()"
+                           OptionNamePredicate="x => x.GetType().Name.ToLower()"
                            GroupPredicate='x => x.GetType().Name'
-                           GroupNamePredicate='x => $"{x.GetType().Name}s"'
                            SelectedItems="_selectedElements"
                            OnSelectItem="(e) => { OnElementSelected(e, true); }"
                            OnDeselectItem="(e) => { OnElementSelected(e, false); }">
 
-                    <RowTemplate Context="element">
+                    <OptionTemplate Context="element">
                         <div class="element-name">
                             <div class="name noselectable-text">@element.GetType().Name[0]</div>
                             <i class="noselectable-text">@element.Number</i>
                         </div>
-                    </RowTemplate>
+                    </OptionTemplate>
 
                 </BCHSelect>
 
                 <BCHSelect TItem="Branch"
                            Options="@SchemeService.Branches"
-                           Height="300"
-                           Filtering="false"
-                           Grouping="false"
-                           MultipleSelect="true"
+                           MultipleValues="true"
                            DefaultText="Branches"
-                           ElementNamePredicate='x => $"branch {((List<Branch>)SchemeService.Branches).IndexOf(x)}"'
+                           OptionNamePredicate='x => $"branch {((List<Branch>)SchemeService.Branches).IndexOf(x)}"'
                            SelectedItems="_selectedBranches"
                            OnSelectItem="(e) => { OnBranchSelected(e, true); }"
                            OnDeselectItem="(e) => { OnBranchSelected(e, false); }">
 
-                    <RowTemplate Context="branch">
+                    <OptionTemplate Context="branch">
                         <div class="branch-wrapper">
                             <div class="name noselectable-text">Branch <i class="noselectable-text">@($"{((List<Branch>)SchemeService.Branches).IndexOf(branch)}")</i></div>
                             <div class="controls">
@@ -75,7 +69,7 @@
                                 </div>
                             </div>
                         </div>
-                    </RowTemplate>
+                    </OptionTemplate>
 
                 </BCHSelect>
 
@@ -88,16 +82,14 @@
 
                     <BCHSelect TItem="Circuit"
                                Options="@graph.Circuits"
-                               Height="300"
                                Filtering="false"
-                               Grouping="false"
-                               MultipleSelect="true"
+                               MultipleValues="true"
                                DefaultText="@($"Graph {i}")"
-                               ElementNamePredicate='x => $"circuit {graph.Circuits.IndexOf(x)}"'
+                               OptionNamePredicate='x => $"circuit {graph.Circuits.IndexOf(x)}"'
                                OnSelectItem="(e) => { OnSelectCircuit(e, true); }"
                                OnDeselectItem="(e) => { OnSelectCircuit(e, false); }">
 
-                        <RowTemplate Context="circuit">
+                        <OptionTemplate Context="circuit">
                             <div class="circuit-wrapper">
                                 <div class="name noselectable-text">Circuit <i class="noselectable-text">@(graph.Circuits.IndexOf(circuit))</i></div>
                                 <div class="controls">
@@ -109,7 +101,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </RowTemplate>
+                        </OptionTemplate>
 
                     </BCHSelect>
                 }

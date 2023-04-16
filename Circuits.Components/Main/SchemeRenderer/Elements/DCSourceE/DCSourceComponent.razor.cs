@@ -1,5 +1,5 @@
 using System.Globalization;
-using Circuits.Components.Common.Events;
+using BlazorComponentHeap.Shared.Models.Events;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Math;

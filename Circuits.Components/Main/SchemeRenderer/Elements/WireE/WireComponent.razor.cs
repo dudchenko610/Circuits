@@ -3,7 +3,7 @@ using Circuits.ViewModels.Math;
 using Circuits.ViewModels.Rendering.Scheme;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
-using Circuits.Components.Common.Events;
+using BlazorComponentHeap.Shared.Models.Events;
 using Circuits.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -11,7 +11,7 @@ namespace Circuits.Components.Main.SchemeRenderer.Elements.WireE;
 
 public partial class WireComponent : IDisposable
 {
-    [Inject] private IHighlightService _highlightService { get; set; } = null!;
+    [Inject] private IHighlightService HighlightService { get; set; } = null!;
     [CascadingParameter(Name="SchemeRenderReference")] public SchemeRendererComponent SchemeRenderer { get; set; } = null!;
     [Parameter] public Wire Wire { get; set; } = null!;
 
@@ -35,13 +35,13 @@ public partial class WireComponent : IDisposable
     protected override void OnInitialized()
     {
         SchemeRenderer.OnDragUpdate += OnDraggingUpdate;
-        _highlightService.OnUpdate += StateHasChanged;
+        HighlightService.OnUpdate += StateHasChanged;
     }
     
     public void Dispose()
     {
         SchemeRenderer.OnDragUpdate -= OnDraggingUpdate;
-        _highlightService.OnUpdate -= StateHasChanged;
+        HighlightService.OnUpdate -= StateHasChanged;
     }
 
     private void OnDraggingUpdate()

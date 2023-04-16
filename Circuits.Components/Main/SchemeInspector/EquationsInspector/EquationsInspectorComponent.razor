@@ -32,19 +32,17 @@
                 <BCHSelect TItem="CircuitBranch"
                            Width="120"
                            Options="@circuitBranches"
-                           Height="300"
                            Filtering="false"
-                           Grouping="true"
-                           MultipleSelect="true"
+                           MultipleValues="true"
                            DefaultText="@($"Graph {i}")"
                            GroupPredicate="x => x.Circuit"
                            FilterByPredicate='x => $"branch {x.Circuit.Branches.IndexOf(x.Branch)}"'
                            OnSelectItem="(e) => { OnBranchSelected(e.Branch, true); }"
                            OnDeselectItem="(e) => { OnBranchSelected(e.Branch, false); }">
-
+                
                     <GroupTemplate Context="circuitObj">
                         @{ var circuit = (Circuit)circuitObj!; }
-
+                
                         <div class="circuit-wrapper">
                             <div class="name noselectable-text">Circuit <i class="noselectable-text">@(graph.Circuits.IndexOf(circuit))</i></div>
                             <div class="controls">
@@ -57,8 +55,8 @@
                             </div>
                         </div>
                     </GroupTemplate>
-
-                    <RowTemplate Context="cb">
+                
+                    <OptionTemplate Context="cb">
                         <div class="branch-wrapper">
                             <div class="name noselectable-text">Branch <i class="noselectable-text">@(graphBranches.IndexOf(cb.Branch))</i></div>
                             <div class="controls">
@@ -70,8 +68,8 @@
                                 </div>
                             </div>
                         </div>
-                    </RowTemplate>
-
+                    </OptionTemplate>
+                
                 </BCHSelect>
             }
         </div>

@@ -108,7 +108,7 @@
           X="@($"{_selectedPos.X.ToString(_nF)}px")"
           Y="@($"{(_selectedPos.Y - 45).ToString(_nF)}px")"
           CssClass="element-help-menu-modal"
-          CloseOnOverflowClicked="true"
+          CloseOnOverlayClicked="true"
           Show="@(_selectedElement != null!)">
     <ElementOptionsComponent SelectedElement="_selectedElement"
                              OnRemoveElement="RemoveElement"
@@ -123,7 +123,7 @@
           X="@($"{_selectedPos.X.ToString(_nF)}px")"
           Y="@($"calc({_selectedPos.Y.ToString(_nF)}px + 18px)")"
           CssClass="element-options-modal"
-          CloseOnOverflowClicked="true"
+          CloseOnOverlayClicked="true"
           @bind-Show="_showElementOptions">
     <ElementEditComponent SelectedElement="_selectedElement"/>
 </BCHModal>

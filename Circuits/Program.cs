@@ -1,8 +1,7 @@
+using BlazorComponentHeap.Components.Modal.Root;
+using BlazorComponentHeap.Core.Extensions;
 using BlazorWorker.Core;
 using Circuits;
-using Circuits.Components.Common.Modal.Root;
-using Circuits.Components.Common.Services;
-using Circuits.Components.Common.Services.Interfaces;
 using Circuits.Services.Database;
 using Circuits.Services.Services;
 using Circuits.Services.Services.Interfaces;
@@ -20,8 +19,6 @@ builder.RootComponents.Add<BCHRootModal>("body::after");
 var services = builder.Services;
 
 services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-services.AddScoped<IJSUtilsService, JSUtilsService>();
-services.AddScoped<IPopupService, PopupService>();
 services.AddScoped<IElementService, ElementService>();
 services.AddScoped<IGraphService, GraphService>();
 services.AddScoped<IHighlightService, HighlightService>();
@@ -31,6 +28,8 @@ services.AddScoped<IElectricalSystemService, ElectricalSystemService>();
 services.AddScoped<IStorageService, StorageService>();
 services.AddScoped<IChartService, ChartService>();
 services.AddScoped<IWorkerService, WorkerService>();
+
+services.AddBCHComponents("subscription_key"); // key should be passed here somehow
 // services.AddScoped<ISolverService, SolverService>();
 
 services.AddWorkerFactory();

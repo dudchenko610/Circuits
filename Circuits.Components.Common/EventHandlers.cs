@@ -1,4 +1,4 @@
-using Circuits.Components.Common.Events;
+using BlazorComponentHeap.Shared.Models.Events;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 

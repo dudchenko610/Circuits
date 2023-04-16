@@ -8,7 +8,8 @@
              ZoomOnMouseWheel="true">
         <svg class="graph"
              width="@($"{SvgWidth.ToString(_nF)}px")"
-             height="@($"{SvgHeight.ToString(_nF)}px")">
+             height="@($"{SvgHeight.ToString(_nF)}px")"
+             style="@($"background-size: {CellWidth}px {CellHeight}px;")">
 
             @{
                 var svgWidth = SvgWidth;
@@ -38,26 +39,26 @@
                 var y1 = _zoomPos.Y + _zoomBounds.Y;
             }
 
-            @for (var i = verticalStartIndex; i <= verticalEndIndex; i++)
-            {
-                var yOffset = (i / verticalLineCount) * 100;
-                var yOffsetStr = $"{yOffset.ToString(_nF)}%";
-
-                <line x1="0" y1="@yOffsetStr" x2="100%" y2="@yOffsetStr" class="grid-line" />
-            }
-
-            @for (var i = horizontalStartIndex; i <= horizontalEndIndex; i++)
-            {
-                var xOffset = (i / (float)horizontalLineCount) * 100;
-                var xOffsetStr = $"{xOffset.ToString(_nF)}%";
-
-                <line x1="@xOffsetStr" y1="0" x2="@xOffsetStr" y2="100%" class="grid-line" />
-                @* <text><text x="@xOffsetStr" y="@((svgHeight * 0.5f - 1.0f).ToString(_nF))" class="axis-text noselectable-text">@XLabel(i)</text></text> *@
-            }
+            @* @for (var i = verticalStartIndex; i <= verticalEndIndex; i++) *@
+            @* { *@
+            @*     var yOffset = (i / verticalLineCount) * 100; *@
+            @*     var yOffsetStr = $"{yOffset.ToString(_nF)}%"; *@
+            @* *@
+            @*     <line x1="0" y1="@yOffsetStr" x2="100%" y2="@yOffsetStr" class="grid-line" /> *@
+            @* } *@
+            @* *@
+            @* @for (var i = horizontalStartIndex; i <= horizontalEndIndex; i++) *@
+            @* { *@
+            @*     var xOffset = (i / (float)horizontalLineCount) * 100; *@
+            @*     var xOffsetStr = $"{xOffset.ToString(_nF)}%"; *@
+            @* *@
+            @*     <line x1="@xOffsetStr" y1="0" x2="@xOffsetStr" y2="100%" class="grid-line" /> *@
+            @*     $1$ <text><text x="@xOffsetStr" y="@((svgHeight * 0.5f - 1.0f).ToString(_nF))" class="axis-text noselectable-text">@XLabel(i)</text></text> #1# *@
+            @* } *@
 
             <line x1="0" y1="50%" x2="100%" y2="50%" class="axis-line"/>
-
-            @for (var j = graphStartIndex; j < graphEndIndex; j++)
+            
+            @for (var j = graphStartIndex; j < graphEndIndex; j++) // TODO: lower lines count based on graph curvature
             {
                 var i = j;
                 var curr = FuncModifier.Invoke(DataArray[i + 0]);
@@ -65,7 +66,7 @@
 
                 var currVal = median - CellHeight * curr / CellYValues;
                 var nextVal = median - CellHeight * next / CellYValues;
-                
+
                 // Console.WriteLine($"curr = {curr}, currVal = {currVal}");
 
                 if ((currVal < y0 && nextVal < y0) || (currVal > y1 && nextVal > y1)) continue;
@@ -76,6 +77,7 @@
                       y2="@(nextVal.ToString(_nF))"
                       class="graph-line"/>
             }
+
 
         </svg>
     </BCHZoom>
@@ -132,7 +134,7 @@
         {
             var index = (int)(median / CellHeight) - i;
             if (index == 0) continue;
-            
+
             switch (_zoomContext.Scale)
             {
                 case < 1.6f:

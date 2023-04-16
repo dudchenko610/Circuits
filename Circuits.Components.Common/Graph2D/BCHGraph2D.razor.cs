@@ -1,7 +1,8 @@
 using System.Globalization;
+using BlazorComponentHeap.Core.Services.Interfaces;
+using BlazorComponentHeap.Shared.Models.Markup;
 using Circuits.Components.Common.Models.Zoom;
 using Circuits.Services.Services.Interfaces;
-using Circuits.ViewModels.Markup;
 using Circuits.ViewModels.Math;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;

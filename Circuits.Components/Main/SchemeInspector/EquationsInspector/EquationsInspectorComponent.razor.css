@@ -53,8 +53,8 @@
         padding: 10px;
     }
     
-    .equation-inspector .branch-wrapper,
-    .equation-inspector .circuit-wrapper {
+    .branch-wrapper,
+    .circuit-wrapper {
         display: flex;
         align-items: baseline;
         justify-content: space-between;
@@ -62,8 +62,8 @@
         margin-right: 17px;
     }
     
-    .equation-inspector .branch-wrapper > .name,
-    .equation-inspector .circuit-wrapper > .name {
+    .branch-wrapper > .name,
+    .circuit-wrapper > .name {
         font-family: 'Roboto';
         font-style: normal;
         font-weight: 400;
@@ -73,17 +73,17 @@
         white-space: nowrap;
     }
     
-    .equation-inspector .circuit-wrapper > .name {
+    .circuit-wrapper > .name {
         margin-left: 10px;
     }
     
-    .equation-inspector .branch-wrapper > .controls,
-    .equation-inspector .circuit-wrapper > .controls {
+    .branch-wrapper > .controls,
+    .circuit-wrapper > .controls {
         display: flex;
     }
     
-    .equation-inspector .branch-wrapper > .controls > .icon,
-    .equation-inspector .circuit-wrapper > .controls > .icon {
+    .branch-wrapper > .controls > .icon,
+    .circuit-wrapper > .controls > .icon {
         width: 20px;
         height: 20px;
         display: flex;
@@ -101,14 +101,14 @@
         color: rgba(3, 2, 41, 0.4);
     }
     
-    .equation-inspector .branch-wrapper > .controls > .icon.selected,
-    .equation-inspector .circuit-wrapper > .controls > .icon.selected {
+    .branch-wrapper > .controls > .icon.selected,
+    .circuit-wrapper > .controls > .icon.selected {
         border: 1px solid rgba(141, 2, 3, 0.4);
         color: rgba(141, 2, 3, 0.4);
     }
     
-    .equation-inspector .branch-wrapper  > .name > i,
-    .equation-inspector .circuit-wrapper  > .name > i {
+    .branch-wrapper > .name > i,
+    .circuit-wrapper > .name > i {
         height: 10px;
         font-family: 'Roboto';
         font-style: normal;

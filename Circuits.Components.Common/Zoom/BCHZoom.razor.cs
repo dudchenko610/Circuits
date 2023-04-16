@@ -1,5 +1,6 @@
 using System.Globalization;
-using Circuits.Components.Common.Events;
+using BlazorComponentHeap.Core.Services.Interfaces;
+using BlazorComponentHeap.Shared.Models.Events;
 using Circuits.Components.Common.Models.Zoom;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Math;
@@ -75,16 +76,16 @@ public partial class BCHZoom : IAsyncDisposable
         
         _dotNetRef = DotNetObjectReference.Create(this);
 
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousemove", _dotNetRef,
-            "OnDocumentMouseMove");
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "touchmove", _dotNetRef,
-            "OnDocumentTouchMove");
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mouseup", _dotNetRef,
-            "OnMouseLeaveUp");
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "touchend", _dotNetRef,
-            "OnMouseLeaveUp");
+        // await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mousemove", _dotNetRef,
+        //     "OnDocumentMouseMove");
+        // await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "touchmove", _dotNetRef,
+        //     "OnDocumentTouchMove");
+        // await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "mouseup", _dotNetRef,
+        //     "OnMouseLeaveUp");
+        // await JsRuntime.InvokeVoidAsync("addDocumentListener", _subscriptionKey, "touchend", _dotNetRef,
+        //     "OnMouseLeaveUp");
         
-        _dppx = await JsRuntime.InvokeAsync<float>("getPixelRatio");
+        _dppx = await JsRuntime.InvokeAsync<float>("bchGetPixelRatio");
     }
 
     protected override void OnParametersSet()
@@ -109,10 +110,10 @@ public partial class BCHZoom : IAsyncDisposable
         ZoomContext.ZoomUp -= OnZoomUp;
         ZoomContext.ZoomDown -= OnZoomDownAsync;
         
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "touchmove");
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mouseup");
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "touchend");
+        // await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mousemove");
+        // await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "touchmove");
+        // await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "mouseup");
+        // await JsRuntime.InvokeVoidAsync("removeDocumentListener", _subscriptionKey, "touchend");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -52,8 +52,8 @@
     height: fit-content;
 }
 
-.solver-inspector .branch-wrapper,
-.solver-inspector .circuit-wrapper {
+.branch-wrapper,
+.circuit-wrapper {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -61,8 +61,8 @@
     margin-right: 17px;
 }
 
-.solver-inspector .branch-wrapper > .name,
-.solver-inspector .circuit-wrapper > .name {
+.branch-wrapper > .name,
+.circuit-wrapper > .name {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
@@ -72,17 +72,17 @@
     white-space: nowrap;
 }
 
-.solver-inspector .circuit-wrapper > .name {
+.circuit-wrapper > .name {
     margin-left: 10px;
 }
 
-.solver-inspector .branch-wrapper > .controls,
-.solver-inspector .circuit-wrapper > .controls {
+.branch-wrapper > .controls,
+.circuit-wrapper > .controls {
     display: flex;
 }
 
-.solver-inspector .branch-wrapper > .controls > .icon,
-.solver-inspector .circuit-wrapper > .controls > .icon {
+.branch-wrapper > .controls > .icon,
+.circuit-wrapper > .controls > .icon {
     width: 20px;
     height: 20px;
     display: flex;
@@ -100,14 +100,14 @@
     color: rgba(3, 2, 41, 0.4);
 }
 
-.solver-inspector .branch-wrapper > .controls > .icon.selected,
-.solver-inspector .circuit-wrapper > .controls > .icon.selected {
+.branch-wrapper > .controls > .icon.selected,
+.circuit-wrapper > .controls > .icon.selected {
     border: 1px solid rgba(141, 2, 3, 0.4);
     color: rgba(141, 2, 3, 0.4);
 }
 
-.solver-inspector .branch-wrapper  > .name > i,
-.solver-inspector .circuit-wrapper  > .name > i {
+.branch-wrapper  > .name > i,
+.circuit-wrapper  > .name > i {
     height: 10px;
     font-family: 'Roboto';
     font-style: normal;

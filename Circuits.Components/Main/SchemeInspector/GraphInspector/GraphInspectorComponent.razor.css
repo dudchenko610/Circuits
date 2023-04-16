@@ -59,12 +59,12 @@
     padding: 10px;
 }
 
-.graph-inspector .element-name {
+.element-name {
     display: flex;
     align-items: baseline;
 }
 
-    .graph-inspector .element-name > .name {
+    .element-name > .name {
         font-family: 'Roboto';
         font-style: normal;
         font-weight: 400;
@@ -74,7 +74,7 @@
         white-space: nowrap;
     }
     
-    .graph-inspector .element-name > i {
+    .element-name > i {
         height: 10px;
         font-family: 'Roboto';
         font-style: normal;
@@ -86,8 +86,8 @@
     }
 
 
-.graph-inspector .branch-wrapper,
-.graph-inspector .circuit-wrapper {
+.branch-wrapper,
+.circuit-wrapper {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -95,8 +95,8 @@
     margin-right: 17px;
 }
 
-.graph-inspector .branch-wrapper > .name,
-.graph-inspector .circuit-wrapper > .name {
+.branch-wrapper > .name,
+.circuit-wrapper > .name {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
@@ -106,13 +106,13 @@
     white-space: nowrap;
 }
 
-.graph-inspector .branch-wrapper > .controls,
-.graph-inspector .circuit-wrapper > .controls {
+.branch-wrapper > .controls,
+.circuit-wrapper > .controls {
     display: flex;
 }
 
-.graph-inspector .branch-wrapper > .controls > .icon,
-.graph-inspector .circuit-wrapper > .controls > .icon {
+.branch-wrapper > .controls > .icon,
+.circuit-wrapper > .controls > .icon {
     width: 20px;
     height: 20px;
     display: flex;
@@ -130,14 +130,14 @@
     color: rgba(3, 2, 41, 0.4);
 }
 
-.graph-inspector .branch-wrapper > .controls > .icon.selected,
-.graph-inspector .circuit-wrapper > .controls > .icon.selected {
+.branch-wrapper > .controls > .icon.selected,
+.circuit-wrapper > .controls > .icon.selected {
     border: 1px solid rgba(141, 2, 3, 0.4);
     color: rgba(141, 2, 3, 0.4);
 }
 
-.graph-inspector .branch-wrapper  > .name > i,
-.graph-inspector .circuit-wrapper  > .name > i {
+.branch-wrapper  > .name > i,
+.circuit-wrapper  > .name > i {
     height: 10px;
     font-family: 'Roboto';
     font-style: normal;

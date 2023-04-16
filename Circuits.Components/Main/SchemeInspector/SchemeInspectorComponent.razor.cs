@@ -1,17 +1,24 @@
-using Circuits.Components.Common.Models.Tabs;
-using Circuits.Components.Common.Select;
+using BlazorComponentHeap.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace Circuits.Components.Main.SchemeInspector;
 
-public partial class SchemeInspectorComponent : IDisposable
+public partial class SchemeInspectorComponent
 {
-    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
+    class TabModel
+    {
+        public string Name { get; set; }
+        public int Width { get; set; }
+    }
+
+    [Inject] private IJSUtilsService JsUtilsService { get; set; } = null!;
 
     [Parameter] public EventCallback<bool> OpenedChanged { get; set; }
-    [Parameter] public bool Opened
+
+    [Parameter]
+    public bool Opened
     {
         get => _opened;
         set
@@ -25,74 +32,34 @@ public partial class SchemeInspectorComponent : IDisposable
 
     private bool _isMouseDown = false;
     private bool _opened = false;
-    private readonly TabContextModel _context = new(1)
+
+    private readonly List<TabModel> _tabModels = new List<TabModel>()
     {
-        Orderable = true,
-        TabPanels = new TabPanelModel[]
+        new()
         {
-            new ()
-            {
-                TabModels = new List<TabModel>
-                {
-                    new ()
-                    {
-                        Type = "graph-inspector",
-                        Name = $"Graph Inspector",
-                        Width = 175,
-                        Height = 35,
-                        Closable = false,
-                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
-                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
-                    },
-                    new ()
-                    {
-                        Type = "equations-inspector",
-                        Name = $"Equations Inspector",
-                        Width = 185,
-                        Height = 35,
-                        Closable = false,
-                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
-                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
-                    },
-                    new ()
-                    {
-                        Type = "solver-inspector",
-                        Name = $"Solver Inspector",
-                        Width = 175,
-                        Height = 35,
-                        Closable = false,
-                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
-                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
-                    },
-                    new ()
-                    {
-                        Type = "storage",
-                        Name = $"Storage",
-                        Width = 150,
-                        Height = 35,
-                        Closable = false,
-                        IconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab.svg",
-                        SelectedIconImage = "_content/Circuits.Components.Common/img/tabs/default-icon/default-tab-selected.svg"
-                    }
-                }
-            }
+            Name = $"Graph Inspector",
+            Width = 215,
+        },
+        new()
+        {
+            Name = $"Equations Inspector",
+            Width = 215,
+        },
+        new()
+        {
+            Name = $"Solver Inspector",
+            Width = 215,
+        },
+        new()
+        {
+            Name = $"Storage",
+            Width = 150,
         }
     };
     
-    private DotNetObjectReference<SchemeInspectorComponent> _dotNetRef = null!;
     private readonly string _key = $"_key_{Guid.NewGuid()}";
     private int _blockWidth = 450;
-    
-    protected override void OnInitialized()
-    {
-        _dotNetRef = DotNetObjectReference.Create(this);
-    }
-    
-    public void Dispose()
-    {
-        _dotNetRef.Dispose();
-    }
-    
+
     // protected override void OnAfterRender(bool firstRender)
     // {
     //     Console.WriteLine("ElementDetails OnAfterRender");
@@ -101,26 +68,26 @@ public partial class SchemeInspectorComponent : IDisposable
     private async Task OnMouseDownAsync()
     {
         _isMouseDown = true;
-        
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _key, "mouseup", _dotNetRef, "OnMouseUpAsync");
-        await JsRuntime.InvokeVoidAsync("addDocumentListener", _key, "mousemove", _dotNetRef, "OnMouseMoveAsync");
+
+        await JsUtilsService.AddDocumentListenerAsync<MouseEventArgs>("mouseup", _key, OnMouseUpAsync);
+        await JsUtilsService.AddDocumentListenerAsync<MouseEventArgs>("mousemove", _key, OnMouseMoveAsync);
     }
 
     [JSInvokable]
     public Task OnMouseMoveAsync(MouseEventArgs args)
     {
-        _blockWidth = Math.Clamp((int) args.ClientX - 16, 300, 1000);
+        _blockWidth = Math.Clamp((int)args.ClientX - 16, 300, 1000);
         StateHasChanged();
 
         return Task.CompletedTask;
     }
-    
+
     [JSInvokable]
-    public async Task OnMouseUpAsync()
+    public async Task OnMouseUpAsync(MouseEventArgs _)
     {
         _isMouseDown = false;
-        
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _key, "mouseup");
-        await JsRuntime.InvokeVoidAsync("removeDocumentListener", _key, "mousemove");
+
+        await JsUtilsService.RemoveDocumentListenerAsync<MouseEventArgs>("mouseup", _key);
+        await JsUtilsService.RemoveDocumentListenerAsync<MouseEventArgs>("mousemove", _key);
     }
 }

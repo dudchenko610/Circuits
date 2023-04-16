@@ -1,8 +1,6 @@
-using Accord;
-using Accord.Math;
+using BlazorComponentHeap.Core.Services.Interfaces;
 using BlazorWorker.BackgroundServiceFactory;
 using BlazorWorker.Core;
-using Circuits.Services.Helpers;
 using Circuits.Services.Services.Interfaces;
 using Circuits.Shared.Converters;
 using Circuits.ViewModels.Entities.Equations;
@@ -35,10 +33,10 @@ public class WorkerService : IWorkerService
 
     public async Task RunAsync(EquationSystem equationSystem, int iterationCount = 100, float dt = 0.001f)
     {
-        var scriptJs = ScriptHelper.BuildBroydensSolverJs(equationSystem, iterationCount, dt);
-        var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
-        
-        Console.WriteLine($"URL: {url}");
+        // var scriptJs = ScriptHelper.BuildBroydensSolverJs(equationSystem, iterationCount, dt);
+        // var url = await _jsUtilsService.CreateObjectURLAsync(scriptJs);
+        //
+        // Console.WriteLine($"URL: {url}");
         
         
         // validate parameters ?

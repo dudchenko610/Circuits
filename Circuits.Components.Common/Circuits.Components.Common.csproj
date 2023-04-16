@@ -12,11 +12,39 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorComponentHeap.Components" Version="2.0.83" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Circuits.Services\Circuits.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\fonts.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\KFOmCnqEu92Fr1Mu4mxK.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\KFOmCnqEu92Fr1Mu4WxKOzY.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\KFOmCnqEu92Fr1Mu5mxKOzY.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\KFOmCnqEu92Fr1Mu72xKOzY.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\KFOmCnqEu92Fr1Mu7GxKOzY.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\KFOmCnqEu92Fr1Mu7mxKOzY.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\KFOmCnqEu92Fr1Mu7WxKOzY.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\fonts\Roboto\select-search.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\select\select-arrow.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\select\select-search.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\tabs\arrow-right.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\tabs\close-tab-selected.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\tabs\close-tab.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\tabs\default-icon\default-tab-selected.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\tabs\default-icon\default-tab.svg" />
+    <_ContentIncludedByDefault Remove="Select\BCHSelect.razor" />
+    <_ContentIncludedByDefault Remove="Modal\Content\BCHModalContent.razor" />
+    <_ContentIncludedByDefault Remove="Modal\Root\BCHRootModal.razor" />
+    <_ContentIncludedByDefault Remove="Tabs\FakeTab\BCHFakeTab.razor" />
+    <_ContentIncludedByDefault Remove="Tabs\Tab\BCHTab.razor" />
+    <_ContentIncludedByDefault Remove="Tabs\TabContent\BCHTabContent.razor" />
+    <_ContentIncludedByDefault Remove="Tabs\TabContext\BCHTabContext.razor" />
+    <_ContentIncludedByDefault Remove="Tabs\TabPanel\BCHTabPanel.razor" />
   </ItemGroup>
 
 </Project>

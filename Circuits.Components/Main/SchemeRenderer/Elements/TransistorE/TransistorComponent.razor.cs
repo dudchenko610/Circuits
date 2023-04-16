@@ -1,5 +1,5 @@
 using System.Globalization;
-using Circuits.Components.Common.Events;
+using BlazorComponentHeap.Shared.Models.Events;
 using Circuits.Services.Services.Interfaces;
 using Circuits.ViewModels.Entities.Elements;
 using Circuits.ViewModels.Math;
@@ -11,7 +11,7 @@ namespace Circuits.Components.Main.SchemeRenderer.Elements.TransistorE;
 
 public partial class TransistorComponent : IDisposable
 {
-    [Inject] private IHighlightService _highlightService { get; set; } = null!;
+    [Inject] private IHighlightService HighlightService { get; set; } = null!;
     
     [CascadingParameter(Name = "SchemeRenderReference")]
     public SchemeRendererComponent SchemeRenderer { get; set; } = null!;
@@ -37,13 +37,13 @@ public partial class TransistorComponent : IDisposable
     protected override void OnInitialized()
     {
         SchemeRenderer.OnDragUpdate += OnDraggingUpdate;
-        _highlightService.OnUpdate += StateHasChanged;
+        HighlightService.OnUpdate += StateHasChanged;
     }
 
     public void Dispose()
     {
         SchemeRenderer.OnDragUpdate -= OnDraggingUpdate;
-        _highlightService.OnUpdate -= StateHasChanged;
+        HighlightService.OnUpdate -= StateHasChanged;
     }
 
     private void OnDraggingUpdate()
