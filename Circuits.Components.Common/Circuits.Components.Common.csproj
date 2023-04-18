@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorComponentHeap.Components" Version="2.0.83" />
+    <PackageReference Include="BlazorComponentHeap.Components" Version="2.0.89" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
   </ItemGroup>
 

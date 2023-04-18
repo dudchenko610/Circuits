@@ -38,7 +38,7 @@ public partial class BCHZoom : IAsyncDisposable
     private Vec2 _size = new();
     private readonly Vec2 _viewPortSize = new();
     private readonly Vec2 _navigationSize = new();
-    private Vec2 _navigationOffsetSize = new();
+    private readonly Vec2 _navigationOffsetSize = new();
     private readonly Vec2 _pos = new();
     private float _scale = 4;
     private readonly Vec2 _zoomTarget = new();
@@ -321,7 +321,9 @@ public partial class BCHZoom : IAsyncDisposable
         var predictedNavWidth = _navigationOffsetSize.X * Scale;
         var predictedNavHeight = _navigationOffsetSize.Y * Scale;
         
-       // Console.WriteLine($"predictedNavHeight = {predictedNavHeight}");
+        // Console.WriteLine($"x1 {_navigationOffsetSize.X} y1 {_navigationOffsetSize.Y} x2 {_navigationSize.X} y2 {_navigationSize.Y}");
+        
+        // Console.WriteLine($"predictedNavHeight = {predictedNavHeight}");
         
         if (ConstraintZoomByContent)
         {
@@ -336,9 +338,10 @@ public partial class BCHZoom : IAsyncDisposable
                     ? _viewPortSize.X / _navigationOffsetSize.X 
                     : _viewPortSize.Y / _navigationOffsetSize.Y;
                 
+                
                 _scale = (float)Math.Log(newScale) + 4;
                 
-                //Console.WriteLine($"ZOOM newScale = {newScale} {scl} {Math.Exp(scl - 4)}");
+                // Console.WriteLine($"ZOOM newScale = {newScale} {Scale}");
 
                 predictedNavWidth = _navigationOffsetSize.X * newScale;
                 predictedNavHeight = _navigationOffsetSize.Y * newScale;

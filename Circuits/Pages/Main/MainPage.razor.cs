@@ -250,4 +250,34 @@ public partial class MainPage : IDisposable
         
         StateHasChanged();
     }
+
+    private readonly Vec2 _size = new Vec2(3000, 3000);
+
+    private void SchemeZoomConstraint(
+        BlazorComponentHeap.Shared.Models.Math.Vec2 pos, 
+        BlazorComponentHeap.Shared.Models.Math.Vec2 navigationSize, 
+        BlazorComponentHeap.Shared.Models.Math.Vec2 navigationOffsetSize, 
+        BlazorComponentHeap.Shared.Models.Math.Vec2 viewPortSize, 
+        float linearScale, float scale)
+    {
+        if (pos.X > 0)
+        {
+            pos.X = 0;
+        }
+        
+        if (pos.Y > 0)
+        {
+            pos.Y = 0;
+        }
+
+        if ((pos.X - viewPortSize.X) / linearScale < -_size.X)
+        {
+            pos.X = viewPortSize.X - _size.X * linearScale;
+        }
+        
+        if ((pos.Y - viewPortSize.Y) / linearScale < -_size.Y)
+        {
+            pos.Y = viewPortSize.Y - _size.Y * linearScale;
+        }
+    }
 }

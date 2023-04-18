@@ -29,8 +29,7 @@
         </div>
 
         <div class="control-block left">
-            <div
-                class="icon graph-details"
+            <div class="icon graph-details"
                 @onclick="() => { _showGraphInspector = !_showGraphInspector; StateHasChanged(); }">
 
                 <div class="icon-cnt">
@@ -44,8 +43,12 @@
 
         <SchemeInspectorComponent @bind-Opened="_showGraphInspector"/>
 
-        <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext">
-
+        <BCHZoom ZoomOnMouseWheel="true"
+                 BoundsByParent="false"
+                 MinScale="3.5f"
+                 MaxScale="5.5f"
+                 ConstraintPredicate="SchemeZoomConstraint">
+            
             <SchemeRendererComponent
                 SchemeRendererContext="_context"
                 Scale="_navPlaneContext.Scale"
@@ -98,8 +101,12 @@
                 </ElementComponent>
 
             </SchemeRendererComponent>
-
-        </NavigationPlaneComponent>
+            
+        </BCHZoom>
+        
+        @* <NavigationPlaneComponent NavigationPlaneContext="_navPlaneContext"> *@
+        @* *@
+        @* </NavigationPlaneComponent> *@
     </div>
 </div>
 
