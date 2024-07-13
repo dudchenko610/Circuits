@@ -1,0 +1,52 @@
+trigger:
+  - 'mvp-version'
+
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+
+  - task: UseDotNet@2
+    displayName: 'Use .NET 6 sdk'
+    inputs:
+      packageType: 'sdk'
+      version: '6.0.x'
+      includePreviewVersions: true
+
+  - task: NuGetAuthenticate@0
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet build'
+    inputs:
+      command: 'build'
+      arguments: --configuration $(buildConfiguration)
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish'
+    inputs:
+      command: publish
+      publishWebProjects: false
+      arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: false
+
+  - script: |
+      find $(build.ArtifactStagingDirectory) -type f
+    displayName: 'Print Build.ArtifactStagingDirectory'
+
+  - script: |
+      sed -i 's|href="/"|href="/circuits/"|g' $(build.ArtifactStagingDirectory)/wwwroot/index.html
+    displayName: Fix index.html for embedded version
+
+  - task: CopyFilesOverSSH@0
+    displayName: 'Deploy to Droplet'
+    inputs:
+      sshEndpoint: 'ConnectionToWebSvitDroplet'
+      sourceFolder: '$(Build.ArtifactStagingDirectory)/wwwroot'
+      contents: '**'
+      targetFolder: '/var/www/circuits-app'
+      cleanTargetFolder: true
